@@ -1,0 +1,393 @@
+// 
+//  Copyright 2012  Andrew Okin
+// 
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+// 
+//        http://www.apache.org/licenses/LICENSE-2.0
+// 
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
+using System;
+using System.IO;
+using System.Diagnostics;
+
+using Gtk;
+
+using MultiMC.Data;
+using MultiMC.Tasks;
+
+namespace MultiMC
+{
+	public partial class MainWindow : Gtk.Window
+	{
+		private ListStore instList;
+		
+		public MainWindow() : 
+				base(Gtk.WindowType.Toplevel)
+		{
+			this.Build();
+			Title = "MultiMC " + AppUtils.GetVersion().ToString();
+			
+			instList = new ListStore(typeof(string), typeof(Instance), typeof(Gdk.Pixbuf));
+			
+			instIconView.Model = instList;
+			instIconView.TextColumn = 0;
+			instIconView.PixbufColumn = 2;
+			
+			LoadInstances();
+			InitMenu();
+			
+			if (!File.Exists(AppSettings.Main.LauncherPath))
+			{
+				instIconView.Sensitive = false;
+				Downloader launchDl = new Downloader(AppSettings.Main.LauncherPath,
+				                                     Resources.LauncherURL,
+				                                     "Downloading Launcher");
+				launchDl.Completed += (sender, e) => instIconView.Sensitive = true;
+			}
+			
+			if (!File.Exists("Ionic.Zip.Reduced.dll"))
+			{
+				instIconView.Sensitive = false;
+				Downloader dnzDl = new Downloader(AppSettings.Main.LauncherPath,
+				                                     Resources.LauncherURL,
+				                                     "Downloading DotNetZip");
+				dnzDl.Completed += (sender, e) => instIconView.Sensitive = true;
+			}
+			
+			if (AppSettings.Main.AutoUpdate)
+			{
+				DoUpdateCheck();
+			}
+		}
+		
+		#region Buttons
+		
+		protected void OnDeleteEvent(object o, Gtk.DeleteEventArgs args)
+		{
+			Application.Quit();
+		}
+		
+		protected void OnNewClicked(object sender, System.EventArgs e)
+		{
+			NewInstanceDialog newDlg = new NewInstanceDialog();
+			newDlg.ParentWindow = this.GdkWindow;
+			newDlg.Show();
+			newDlg.OKClicked += (sender1, e1) => 
+			{
+				Console.WriteLine("Adding inst " + newDlg.InstDir);
+				Instance inst = new Instance(newDlg.InstName, newDlg.InstDir, true);
+				instList.AppendValues(inst.Name, inst);
+			};
+		}
+
+		protected void OnViewFolderClicked(object sender, System.EventArgs e)
+		{
+			if (!Directory.Exists(Resources.InstDir))
+				Directory.CreateDirectory(Resources.InstDir);
+			Process.Start(Resources.InstDir);
+		}
+
+		protected void OnSettingsClicked(object sender, System.EventArgs e)
+		{
+			SettingsDialog settingsDlg = new SettingsDialog();
+			settingsDlg.ParentWindow = this.GdkWindow;
+			settingsDlg.Show();
+		}
+		
+		protected void OnRefreshClicked(object sender, System.EventArgs e)
+		{
+			LoadInstances();
+		}
+
+		protected void OnUpdateClicked(object sender, System.EventArgs e)
+		{
+			DoUpdateCheck();
+		}
+		
+		/// <summary>
+		/// Clears the list of instances and loads it from the instance directory.
+		/// </summary>
+		protected void LoadInstances()
+		{
+			instList.Clear();
+			foreach (Instance inst in Instance.LoadInstances(Resources.InstDir))
+			{
+				instList.AppendValues(inst.Name, inst, Resources.GetInstIcon(inst.IconKey));
+			}
+		}
+		
+		#endregion
+		
+		#region Task System
+		
+		Task currentTask;
+		
+		private void StartTask(Task task)
+		{
+			if (currentTask != null && currentTask.Running)
+				throw new TaskAlreadyOccupiedException("A task is already running.");
+
+			this.currentTask = task;
+
+			currentTask.Started += new EventHandler(taskStarted);
+			currentTask.Completed += new EventHandler(taskCompleted);
+			currentTask.ProgressChange +=
+				new Task.ProgressChangeEventHandler(taskProgressChange);
+			currentTask.StatusChange +=
+				new Task.StatusChangeEventHandler(taskStatusChange);
+			currentTask.ErrorMessage += new Task.ErrorMessageEventHandler(taskErrorMessage);
+
+			currentTask.Start();
+		}
+
+		void taskErrorMessage(object sender, Task.ErrorMessageEventArgs e)
+		{
+			Gtk.Application.Invoke(
+				(sender1, e1) =>
+			{
+				MessageDialog errDlg = new MessageDialog(this, 
+				                                         DialogFlags.Modal, 
+				                                         MessageType.Error, 
+				                                         ButtonsType.Ok,
+				                                         e.Message);
+				errDlg.Response += (o, args) => errDlg.Destroy();
+				errDlg.Run();
+			});
+		}
+
+		#region Mod Installation
+
+		Modder modder;
+
+		/// <summary>
+		/// Rebuilds the given instance's minecraft.jar
+		/// </summary>
+		private void RebuildMCJar(Instance inst)
+		{
+			if (!Directory.Exists(inst.MinecraftDir))
+			{
+				new MessageDialog(this, 
+				                  DialogFlags.Modal, 
+				                  MessageType.Error, 
+				                  ButtonsType.Ok, 
+				                  "You must run the instance at least once " +
+				                  "before installing mods.", 
+				                  "Error: No .minecraft folder").Run();
+				return;
+			}
+
+			modder = new Modder(inst);
+
+			Console.WriteLine("Rebuilding minecraft.jar...");
+			StartTask(modder);
+		}
+		
+		#endregion
+
+		#region Updates
+
+		Updater updater;
+		Version updateVersion;
+
+		private void DoUpdateCheck()
+		{
+			updater = new Updater();
+			updater.Completed += (sender, e) =>
+			{
+				updateVersion = updater.NewVersion;
+				if (updateVersion != null && 
+					updater.NewVersion.CompareTo(AppUtils.GetVersion()) > 0)
+				{
+					DownloadNewVersion();
+				}
+			};
+			StartTask(updater);
+		}
+
+		private void toolStripUpdate_Click(object sender, EventArgs e)
+		{
+			DoUpdateCheck();
+		}
+
+		#endregion
+
+		#region Update Install
+
+		Downloader updateDL;
+
+		private void DownloadNewVersion()
+		{
+			updateDL = new Downloader(Resources.NewVersionFileName,
+				Resources.LatestVersionURL, "Downloading updates...");
+			updateDL.Completed += new EventHandler(updateDL_Completed);
+			StartTask(updateDL);
+		}
+
+		void updateDL_Completed(object sender, EventArgs e)
+		{
+			Application.Invoke(
+				(sender1, e1) => 
+			{
+				MessageDialog updateDlg = new MessageDialog(this,
+				                                            DialogFlags.Modal,
+				                                            MessageType.Question,
+				                                            ButtonsType.YesNo,
+				                                            "Version {0} has been " +
+				                                            "downloaded. Would you " +
+				                                            "like to install it now?",
+				                                            updateVersion);
+				updateDlg.Response += (o, args) => 
+				{
+					if (args.ResponseId == ResponseType.Yes)
+					{
+						CloseForUpdates();
+					}
+					else
+					{
+						File.Delete(Resources.NewVersionFileName);
+					}
+					updateDlg.Destroy();
+				};
+				updateDlg.Run();
+			});
+		}
+		
+		void CloseForUpdates()
+		{
+			MainClass.InstallUpdates = true;
+			MainClass.RestartAfterUpdate = true;
+			Destroy();
+			Application.Quit();
+		}
+		
+		#endregion
+
+		#region Exceptions
+
+		/// <summary>
+		/// Thrown when trying to start a new task when one is already running
+		/// </summary>
+		class TaskAlreadyOccupiedException : Exception
+		{
+			public TaskAlreadyOccupiedException(string msg)
+				: base(msg)
+			{
+			}
+		}
+
+		#endregion
+
+		#region Events for all Tasks
+
+		void taskStarted(object sender, EventArgs e)
+		{
+			Gtk.Application.Invoke(
+				(sender1, e1) =>
+			{
+				this.statusProgBar.Visible = true;
+				this.statusProgBar.Fraction = 0;
+			});
+		}
+
+		void taskCompleted(object sender, EventArgs e)
+		{
+			Gtk.Application.Invoke(
+				(sender1, e1) =>
+			{
+				statusProgBar.Visible = false;
+			});
+		}
+
+		void taskProgressChange(object sender, Task.ProgressChangeEventArgs e)
+		{
+			Gtk.Application.Invoke(
+				(sender1, e1) =>
+			{
+				Console.WriteLine("Progress: " + e.Progress);
+				statusProgBar.Fraction = e.Progress / 100;
+			});
+		}
+		
+		void taskStatusChange(object sender, Task.TaskStatusEventArgs e)
+		{
+			Gtk.Application.Invoke(
+				(sender1, e1) =>
+			{
+				statusProgBar.Text = e.Status;
+			});
+		}
+
+		#endregion
+
+		#endregion
+		
+		#region Menu
+		
+		private Menu instMenu;
+		
+		MenuItem imPlay;
+		
+		MenuItem imRename;
+		
+		private void InitMenu()
+		{
+			instMenu = new Menu();
+			
+			instMenu.Add(imPlay = new MenuItem("Play"));
+			instMenu.Add(new SeparatorMenuItem());
+			instMenu.Add(imRename = new MenuItem("Rename"));
+			
+			instMenu.ShowAll();
+			
+			
+			imPlay.Activated += (sender, e) => SelectedInst.Launch();
+			
+			imRename.Activated += (sender, e) =>
+			{
+				if (SelectedInst != null)
+				{
+					InputDialog inDlg = new InputDialog();
+					inDlg.Title = "Rename Instance";
+				}
+			};
+			
+			instIconView.ButtonPressEvent += (object o, ButtonPressEventArgs args) =>
+			{
+				if (args.Event.Button == 3 && 
+				    instIconView.GetPathAtPos((int) args.Event.X, 
+				                          (int) args.Event.Y) != null)
+				{
+					instIconView.SelectPath(
+						instIconView.GetPathAtPos((int) args.Event.X,
+					                          (int) args.Event.Y));
+					instMenu.Popup();
+				}
+			};
+		}
+		
+		#endregion
+		
+		private Instance SelectedInst
+		{
+			get
+			{
+				TreeIter iter;
+				if (instList.GetIter(out iter, instIconView.SelectedItems[0]))
+				{
+					return (Instance) instList.GetValue(iter, 1);
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+	}
+}
+
