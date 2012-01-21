@@ -121,4 +121,7 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <Folder Include="GUI\" />
     <Folder Include="icons\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="README" />
+  </ItemGroup>
 </Project>
