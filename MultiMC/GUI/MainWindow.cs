@@ -38,9 +38,24 @@ namespace MultiMC
 			instIconView.Model = instList;
 			instIconView.TextColumn = 0;
 			instIconView.PixbufColumn = 2;
+			instIconView.Cells[0] = new CellRendererText();
 			
-			LoadInstances();
+			CellRendererText textCell = (instIconView.Cells[0] as CellRendererText);
+			textCell.Editable = true;
+			textCell.Width = 64;
+			textCell.Alignment = Pango.Alignment.Center;
+			textCell.Edited += (object o, EditedArgs args) =>
+			{
+				instIconView.SelectPath(new TreePath(args.Path));
+				if (Instance.NameIsValid(args.NewText))
+				{
+					SelectedInst.Name = args.NewText;
+					LoadInstances();
+				}
+			};
+			
 			InitMenu();
+			LoadInstances();
 			
 			if (!File.Exists(AppSettings.Main.LauncherPath))
 			{
@@ -49,6 +64,7 @@ namespace MultiMC
 				                                     Resources.LauncherURL,
 				                                     "Downloading Launcher");
 				launchDl.Completed += (sender, e) => instIconView.Sensitive = true;
+				StartTask(launchDl);
 			}
 			
 			if (!File.Exists("Ionic.Zip.Reduced.dll"))
@@ -58,6 +74,7 @@ namespace MultiMC
 				                                     Resources.LauncherURL,
 				                                     "Downloading DotNetZip");
 				dnzDl.Completed += (sender, e) => instIconView.Sensitive = true;
+				StartTask(dnzDl);
 			}
 			
 			if (AppSettings.Main.AutoUpdate)
@@ -333,7 +350,14 @@ namespace MultiMC
 		
 		MenuItem imPlay;
 		
-		MenuItem imRename;
+		MenuItem imIcon;
+		MenuItem imNotes;
+		
+		MenuItem imEditMods;
+		MenuItem imRebuild;
+		MenuItem imViewFolder;
+		
+		MenuItem imDelete;
 		
 		private void InitMenu()
 		{
@@ -341,21 +365,29 @@ namespace MultiMC
 			
 			instMenu.Add(imPlay = new MenuItem("Play"));
 			instMenu.Add(new SeparatorMenuItem());
-			instMenu.Add(imRename = new MenuItem("Rename"));
+			instMenu.Add(imIcon = new MenuItem("Change Icon"));
+			instMenu.Add(imNotes = new MenuItem("Notes"));
+			instMenu.Add(new SeparatorMenuItem());
+			instMenu.Add(imEditMods = new MenuItem("Edit Mods"));
+			instMenu.Add(imRebuild = new MenuItem("Rebuild"));
+			instMenu.Add(imViewFolder = new MenuItem("View Folder"));
+			instMenu.Add(new SeparatorMenuItem());
+			instMenu.Add(imDelete = new MenuItem("Delete"));
 			
 			instMenu.ShowAll();
 			
 			
 			imPlay.Activated += (sender, e) => SelectedInst.Launch();
 			
-			imRename.Activated += (sender, e) =>
-			{
-				if (SelectedInst != null)
-				{
-					InputDialog inDlg = new InputDialog();
-					inDlg.Title = "Rename Instance";
-				}
-			};
+			imIcon.Activated += ChangeIconActivated;
+			imNotes.Activated += EditNotesActivated;
+			
+			imEditMods.Activated += EditModsActivated;
+			imRebuild.Activated += RebuildActivated;
+			imViewFolder.Activated += (sender, e) => 
+				Process.Start(SelectedInst.RootDir);
+			
+			imDelete.Activated += DeleteActivated;
 			
 			instIconView.ButtonPressEvent += (object o, ButtonPressEventArgs args) =>
 			{
@@ -369,6 +401,31 @@ namespace MultiMC
 					instMenu.Popup();
 				}
 			};
+		}
+
+		void ChangeIconActivated (object sender, EventArgs e)
+		{
+			// TODO Implement change icon
+		}
+
+		void EditNotesActivated (object sender, EventArgs e)
+		{
+			// TODO Implement notes
+		}
+		
+		void EditModsActivated (object sender, EventArgs e)
+		{
+			// TODO Implement mod removal
+		}
+		
+		void RebuildActivated (object sender, EventArgs e)
+		{
+			// TODO Implement rebuild
+		}
+		
+		void DeleteActivated (object sender, EventArgs e)
+		{
+			// TODO Implement delete
 		}
 		
 		#endregion
