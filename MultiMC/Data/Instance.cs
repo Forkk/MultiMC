@@ -364,6 +364,14 @@ namespace MultiMC.Data
 		{
 			get { return Path.Combine(MinecraftDir, "bin"); }
 		}
+		
+		/// <summary>
+		/// The instance's minecraft.jar
+		/// </summary>
+		public string MCJar
+		{
+			get { return Path.Combine(BinDir, "minecraft.jar"); }
+		}
 
 		/// <summary>
 		/// ModLoader's folder (.minecraft\mods)

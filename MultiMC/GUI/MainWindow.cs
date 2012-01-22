@@ -15,6 +15,8 @@
 using System;
 using System.IO;
 using System.Diagnostics;
+using System.Collections;
+using System.Collections.Generic;
 
 using Gtk;
 
@@ -55,6 +57,8 @@ namespace MultiMC
 			};
 			
 			InitMenu();
+//			InitDND();
+			
 			LoadInstances();
 			
 			if (!File.Exists(AppSettings.Main.LauncherPath))
@@ -420,14 +424,115 @@ namespace MultiMC
 		
 		void RebuildActivated (object sender, EventArgs e)
 		{
-			// TODO Implement rebuild
+			if (!File.Exists(SelectedInst.MCJar))
+			{
+				MessageUtils.ShowMessageBox(MessageType.Warning, 
+				                            "You must run the " +
+				                            "instance at least " +
+				                            "once before installing mods.");
+				return;
+			}
+			Modder modder = new Modder(SelectedInst);
+			instIconView.Sensitive = false;
+			modder.Completed += (sender2, e2) => instIconView.Sensitive = true;
+			StartTask(modder);
 		}
 		
-		void DeleteActivated (object sender, EventArgs e)
+		void DeleteActivated(object sender, EventArgs e)
 		{
 			// TODO Implement delete
 		}
 		
+		#endregion
+		
+		#region Drag and Drop
+		
+		// FIXME Gtk drag and drop bullshit
+//		
+//		private void InitDND()
+//		{
+//			instIconView.EnableModelDragDest(
+//				new TargetEntry[]
+//			{
+//				new TargetEntry("STRING", TargetFlags.OtherApp, 0),
+//			}, Gdk.DragAction.Default);
+////			instIconView.drag
+//			instIconView.DragDrop += IconViewDrop;
+//			instIconView.DragLeave += IVDragLeave;
+//			instIconView.DragDataReceived += IconViewDataReceived;
+//		}
+//
+//		void IVDragLeave (object o, DragLeaveArgs args)
+//		{
+//			Console.WriteLine("Drag leave");
+//		}
+//
+//		void IconViewDataReceived (object o, DragDataReceivedArgs args)
+//		{
+//			Console.WriteLine("Data");
+//			Console.WriteLine(args.SelectionData.Text);
+//		}
+//
+//		void IconViewDrop(object o, DragDropArgs args)
+//		{
+//			Console.WriteLine("drop");
+//			args.RetVal = true;
+//		}
+//		
+////		bool DragDataValid(int x, int y)
+////		{
+////			Point p = instanceList.PointToClient(new Point(x, y));
+////
+////			ListViewItem item = instanceList.GetItemAt(p.X, p.Y);
+////			if (item == null)
+////			{
+////				return false;
+////			}
+////
+////			if (currentTask != null && currentTask.Running)
+////			{
+////				return false;
+////			}
+////
+////			if (!dragData.GetDataPresent(DataFormats.FileDrop))
+////			{
+////				return false;
+////			}
+////
+////			string[] files = (string[]) dragData.GetData(DataFormats.FileDrop);
+////			foreach (string file in files)
+////			{
+////				if (!(File.Exists(file) || Directory.Exists(file)))
+////				{
+////					return false;
+////				}
+////			}
+////
+////			return true;
+////		}
+//		
+//		private string DragDropHint
+//		{
+//			get { return ddHint; }
+//			set
+//			{
+//				ddHint = value;
+//
+//				if (currentTask == null || !currentTask.Running)
+//				{
+//					if (!string.IsNullOrEmpty(ddHint))
+//					{
+//						statusProgBar.Text = ddHint;
+//						statusProgBar.Visible = true;
+//					}
+//					else
+//					{
+//						statusProgBar.Visible = false;
+//					}
+//				}
+//			}
+//		} string ddHint;
+//		
 		#endregion
 		
 		private Instance SelectedInst

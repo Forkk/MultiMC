@@ -1,3 +1,18 @@
+2012-01-22  Andrew Okin  <razorblades13@gmail.com>
+
+	* Instance.cs: Added MCJar property for getting the instance's
+	minecraft.jar
+
+	* MainWindow.cs: Mods can now be installed from the instMods
+	folder, however, drag and drop support is currently broken.
+
+	* MessageUtils.cs: MessageUtils now supports message dialogs
+	with titles.
+
+	* OSUtils.cs: Removed 6 from Linux check
+
+	* MultiMC.MainWindow.cs: 
+
 2012-01-21  Andrew Okin  <razorblades13@gmail.com>
 
 	* MainWindow.cs: 
