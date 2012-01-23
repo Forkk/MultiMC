@@ -1,3 +1,8 @@
+2012-01-23  Andrew Okin  <razorblades13@gmail.com>
+
+	* Forkk.mdpolicy: Added formatting policy file so that others
+	  using MonoDevelop can use the same formatting policy as me.
+
 2012-01-22  Andrew Okin  <razorblades13@gmail.com>
 	* EditNotesDialog.cs: Added instance notes
 

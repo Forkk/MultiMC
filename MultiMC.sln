@@ -16,5 +16,46 @@ Global
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = MultiMC\MultiMC.csproj
+		Policies = $0
+		$0.TextStylePolicy = $1
+		$1.inheritsSet = Mono
+		$1.inheritsScope = text/plain
+		$1.scope = text/plain
+		$0.XmlFormattingPolicy = $2
+		$2.inheritsSet = Mono
+		$2.inheritsScope = application/xml
+		$2.scope = application/xml
+		$0.VersionControlPolicy = $3
+		$3.CommitMessageStyle = $4
+		$4.FileSeparator = ", "
+		$3.inheritsSet = Mono
+		$0.ChangeLogPolicy = $5
+		$5.UpdateMode = ProjectRoot
+		$5.MessageStyle = $6
+		$6.FileSeparator = ", "
+		$5.inheritsSet = Mono
+		$0.CSharpFormattingPolicy = $7
+		$7.AnonymousMethodBraceStyle = NextLine
+		$7.StatementBraceStyle = NextLine
+		$7.PlaceElseOnNewLine = True
+		$7.PlaceArrayInitializersOnNewLine = AlwaysNewLine
+		$7.BeforeMethodDeclarationParentheses = False
+		$7.BeforeMethodCallParentheses = False
+		$7.BeforeConstructorDeclarationParentheses = False
+		$7.BeforeIndexerDeclarationBracket = False
+		$7.BeforeDelegateDeclarationParentheses = False
+		$7.NewParentheses = False
+		$7.SpacesBeforeBrackets = False
+		$7.inheritsSet = Mono
+		$7.inheritsScope = text/x-csharp
+		$7.scope = text/x-csharp
+		$0.TextStylePolicy = $8
+		$8.TabWidth = 4
+		$8.inheritsSet = Mono
+		$8.inheritsScope = text/plain
+		$8.scope = text/x-csharp
+		$0.StandardHeader = $9
+		$9.Text = @\n Copyright ${Year}  ${CopyrightHolder}\n\n   Licensed under the Apache License, Version 2.0 (the "License");\n   you may not use this file except in compliance with the License.\n   You may obtain a copy of the License at\n\n       http://www.apache.org/licenses/LICENSE-2.0\n\n   Unless required by applicable law or agreed to in writing, software\n   distributed under the License is distributed on an "AS IS" BASIS,\n   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n   See the License for the specific language governing permissions and\n   limitations under the License.
+		$9.IncludeInNewFiles = True
 	EndGlobalSection
 EndGlobal
