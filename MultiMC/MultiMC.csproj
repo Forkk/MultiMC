@@ -112,6 +112,8 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <Compile Include="GUI\NewInstanceDialog.cs" />
     <Compile Include="gtk-gui\MultiMC.NewInstanceDialog.cs" />
     <Compile Include="MessageUtils.cs" />
+    <Compile Include="GUI\EditNotesDialog.cs" />
+    <Compile Include="gtk-gui\MultiMC.EditNotesDialog.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

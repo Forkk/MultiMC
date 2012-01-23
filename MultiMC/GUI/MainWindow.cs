@@ -411,7 +411,9 @@ namespace MultiMC
 
 		void EditNotesActivated (object sender, EventArgs e)
 		{
-			// TODO Implement notes
+			EditNotesDialog end = new EditNotesDialog(SelectedInst);
+			end.Parent = this;
+			end.Run();
 		}
 		
 		void AddModsActivated (object sender, EventArgs e)

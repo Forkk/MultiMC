@@ -1,4 +1,7 @@
 2012-01-22  Andrew Okin  <razorblades13@gmail.com>
+	* EditNotesDialog.cs: Added instance notes
+
+2012-01-22  Andrew Okin  <razorblades13@gmail.com>
 
 	* MainWindow.cs: Adding mods now rebuilds minecraft.jar
 
