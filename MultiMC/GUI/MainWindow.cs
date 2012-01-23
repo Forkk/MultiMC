@@ -184,28 +184,22 @@ namespace MultiMC
 
 		#region Mod Installation
 
-		Modder modder;
-
 		/// <summary>
 		/// Rebuilds the given instance's minecraft.jar
 		/// </summary>
 		private void RebuildMCJar(Instance inst)
 		{
-			if (!Directory.Exists(inst.MinecraftDir))
+			if (!File.Exists(SelectedInst.MCJar))
 			{
-				new MessageDialog(this, 
-				                  DialogFlags.Modal, 
-				                  MessageType.Error, 
-				                  ButtonsType.Ok, 
-				                  "You must run the instance at least once " +
-				                  "before installing mods.", 
-				                  "Error: No .minecraft folder").Run();
+				MessageUtils.ShowMessageBox(MessageType.Warning, 
+				                            "You must run the " +
+				                            "instance at least " +
+				                            "once before installing mods.");
 				return;
 			}
-
-			modder = new Modder(inst);
-
-			Console.WriteLine("Rebuilding minecraft.jar...");
+			Modder modder = new Modder(SelectedInst);
+			instIconView.Sensitive = false;
+			modder.Completed += (sender2, e2) => instIconView.Sensitive = true;
 			StartTask(modder);
 		}
 		
@@ -438,6 +432,7 @@ namespace MultiMC
 						Directory.CreateDirectory(SelectedInst.InstModsDir);
 					
 					CopyFiles(fileDlg.Filenames, SelectedInst.InstModsDir);
+					RebuildMCJar(SelectedInst);
 				}
 				fileDlg.Destroy();
 			};
@@ -451,18 +446,7 @@ namespace MultiMC
 		
 		void RebuildActivated (object sender, EventArgs e)
 		{
-			if (!File.Exists(SelectedInst.MCJar))
-			{
-				MessageUtils.ShowMessageBox(MessageType.Warning, 
-				                            "You must run the " +
-				                            "instance at least " +
-				                            "once before installing mods.");
-				return;
-			}
-			Modder modder = new Modder(SelectedInst);
-			instIconView.Sensitive = false;
-			modder.Completed += (sender2, e2) => instIconView.Sensitive = true;
-			StartTask(modder);
+			RebuildMCJar(SelectedInst);
 		}
 		
 		void DeleteActivated(object sender, EventArgs e)

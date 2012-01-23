@@ -1,5 +1,10 @@
 2012-01-22  Andrew Okin  <razorblades13@gmail.com>
 
+	* MainWindow.cs: Adding mods now rebuilds minecraft.jar
+
+
+2012-01-22  Andrew Okin  <razorblades13@gmail.com>
+
 	* MainWindow.cs: You can now install mods through a file
 	chooser by right clicking on an instance and clicking "Add
 	Mods"
