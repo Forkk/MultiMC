@@ -357,6 +357,7 @@ namespace MultiMC
 		MenuItem imIcon;
 		MenuItem imNotes;
 		
+		MenuItem imAddMods;
 		MenuItem imEditMods;
 		MenuItem imRebuild;
 		MenuItem imViewFolder;
@@ -372,6 +373,7 @@ namespace MultiMC
 			instMenu.Add(imIcon = new MenuItem("Change Icon"));
 			instMenu.Add(imNotes = new MenuItem("Notes"));
 			instMenu.Add(new SeparatorMenuItem());
+			instMenu.Add(imAddMods = new MenuItem("Add Mods"));
 			instMenu.Add(imEditMods = new MenuItem("Edit Mods"));
 			instMenu.Add(imRebuild = new MenuItem("Rebuild"));
 			instMenu.Add(imViewFolder = new MenuItem("View Folder"));
@@ -386,6 +388,7 @@ namespace MultiMC
 			imIcon.Activated += ChangeIconActivated;
 			imNotes.Activated += EditNotesActivated;
 			
+			imAddMods.Activated += AddModsActivated;
 			imEditMods.Activated += EditModsActivated;
 			imRebuild.Activated += RebuildActivated;
 			imViewFolder.Activated += (sender, e) => 
@@ -415,6 +418,30 @@ namespace MultiMC
 		void EditNotesActivated (object sender, EventArgs e)
 		{
 			// TODO Implement notes
+		}
+		
+		void AddModsActivated (object sender, EventArgs e)
+		{
+			FileChooserDialog fileDlg = new FileChooserDialog("Add mods", 
+			                                                  this, 
+			                                                  FileChooserAction.Open, 
+			                                                  "Cancel", ResponseType.Cancel,
+			                                                  "Add", ResponseType.Accept);
+			fileDlg.Response += (object o, ResponseArgs args) => 
+			{
+				if (SelectedInst == null)
+					return;
+				
+				if (args.ResponseId == ResponseType.Accept)
+				{
+					if (!Directory.Exists(SelectedInst.InstModsDir))
+						Directory.CreateDirectory(SelectedInst.InstModsDir);
+					
+					CopyFiles(fileDlg.Filenames, SelectedInst.InstModsDir);
+				}
+				fileDlg.Destroy();
+			};
+			fileDlg.Run();
 		}
 		
 		void EditModsActivated (object sender, EventArgs e)
@@ -533,6 +560,51 @@ namespace MultiMC
 //			}
 //		} string ddHint;
 //		
+		#endregion
+		
+		#region Other
+		
+		/// <summary>
+		/// Recursively copies the list of files and folders into the destination
+		/// </summary>
+		/// <param name="cFiles">list of files and folders to copy</param>
+		/// <param name="destination">place to copy the files to</param>
+		private void CopyFiles(IEnumerable<string> cFiles, string destination)
+		{
+			foreach (string f in cFiles)
+			{
+				// For files...
+				if (File.Exists(f))
+				{
+					if (!Directory.Exists(destination))
+						Directory.CreateDirectory(destination);
+
+					string copyname = System.IO.Path.Combine(destination, 
+					                                         System.IO.Path.GetFileName(f));
+					if (File.Exists(copyname))
+					{
+						Console.WriteLine("Overwriting " + copyname);
+						File.Delete(copyname);
+						File.Copy(f, copyname);
+						File.SetCreationTime(copyname, DateTime.Now);
+					}
+					else
+					{
+						Console.WriteLine("Adding file " + copyname);
+						File.Copy(f, copyname);
+						File.SetCreationTime(copyname, DateTime.Now);
+					}
+				}
+
+				// For directories
+				else if (Directory.Exists(f))
+				{
+					CopyFiles(Directory.EnumerateFileSystemEntries(f),
+						System.IO.Path.Combine(destination, System.IO.Path.GetFileName(f)));
+				}
+			}
+		}
+		
 		#endregion
 		
 		private Instance SelectedInst
