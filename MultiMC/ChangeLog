@@ -1,3 +1,8 @@
+2012-01-26  Andrew Okin  <razorblades13@gmail.com>
+
+	* MultiMC.ico: Added the icon (MonoDevelop apparently decided
+	  it didn't like my icon and didn't add it to git...)
+
 2012-01-25  Andrew Okin  <razorblades13@gmail.com>
 
 	* MainWindow.cs, ConsoleWindow.cs: Added console
