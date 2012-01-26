@@ -34,8 +34,14 @@ namespace MultiMC.Tasks
 		public virtual string Status
 		{
 			get { return _Status; }
-			protected set { _Status = value; OnStatusChange(Status); }
-		} private string _Status;
+			protected set
+			{
+				_Status = value;
+				OnStatusChange(Status);
+			}
+		}
+
+		private string _Status;
 
 		/// <summary>
 		/// Progress on the current task (in percent).
@@ -44,8 +50,14 @@ namespace MultiMC.Tasks
 		public virtual int Progress
 		{
 			get { return _Progress; }
-			protected set { _Progress = value; OnProgressChange(Progress); }
-		} private int _Progress;
+			protected set
+			{
+				_Progress = value;
+				OnProgressChange(Progress);
+			}
+		}
+
+		private int _Progress;
 
 		/// <summary>
 		/// True if the task is running
@@ -53,19 +65,22 @@ namespace MultiMC.Tasks
 		public virtual bool Running
 		{
 			get { return running; }
-		} bool running;
+		}
+
+		bool running;
 
 		#endregion
 
 		#region Properties
 
 		/// <summary>
-		/// The process's thread (null if not started)
+		/// The task's thread (null if not started)
 		/// </summary>
-		public Thread ProcessThread
+		public Thread TaskThread
 		{
-			get { return pThread; }
-		} Thread pThread;
+			get;
+			private set;
+		}
 
 		#endregion
 
@@ -74,8 +89,8 @@ namespace MultiMC.Tasks
 		/// </summary>
 		public void Start()
 		{
-			pThread = new Thread(new ThreadStart(TaskStart));
-			pThread.Start();
+			TaskThread = new Thread(new ThreadStart(TaskStart));
+			TaskThread.Start();
 		}
 
 		/// <summary>
@@ -85,7 +100,7 @@ namespace MultiMC.Tasks
 		{
 			OnCancel();
 			OnComplete();
-			pThread.Abort();
+			TaskThread.Abort();
 		}
 
 		/// <summary>
@@ -96,7 +111,9 @@ namespace MultiMC.Tasks
 		/// <summary>
 		/// Called when the task is cancelled.
 		/// </summary>
-		protected virtual void OnCancel() { }
+		protected virtual void OnCancel()
+		{
+		}
 
 		#region Events
 
@@ -104,60 +121,72 @@ namespace MultiMC.Tasks
 		/// Called when the task is started
 		/// </summary>
 		public event EventHandler Started;
+
 		protected virtual void OnStart()
 		{
 			running = true;
-			if (Started != null) Started(this, EventArgs.Empty);
+			if (Started != null)
+				Started(this, EventArgs.Empty);
 		}
 
 		/// <summary>
 		/// Called when the task ends
 		/// </summary>
 		public event EventHandler Completed;
+
 		protected virtual void OnComplete()
 		{
 			running = false;
-			if (Completed != null) Completed(this, EventArgs.Empty);
+			if (Completed != null)
+				Completed(this, EventArgs.Empty);
 		}
 
 		/// <summary>
 		/// Called when an exception is thrown that the task isn't meant to handle
 		/// </summary>
 		public event TaskExceptionEventHandler ExceptionThrown;
-		public delegate void TaskExceptionEventHandler(object sender, TaskExceptionEventArgs e);
+		public delegate void TaskExceptionEventHandler(object sender,TaskExceptionEventArgs e);
+
 		protected virtual void OnException(Exception e)
 		{
-			if (ExceptionThrown != null) ExceptionThrown(this, new TaskExceptionEventArgs(e));
+			if (ExceptionThrown != null)
+				ExceptionThrown(this, new TaskExceptionEventArgs(e));
 		}
 
 		/// <summary>
 		/// Called when the task's progress status changes
 		/// </summary>
 		public event ProgressChangeEventHandler ProgressChange;
-		public delegate void ProgressChangeEventHandler(object sender, ProgressChangeEventArgs e);
+		public delegate void ProgressChangeEventHandler(object sender,ProgressChangeEventArgs e);
+
 		protected virtual void OnProgressChange(int NewValue)
 		{
-			if (ProgressChange != null) ProgressChange(this, new ProgressChangeEventArgs(NewValue));
+			if (ProgressChange != null)
+				ProgressChange(this, new ProgressChangeEventArgs(NewValue));
 		}
 
 		/// <summary>
 		/// Called when the task's status message changes
 		/// </summary>
 		public event StatusChangeEventHandler StatusChange;
-		public delegate void StatusChangeEventHandler(object sender, TaskStatusEventArgs e);
+		public delegate void StatusChangeEventHandler(object sender,TaskStatusEventArgs e);
+
 		protected virtual void OnStatusChange(string NewValue)
 		{
-			if (StatusChange != null) StatusChange(this, new TaskStatusEventArgs(NewValue));
+			if (StatusChange != null)
+				StatusChange(this, new TaskStatusEventArgs(NewValue));
 		}
 
 		/// <summary>
 		/// Called when an error occurs to display an error message
 		/// </summary>
 		public event ErrorMessageEventHandler ErrorMessage;
-		public delegate void ErrorMessageEventHandler(object sender, ErrorMessageEventArgs e);
+		public delegate void ErrorMessageEventHandler(object sender,ErrorMessageEventArgs e);
+
 		protected virtual void OnErrorMessage(string message)
 		{
-			if (ErrorMessage != null) ErrorMessage(this, new ErrorMessageEventArgs(message));
+			if (ErrorMessage != null)
+				ErrorMessage(this, new ErrorMessageEventArgs(message));
 		}
 
 		#endregion
@@ -180,7 +209,9 @@ namespace MultiMC.Tasks
 			public Exception ThrownException
 			{
 				get { return exception; }
-			} Exception exception;
+			}
+
+			Exception exception;
 
 			/// <summary>
 			/// If true, the task will be cancelled
@@ -189,7 +220,9 @@ namespace MultiMC.Tasks
 			{
 				get { return cancel; }
 				set { cancel = value; }
-			} bool cancel;
+			}
+
+			bool cancel;
 
 			#endregion
 		}
@@ -206,7 +239,9 @@ namespace MultiMC.Tasks
 			public int Progress
 			{
 				get { return progress; }
-			} int progress;
+			}
+
+			int progress;
 
 			#endregion
 		}
@@ -223,7 +258,9 @@ namespace MultiMC.Tasks
 			public string Status
 			{
 				get { return status; }
-			} string status;
+			}
+
+			string status;
 
 			#endregion
 		}
@@ -246,7 +283,9 @@ namespace MultiMC.Tasks
 			public string Message
 			{
 				get { return message; }
-			} string message;
+			}
+
+			string message;
 
 			#endregion
 		}

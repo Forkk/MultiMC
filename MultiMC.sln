@@ -18,6 +18,7 @@ Global
 		StartupItem = MultiMC\MultiMC.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1
+		$1.EolMarker = Windows
 		$1.inheritsSet = Mono
 		$1.inheritsScope = text/plain
 		$1.scope = text/plain
@@ -27,7 +28,9 @@ Global
 		$2.scope = application/xml
 		$0.VersionControlPolicy = $3
 		$3.CommitMessageStyle = $4
+		$4.FirstFilePrefix = 
 		$4.FileSeparator = ", "
+		$4.LineAlign = 0
 		$3.inheritsSet = Mono
 		$0.ChangeLogPolicy = $5
 		$5.UpdateMode = ProjectRoot
@@ -36,6 +39,12 @@ Global
 		$5.inheritsSet = Mono
 		$0.CSharpFormattingPolicy = $7
 		$7.AnonymousMethodBraceStyle = NextLine
+		$7.PropertyBraceStyle = NextLine
+		$7.PropertyGetBraceStyle = NextLine
+		$7.PropertySetBraceStyle = NextLine
+		$7.EventBraceStyle = NextLine
+		$7.EventAddBraceStyle = NextLine
+		$7.EventRemoveBraceStyle = NextLine
 		$7.StatementBraceStyle = NextLine
 		$7.PlaceElseOnNewLine = True
 		$7.PlaceArrayInitializersOnNewLine = AlwaysNewLine
@@ -51,11 +60,22 @@ Global
 		$7.scope = text/x-csharp
 		$0.TextStylePolicy = $8
 		$8.TabWidth = 4
+		$8.EolMarker = Windows
 		$8.inheritsSet = Mono
 		$8.inheritsScope = text/plain
 		$8.scope = text/x-csharp
 		$0.StandardHeader = $9
 		$9.Text = @\n Copyright ${Year}  ${CopyrightHolder}\n\n   Licensed under the Apache License, Version 2.0 (the "License");\n   you may not use this file except in compliance with the License.\n   You may obtain a copy of the License at\n\n       http://www.apache.org/licenses/LICENSE-2.0\n\n   Unless required by applicable law or agreed to in writing, software\n   distributed under the License is distributed on an "AS IS" BASIS,\n   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n   See the License for the specific language governing permissions and\n   limitations under the License.
 		$9.IncludeInNewFiles = True
+		$0.TextStylePolicy = $10
+		$10.inheritsSet = Mono
+		$10.inheritsScope = text/plain
+		$10.scope = application/xml
+		$0.TextStylePolicy = $11
+		$11.inheritsSet = null
+		$11.scope = text/x-readme
+		$0.DotNetNamingPolicy = $12
+		$12.DirectoryNamespaceAssociation = None
+		$12.ResourceNamePolicy = FileFormatDefault
 	EndGlobalSection
 EndGlobal
