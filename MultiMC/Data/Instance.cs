@@ -71,8 +71,7 @@ namespace MultiMC.Data
 				try
 				{
 					inst = LoadInstance(dir);
-				}
-				catch (InvalidInstanceException e)
+				} catch (InvalidInstanceException e)
 				{
 					Console.WriteLine(e.Message);
 				}
@@ -80,7 +79,7 @@ namespace MultiMC.Data
 				if (inst != null)
 					instList.Add(inst);
 			}
-			return (Instance[]) instList.ToArray(typeof(Instance));
+			return (Instance[])instList.ToArray(typeof(Instance));
 		}
 
 		/// <summary>
@@ -197,7 +196,7 @@ namespace MultiMC.Data
 			mcProcStart.FileName = javaPath;
 			mcProcStart.Arguments =
 				"-jar " +
-					(!OSUtils.Windows? "-Duser.home=" + this.RootDir : "") +
+					(!OSUtils.Windows ? "-Duser.home=" + this.RootDir : "") +
 				"-Xmx" + xmx + "m " +
 				"-Xms" + xms + "m " +
 				launcher + "";
@@ -219,24 +218,15 @@ namespace MultiMC.Data
 			mcProc.Start();
 
 			instProc = mcProc;
+			
+			if (InstLaunch != null)
+				InstLaunch(this, EventArgs.Empty);
+			
 			return mcProc;
 		}
 
 		void ProcExited(object sender, EventArgs e)
 		{
-			Console.WriteLine("instance exit");
-
-			if (OSUtils.Linux)
-			{
-				string appdata = Directory.GetParent(OSUtils.MinecraftDir).FullName;
-				UnixSymbolicLinkInfo linkInfo = new UnixSymbolicLinkInfo(OSUtils.MinecraftDir);
-				if (linkInfo.IsSymbolicLink)
-				{
-					linkInfo.Delete();
-				}
-				Directory.Move(Path.Combine(appdata, ".oldmc"), OSUtils.MinecraftDir);
-			}
-
 			if (InstQuit != null)
 				InstQuit(this, EventArgs.Empty);
 		}
@@ -309,7 +299,11 @@ namespace MultiMC.Data
 		public string Name
 		{
 			get { return GetXmlElement("name").InnerText; }
-			set { GetXmlElement("name").InnerText = value; AutoSave(); }
+			set
+			{
+				GetXmlElement("name").InnerText = value;
+				AutoSave();
+			}
 		}
 
 		/// <summary>
@@ -318,7 +312,11 @@ namespace MultiMC.Data
 		public string IconKey
 		{
 			get { return GetXmlElement("iconKey", "default").InnerText; }
-			set { GetXmlElement("iconKey", "default").InnerText = value; AutoSave(); }
+			set
+			{
+				GetXmlElement("iconKey", "default").InnerText = value;
+				AutoSave();
+			}
 		}
 
 		/// <summary>
@@ -327,7 +325,11 @@ namespace MultiMC.Data
 		public string Notes
 		{
 			get { return GetXmlElement("notes").InnerText; }
-			set { GetXmlElement("notes").InnerText = value; AutoSave(); }
+			set
+			{
+				GetXmlElement("notes").InnerText = value;
+				AutoSave();
+			}
 		}
 
 		#region Directories
@@ -338,7 +340,11 @@ namespace MultiMC.Data
 		public string RootDir
 		{
 			get { return this.rootDir; }
-			set { this.rootDir = value; AutoSave(); }
+			set
+			{
+				this.rootDir = value;
+				AutoSave();
+			}
 		}
 
 		/// <summary>
@@ -408,7 +414,8 @@ namespace MultiMC.Data
 				}
 			}
 		}
-
+		
+		// FIXME Running isn't set to false when instance quits.
 		public bool Running
 		{
 			get { return (instProc != null && !instProc.HasExited); }
@@ -422,6 +429,11 @@ namespace MultiMC.Data
 		/// Occurrs when the instance quits.
 		/// </summary>
 		public event EventHandler InstQuit;
+		
+		/// <summary>
+		/// Occurs when the instance launches.
+		/// </summary>
+		public event EventHandler InstLaunch;
 
 		#endregion
 

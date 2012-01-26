@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using Gtk;
+using Gdk;
 
 using MultiMC.Data;
 using MultiMC.Tasks;
@@ -162,12 +163,12 @@ namespace MultiMC
 				new Task.ProgressChangeEventHandler(taskProgressChange);
 			currentTask.StatusChange +=
 				new Task.StatusChangeEventHandler(taskStatusChange);
-			currentTask.ErrorMessage += new Task.ErrorMessageEventHandler(taskErrorMessage);
+			currentTask.ErrorMessage += new Task.ErrorMessageEventHandler(TaskErrorMessage);
 
 			currentTask.Start();
 		}
 
-		void taskErrorMessage(object sender, Task.ErrorMessageEventArgs e)
+		void TaskErrorMessage(object sender, Task.ErrorMessageEventArgs e)
 		{
 			Gtk.Application.Invoke(
 				(sender1, e1) =>
@@ -342,20 +343,45 @@ namespace MultiMC
 
 		#endregion
 		
+		#region Instances
+		
+		ConsoleWindow consoleWindow;
+		
+		public void StartInstance(Instance inst)
+		{
+//			inst.InstQuit += (sender, e) =>
+//			{
+//				if (!cwin.Visible)
+//					Visible = true;
+//			};
+			inst.Launch();
+			
+			consoleWindow = new ConsoleWindow(inst);
+			consoleWindow.ConsoleClosed += (o, args) =>
+			{
+				Gtk.Application.Invoke(
+					(sender, e) => 
+				{
+					Visible = true;
+					consoleWindow.Destroy();
+				});
+			};
+			Visible = false;
+			consoleWindow.Show();
+		}
+		
+		#endregion
+		
 		#region Menu
 		
 		private Menu instMenu;
-		
 		MenuItem imPlay;
-		
 		MenuItem imIcon;
 		MenuItem imNotes;
-		
 		MenuItem imAddMods;
 		MenuItem imEditMods;
 		MenuItem imRebuild;
 		MenuItem imViewFolder;
-		
 		MenuItem imDelete;
 		
 		private void InitMenu()
@@ -377,7 +403,7 @@ namespace MultiMC
 			instMenu.ShowAll();
 			
 			
-			imPlay.Activated += (sender, e) => SelectedInst.Launch();
+			imPlay.Activated += (sender, e) => StartInstance(SelectedInst);
 			
 			imIcon.Activated += ChangeIconActivated;
 			imNotes.Activated += EditNotesActivated;
@@ -393,30 +419,30 @@ namespace MultiMC
 			instIconView.ButtonPressEvent += (object o, ButtonPressEventArgs args) =>
 			{
 				if (args.Event.Button == 3 && 
-				    instIconView.GetPathAtPos((int) args.Event.X, 
-				                          (int) args.Event.Y) != null)
+				    instIconView.GetPathAtPos((int)args.Event.X, 
+				                          (int)args.Event.Y) != null)
 				{
 					instIconView.SelectPath(
-						instIconView.GetPathAtPos((int) args.Event.X,
-					                          (int) args.Event.Y));
+						instIconView.GetPathAtPos((int)args.Event.X,
+					                          (int)args.Event.Y));
 					instMenu.Popup();
 				}
 			};
 		}
 
-		void ChangeIconActivated (object sender, EventArgs e)
+		void ChangeIconActivated(object sender, EventArgs e)
 		{
 			// TODO Implement change icon
 		}
 
-		void EditNotesActivated (object sender, EventArgs e)
+		void EditNotesActivated(object sender, EventArgs e)
 		{
 			EditNotesDialog end = new EditNotesDialog(SelectedInst);
 			end.Parent = this;
 			end.Run();
 		}
 		
-		void AddModsActivated (object sender, EventArgs e)
+		void AddModsActivated(object sender, EventArgs e)
 		{
 			FileChooserDialog fileDlg = new FileChooserDialog("Add mods", 
 			                                                  this, 
@@ -441,12 +467,12 @@ namespace MultiMC
 			fileDlg.Run();
 		}
 		
-		void EditModsActivated (object sender, EventArgs e)
+		void EditModsActivated(object sender, EventArgs e)
 		{
 			// TODO Implement mod removal
 		}
 		
-		void RebuildActivated (object sender, EventArgs e)
+		void RebuildActivated(object sender, EventArgs e)
 		{
 			RebuildMCJar(SelectedInst);
 		}
@@ -459,37 +485,38 @@ namespace MultiMC
 		#endregion
 		
 		#region Drag and Drop
-		
-		// FIXME Gtk drag and drop bullshit
 //		
+//		// FIXME Gtk drag and drop bullshit
+////		
 //		private void InitDND()
 //		{
-//			instIconView.EnableModelDragDest(
-//				new TargetEntry[]
-//			{
-//				new TargetEntry("STRING", TargetFlags.OtherApp, 0),
-//			}, Gdk.DragAction.Default);
-////			instIconView.drag
-//			instIconView.DragDrop += IconViewDrop;
-//			instIconView.DragLeave += IVDragLeave;
-//			instIconView.DragDataReceived += IconViewDataReceived;
+//			TargetEntry[] targets = new TargetEntry[]
+//			{ 
+//				new TargetEntry("text/plain", 0, 0)
+//			};
+//			
+//			Gtk.Drag.DestSet(instIconView, DestDefaults.All, targets, DragAction.Private);
+//			instIconView.EnableModelDragDest(targets, DragAction.Private);
+//			
+//			instIconView.DragDrop += InstListDragDrop;
+//			instIconView.DragLeave += InstListDragLeave;
+//			instIconView.DragMotion += InstListDragMotion;
 //		}
 //
-//		void IVDragLeave (object o, DragLeaveArgs args)
-//		{
-//			Console.WriteLine("Drag leave");
-//		}
-//
-//		void IconViewDataReceived (object o, DragDataReceivedArgs args)
-//		{
-//			Console.WriteLine("Data");
-//			Console.WriteLine(args.SelectionData.Text);
-//		}
-//
-//		void IconViewDrop(object o, DragDropArgs args)
+//		void InstListDragDrop(object o, DragDropArgs args)
 //		{
 //			Console.WriteLine("drop");
-//			args.RetVal = true;
+//			Console.WriteLine(args.Context.DragProtocol.ToString());
+//		}
+//
+//		void InstListDragMotion(object o, DragMotionArgs args)
+//		{
+//			Console.WriteLine("Motion");
+//		}
+//
+//		void InstListDragLeave(object o, DragLeaveArgs args)
+//		{
+//			Console.WriteLine("Leave");
 //		}
 //		
 ////		bool DragDataValid(int x, int y)
@@ -524,11 +551,9 @@ namespace MultiMC
 ////			return true;
 ////		}
 //		
-//		private string DragDropHint
-//		{
+//		private string DragDropHint {
 //			get { return ddHint; }
-//			set
-//			{
+//			set {
 //				ddHint = value;
 //
 //				if (currentTask == null || !currentTask.Running)
@@ -544,8 +569,10 @@ namespace MultiMC
 //					}
 //				}
 //			}
-//		} string ddHint;
-//		
+//		}
+//
+//		string ddHint;
+		
 		#endregion
 		
 		#region Other
@@ -600,7 +627,7 @@ namespace MultiMC
 				TreeIter iter;
 				if (instList.GetIter(out iter, instIconView.SelectedItems[0]))
 				{
-					return (Instance) instList.GetValue(iter, 1);
+					return (Instance)instList.GetValue(iter, 1);
 				}
 				else
 				{

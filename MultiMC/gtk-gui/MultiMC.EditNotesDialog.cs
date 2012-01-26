@@ -17,7 +17,7 @@ namespace MultiMC
 			this.HeightRequest = 300;
 			this.Name = "MultiMC.EditNotesDialog";
 			this.Title = global::Mono.Unix.Catalog.GetString ("Notes");
-			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
+			this.WindowPosition = ((global::Gtk.WindowPosition)(1));
 			this.Gravity = ((global::Gdk.Gravity)(5));
 			// Internal child MultiMC.EditNotesDialog.VBox
 			global::Gtk.VBox w1 = this.VBox;

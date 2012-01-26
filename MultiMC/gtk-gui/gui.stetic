@@ -552,7 +552,24 @@
     </child>
   </widget>
   <widget class="Gtk.Window" id="MultiMC.MainWindow" design-size="633 451">
-    <action-group name="Default" />
+    <action-group name="Settings Actions">
+      <action id="preferencesAction">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">_Settings</property>
+        <property name="ShortLabel" translatable="yes">_Settings</property>
+        <property name="StockId">gtk-preferences</property>
+        <property name="Tooltip" translatable="yes">Change your settings</property>
+        <signal name="Activated" handler="OnSettingsClicked" />
+      </action>
+      <action id="updateAction">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Check for _Updates</property>
+        <property name="ShortLabel" translatable="yes">_Updates</property>
+        <property name="StockId">gtk-ok</property>
+        <property name="Tooltip" translatable="yes">Check for updates.</property>
+        <signal name="Activated" handler="OnUpdateClicked" />
+      </action>
+    </action-group>
     <action-group name="Instance Actions">
       <action id="openInstDirAction">
         <property name="Type">Action</property>
@@ -580,24 +597,7 @@
         <signal name="Activated" handler="OnRefreshClicked" />
       </action>
     </action-group>
-    <action-group name="Settings Actions">
-      <action id="preferencesAction">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes">_Settings</property>
-        <property name="ShortLabel" translatable="yes">_Settings</property>
-        <property name="StockId">gtk-preferences</property>
-        <property name="Tooltip" translatable="yes">Change your settings</property>
-        <signal name="Activated" handler="OnSettingsClicked" />
-      </action>
-      <action id="updateAction">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes">Check for _Updates</property>
-        <property name="ShortLabel" translatable="yes">_Updates</property>
-        <property name="StockId">gtk-ok</property>
-        <property name="Tooltip" translatable="yes">Check for updates.</property>
-        <signal name="Activated" handler="OnUpdateClicked" />
-      </action>
-    </action-group>
+    <action-group name="Default" />
     <property name="MemberName" />
     <property name="Title" translatable="yes">MainWindow</property>
     <property name="WindowPosition">Center</property>
@@ -847,6 +847,86 @@
           </widget>
           <packing>
             <property name="Position">1</property>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+  <widget class="Gtk.Window" id="MultiMC.ConsoleWindow" design-size="600 300">
+    <property name="MemberName" />
+    <property name="WidthRequest">600</property>
+    <property name="HeightRequest">300</property>
+    <property name="Title" translatable="yes">MultiMC Console</property>
+    <property name="WindowPosition">Center</property>
+    <child>
+      <widget class="Gtk.VBox" id="ConsoleVBox">
+        <property name="MemberName" />
+        <property name="Spacing">6</property>
+        <child>
+          <widget class="Gtk.ScrolledWindow" id="GtkScrolledWindow">
+            <property name="MemberName" />
+            <property name="ShadowType">In</property>
+            <child>
+              <widget class="Gtk.TextView" id="ConsoleView">
+                <property name="MemberName" />
+                <property name="CanFocus">True</property>
+                <property name="ShowScrollbars">True</property>
+                <property name="Editable">False</property>
+                <property name="CursorVisible">False</property>
+                <property name="Text" translatable="yes" />
+                <property name="WrapMode">Word</property>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="Position">0</property>
+            <property name="AutoSize">True</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.HButtonBox" id="ConsoleButtonBox">
+            <property name="MemberName" />
+            <property name="Size">2</property>
+            <property name="LayoutStyle">End</property>
+            <child>
+              <widget class="Gtk.Button" id="HideButton">
+                <property name="MemberName" />
+                <property name="CanFocus">True</property>
+                <property name="Type">TextOnly</property>
+                <property name="Label" translatable="yes">Hide</property>
+                <property name="UseUnderline">True</property>
+                <property name="BorderWidth">2</property>
+                <signal name="Clicked" handler="OnHideButtonClicked" />
+              </widget>
+              <packing>
+                <property name="Expand">False</property>
+                <property name="Fill">False</property>
+                <property name="Padding">4</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="Gtk.Button" id="CloseButton">
+                <property name="MemberName" />
+                <property name="Sensitive">False</property>
+                <property name="CanFocus">True</property>
+                <property name="Type">TextOnly</property>
+                <property name="Label" translatable="yes">_Close</property>
+                <property name="UseUnderline">True</property>
+                <property name="BorderWidth">2</property>
+                <signal name="Clicked" handler="OnCloseButtonClicked" />
+              </widget>
+              <packing>
+                <property name="Position">1</property>
+                <property name="Expand">False</property>
+                <property name="Fill">False</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="Position">1</property>
+            <property name="AutoSize">True</property>
             <property name="Expand">False</property>
             <property name="Fill">False</property>
           </packing>

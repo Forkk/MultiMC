@@ -91,6 +91,9 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <EmbeddedResource Include="icons\tnt.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="MultiMC.ico">
+      <LogicalName>MainIcon</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="gtk-gui\generated.cs" />
@@ -114,6 +117,8 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <Compile Include="MessageUtils.cs" />
     <Compile Include="GUI\EditNotesDialog.cs" />
     <Compile Include="gtk-gui\MultiMC.EditNotesDialog.cs" />
+    <Compile Include="GUI\ConsoleWindow.cs" />
+    <Compile Include="gtk-gui\MultiMC.ConsoleWindow.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -125,5 +130,16 @@ It also allows you to install mods by dragging and dropping their files.</Descri
   </ItemGroup>
   <ItemGroup>
     <None Include="README" />
+    <None Include="Forkk.mdpolicy" />
   </ItemGroup>
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <TextStylePolicy TabWidth="4" inheritsSet="Mono" inheritsScope="text/plain" scope="text/x-csharp" />
+          <CSharpFormattingPolicy AnonymousMethodBraceStyle="NextLine" PropertyBraceStyle="NextLine" PropertyGetBraceStyle="NextLine" PropertySetBraceStyle="NextLine" EventBraceStyle="NextLine" EventAddBraceStyle="NextLine" EventRemoveBraceStyle="NextLine" StatementBraceStyle="NextLine" PlaceElseOnNewLine="True" PlaceArrayInitializersOnNewLine="AlwaysNewLine" BeforeMethodDeclarationParentheses="False" BeforeMethodCallParentheses="False" BeforeConstructorDeclarationParentheses="False" BeforeIndexerDeclarationBracket="False" BeforeDelegateDeclarationParentheses="False" NewParentheses="False" SpacesBeforeBrackets="False" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
 </Project>
