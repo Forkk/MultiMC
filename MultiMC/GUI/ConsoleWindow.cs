@@ -37,7 +37,6 @@ namespace MultiMC
 		{
 			// Build the GUI
 			this.Build();
-			this.Icon = Pixbuf.LoadFromResource("MainIcon");
 			this.Deletable = false;
 			
 			// If the user has show console on, show the window
@@ -114,7 +113,7 @@ namespace MultiMC
 				confirmDlg.Title = "Warning";
 				confirmDlg.Response += (object o, ResponseArgs args) => 
 				{
-					if (args.ResponseId == ResponseType.Ok && Inst.InstProcess != null)
+					if (args.ResponseId == ResponseType.Ok)
 					{
 						Inst.InstProcess.Kill();
 					}
@@ -124,14 +123,16 @@ namespace MultiMC
 			};
 			trayMenu.Add(killMenuItem);
 			
+			if (OSUtils.Windows)
+				StyleUtils.DeuglifyMenu(trayMenu);
+			
 			trayMenu.ShowAll();
 			statusIcon.PopupMenu += (object o, PopupMenuArgs args) => 
 				statusIcon.PresentMenu(trayMenu, (uint)args.Args[0], (uint)args.Args[1]);
 			
-			Inst.InstLaunch += (sender, e) => Message("Instance started with command: " + 
-			                                          inst.InstProcess.StartInfo.FileName +
-			                                          " " + 
-			                                          inst.InstProcess.StartInfo.Arguments.ToString());
+			Message("Instance started with command: " + 
+			        inst.InstProcess.StartInfo.FileName +
+			        " " + inst.InstProcess.StartInfo.Arguments.ToString());
 		}
 		
 		void AttachOutputListeners()

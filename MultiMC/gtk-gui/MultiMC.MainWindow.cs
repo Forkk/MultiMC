@@ -52,7 +52,7 @@ namespace MultiMC
 			this.windowbox = new global::Gtk.VBox ();
 			this.windowbox.Name = "windowbox";
 			// Container child windowbox.Gtk.Box+BoxChild
-			this.UIManager.AddUiFromString ("<ui><toolbar name='toolbar'><toolitem name='newInstAction' action='newInstAction'/><toolitem name='openInstDirAction' action='openInstDirAction'/><toolitem name='refreshAction' action='refreshAction'/><separator/><toolitem name='preferencesAction' action='preferencesAction'/><toolitem name='updateAction' action='updateAction'/></toolbar></ui>");
+			this.UIManager.AddUiFromString (@"<ui><toolbar name='toolbar'><toolitem name='newInstAction' action='newInstAction'/><toolitem name='openInstDirAction' action='openInstDirAction'/><toolitem name='refreshAction' action='refreshAction'/><separator/><toolitem name='preferencesAction' action='preferencesAction'/><toolitem name='updateAction' action='updateAction'/></toolbar></ui>");
 			this.toolbar = ((global::Gtk.Toolbar)(this.UIManager.GetWidget ("/toolbar")));
 			this.toolbar.Name = "toolbar";
 			this.toolbar.ShowArrow = false;

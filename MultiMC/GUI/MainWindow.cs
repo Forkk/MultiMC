@@ -467,6 +467,10 @@ namespace MultiMC
 					instMenu.Popup();
 				}
 			};
+			
+			// If on windows, try to make the menu /not/ look like absolute shit
+			if (OSUtils.Windows)
+				StyleUtils.DeuglifyMenu(instMenu);
 		}
 
 		void ChangeIconActivated(object sender, EventArgs e)

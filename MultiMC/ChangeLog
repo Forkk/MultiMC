@@ -1,3 +1,8 @@
+2012-01-27  Andrew Okin  <razorblades13@gmail.com>
+
+	* StyleUtils.cs, MainWindow.cs, ConsoleWindow.cs: Made the
+	  context menus less ugly
+
 2012-01-26  Andrew Okin  <razorblades13@gmail.com>
 
 	* MainWindow.cs, ConsoleWindow.cs: Added icons to windows
