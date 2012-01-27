@@ -36,6 +36,7 @@ namespace MultiMC
 		{
 			this.Build();
 			Title = "MultiMC " + AppUtils.GetVersion().ToString();
+			Icon = Pixbuf.LoadFromResource("MainIcon");
 			
 			instList = new ListStore(typeof(string), typeof(Instance), typeof(Gdk.Pixbuf));
 			
@@ -71,8 +72,6 @@ namespace MultiMC
 			 */
 			Thread startupTaskThread = new Thread(RunStartupTasks);
 			startupTaskThread.Start();
-			
-//			launcherDL.Invoke(this, EventArgs.Empty);
 		}
 		
 		#region Startup Tasks

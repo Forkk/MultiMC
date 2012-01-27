@@ -37,6 +37,7 @@ namespace MultiMC
 		{
 			// Build the GUI
 			this.Build();
+			this.Icon = Pixbuf.LoadFromResource("MainIcon");
 			this.Deletable = false;
 			
 			// If the user has show console on, show the window

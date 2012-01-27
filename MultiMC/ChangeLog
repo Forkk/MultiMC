@@ -1,5 +1,11 @@
 2012-01-26  Andrew Okin  <razorblades13@gmail.com>
 
+	* MainWindow.cs, ConsoleWindow.cs: Added icons to windows
+
+	* gui.stetic: 
+
+2012-01-26  Andrew Okin  <razorblades13@gmail.com>
+
 	* ConsoleWindow.cs: Fixed a crash when starting an instance
 
 	* MainWindow.cs: Fixed a crash that occurred when certain
