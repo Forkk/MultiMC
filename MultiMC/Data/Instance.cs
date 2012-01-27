@@ -186,8 +186,6 @@ namespace MultiMC.Data
 			int xmx = AppSettings.Main.MaxMemoryAlloc;
 			string launcher = AppSettings.Main.LauncherPath;
 			string javaPath = AppSettings.Main.JavaPath;
-			
-			
 
 			Console.WriteLine("Launching instance '" + Name + "' with '" + launcher + "'");
 
@@ -198,7 +196,7 @@ namespace MultiMC.Data
 			mcProcStart.FileName = javaPath;
 			mcProcStart.Arguments =
 				"-jar " +
-					(OSUtils.Windows ? "" : "-Duser.home=" + this.RootDir + " ") +
+					(!OSUtils.Windows ? "-Duser.home=" + this.RootDir : "") +
 				"-Xmx" + xmx + "m " +
 				"-Xms" + xms + "m " +
 				launcher + "";
@@ -230,7 +228,8 @@ namespace MultiMC.Data
 		void ProcExited(object sender, EventArgs e)
 		{
 			if (InstQuit != null)
-				InstQuit(this, EventArgs.Empty);
+				InstQuit(this, new InstQuitEventArgs((sender as Process).ExitCode,
+				                                     (sender as Process).ExitTime));
 		}
 
 		/// <summary>
@@ -426,16 +425,17 @@ namespace MultiMC.Data
 		#endregion
 
 		#region Events
-
+		
 		/// <summary>
 		/// Occurrs when the instance quits.
 		/// </summary>
-		public event EventHandler InstQuit;
+		public event EventHandler<InstQuitEventArgs> InstQuit;
 		
 		/// <summary>
 		/// Occurs when the instance launches.
 		/// </summary>
 		public event EventHandler InstLaunch;
+		
 
 		#endregion
 
@@ -500,6 +500,30 @@ namespace MultiMC.Data
 
 		#endregion
 	}
+	
+	#region Event Args
+		
+	public class InstQuitEventArgs : EventArgs
+	{
+		public InstQuitEventArgs(int exitVal, DateTime quitTime)
+		{
+				
+		}
+			
+		public DateTime QuitTime
+		{
+			get;
+			protected set;
+		}
+			
+		public int ExitCode
+		{
+			get;
+			protected set;
+		}
+	}
+	
+	#endregion
 	
 	/// <summary>
 	/// Thrown when trying to load an instance that is not valid

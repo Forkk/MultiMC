@@ -19,13 +19,14 @@ namespace MultiMC
 {
 	public class MessageUtils
 	{
-		public static void ShowMessageBox(MessageType mtype, 
+		public static void ShowMessageBox(Window parent,
+		                                  MessageType mtype, 
 		                                  string title, 
 		                                  string message, 
 		                                  params string[] args)
 		{
 			MessageDialog msgDlg = 
-				new MessageDialog(null,
+				new MessageDialog(parent,
 				                  DialogFlags.Modal,
 				                  mtype,
 				                  ButtonsType.Ok,
@@ -34,6 +35,14 @@ namespace MultiMC
 			msgDlg.Title = title;
 			msgDlg.Response += (o, args2) => msgDlg.Destroy();
 			msgDlg.Run();
+		}
+		
+		public static void ShowMessageBox(MessageType mtype, 
+		                                  string title, 
+		                                  string message, 
+		                                  params string[] args)
+		{
+			ShowMessageBox(null, mtype, title, message, args);
 		}
 		
 		public static void ShowMessageBox(MessageType mtype, 

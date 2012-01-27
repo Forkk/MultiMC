@@ -150,9 +150,25 @@ namespace MultiMC
 			Message(e.Data, "std");
 		}
 		
+		// Error detection values
+		public const string VerifyErrorName = "java.lang.VerifyError";
+		
 		void OnInstProcError(object sender, DataReceivedEventArgs e)
 		{
 			Message(e.Data, "err");
+			if (e.Data.Contains(VerifyErrorName))
+			{
+				Application.Invoke(
+					(sender2, e2) => 
+				{
+					MessageUtils.ShowMessageBox(MessageType.Error,
+					                            "You're doing it wrong!",
+					                            "MultiMC detected a verify error. This probably means " +
+					                            "you're using the wrong version of some of your mods. " +
+					                            "Please go download the correct version of your mods " +
+					                            "and try again.");
+				});
+			}
 		}
 		
 		void Message(string msg, string tagName = "etc", bool appendNewLine = true)
@@ -170,12 +186,18 @@ namespace MultiMC
 			});
 		}
 		
-		void OnInstQuit(object sender, EventArgs e)
+		void OnInstQuit(object sender, InstQuitEventArgs e)
 		{
 			Application.Invoke(
 				(sender2, e2) => 
 			{
 				Message("Instance quit");
+				
+				if (e.ExitCode != 0 ||
+				    ConsoleView.Buffer.Text.Contains("java.lang.VerifyError"))
+				{
+					Message("Crash detected!");
+				}
 				this.Deletable = true;
 				if (AppSettings.Main.AutoCloseConsole || !ShowConsole)
 				{

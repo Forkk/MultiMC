@@ -1,5 +1,10 @@
 2012-01-27  Andrew Okin  <razorblades13@gmail.com>
 
+	* MessageUtils.cs, Instance.cs, ConsoleWindow.cs,
+	  MultiMC.MainWindow.cs: Added some basic crash detection
+
+2012-01-27  Andrew Okin  <razorblades13@gmail.com>
+
 	* StyleUtils.cs, MainWindow.cs, ConsoleWindow.cs: Made the
 	  context menus less ugly
 
