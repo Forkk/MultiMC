@@ -1,5 +1,23 @@
 2012-01-26  Andrew Okin  <razorblades13@gmail.com>
 
+	* ConsoleWindow.cs: Fixed a crash when starting an instance
+
+	* MainWindow.cs: Fixed a crash that occurred when certain
+	  files did not exist on startup.
+
+	* SettingsDialog.cs: JavaPath is now set properly
+
+	* MultiMC.csproj: Removed the formatting policy from the
+	  project files. Please import the policy from the solution
+	  instead.
+
+	* AppSettings.cs: Code formatting changes
+
+	* Resources.cs: Added config file and the url to download
+	  DotNetZip from
+
+2012-01-26  Andrew Okin  <razorblades13@gmail.com>
+
 	* Task.cs: Renamed the ProcessThread property to TaskThread to
 	  make it less confusing.
 

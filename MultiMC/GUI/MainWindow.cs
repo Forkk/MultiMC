@@ -14,6 +14,7 @@
 //    limitations under the License.
 using System;
 using System.IO;
+using System.Threading;
 using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
@@ -62,31 +63,66 @@ namespace MultiMC
 			
 			LoadInstances();
 			
-			if (!File.Exists(AppSettings.Main.LauncherPath))
-			{
-				instIconView.Sensitive = false;
-				Downloader launchDl = new Downloader(AppSettings.Main.LauncherPath,
-				                                     Resources.LauncherURL,
-				                                     "Downloading Launcher");
-				launchDl.Completed += (sender, e) => instIconView.Sensitive = true;
-				StartTask(launchDl);
-			}
+			/* 
+			 * Run startup tasks such as downloading the launcher and DotNetZip 
+			 * and checking for updates. This is done in a separate thread because 
+			 * the startup task method blocks until each task is finished in order 
+			 * to to prevent task conflicts.
+			 */
+			Thread startupTaskThread = new Thread(RunStartupTasks);
+			startupTaskThread.Start();
 			
-			if (!File.Exists("Ionic.Zip.Reduced.dll"))
-			{
-				instIconView.Sensitive = false;
-				Downloader dnzDl = new Downloader(AppSettings.Main.LauncherPath,
-				                                     Resources.LauncherURL,
-				                                     "Downloading DotNetZip");
-				dnzDl.Completed += (sender, e) => instIconView.Sensitive = true;
-				StartTask(dnzDl);
-			}
+//			launcherDL.Invoke(this, EventArgs.Empty);
+		}
+		
+		#region Startup Tasks
+		
+		/// <summary>
+		/// Checks for necessary files (such as the minecraft launcher 
+		/// and DotNetZip's DLL and downloads them if they don't exist.
+		/// </summary>
+		private void RunStartupTasks()
+		{
+			Downloader dl = null;
+			Console.WriteLine(AppSettings.Main.JavaPath);
+			// Get the launcher
+			dl = CheckDownloadFile(AppSettings.Main.LauncherPath,
+			                       Resources.LauncherURL,
+			                       "Downloading Minecraft launcher...");
+			if (dl != null)
+				dl.TaskThread.Join();
+			
+			// Get DotNetZip
+			dl = CheckDownloadFile("Ionic.Zip.Reduced.dll",
+			                       Resources.DotNetZipURL,
+			                       "Downloading DotNetZip...");
+			if (dl != null)
+				dl.TaskThread.Join();
 			
 			if (AppSettings.Main.AutoUpdate)
-			{
 				DoUpdateCheck();
-			}
 		}
+		
+		/// <summary>
+		/// If the given file doesn't exist, starts a downloader and returns it
+		/// Otherwise, returns null
+		/// </summary>
+		/// <returns>
+		/// The downloader or null if the file already exists.
+		/// </returns>
+		private Downloader CheckDownloadFile(string dest, string url, string message)
+		{
+			if (!File.Exists(dest))
+			{
+				Downloader downloader = new Downloader(dest, url, message);
+				StartTask(downloader);
+				return downloader;
+			}
+			else
+				return null;
+		}
+		
+		#endregion
 		
 		#region Buttons
 		
@@ -345,7 +381,7 @@ namespace MultiMC
 		
 		#region Instances
 		
-		ConsoleWindow consoleWindow;
+//		ConsoleWindow consoleWindow;
 		
 		public void StartInstance(Instance inst)
 		{
@@ -356,7 +392,7 @@ namespace MultiMC
 //			};
 			inst.Launch();
 			
-			consoleWindow = new ConsoleWindow(inst);
+			ConsoleWindow consoleWindow = new ConsoleWindow(inst);
 			consoleWindow.ConsoleClosed += (o, args) =>
 			{
 				Gtk.Application.Invoke(
@@ -403,7 +439,11 @@ namespace MultiMC
 			instMenu.ShowAll();
 			
 			
-			imPlay.Activated += (sender, e) => StartInstance(SelectedInst);
+			imPlay.Activated += (sender, e) =>
+			{
+				if (SelectedInst != null)
+					StartInstance(SelectedInst);
+			};
 			
 			imIcon.Activated += ChangeIconActivated;
 			imNotes.Activated += EditNotesActivated;

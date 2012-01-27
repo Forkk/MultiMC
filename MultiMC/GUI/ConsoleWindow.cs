@@ -113,7 +113,7 @@ namespace MultiMC
 				confirmDlg.Title = "Warning";
 				confirmDlg.Response += (object o, ResponseArgs args) => 
 				{
-					if (args.ResponseId == ResponseType.Ok)
+					if (args.ResponseId == ResponseType.Ok && Inst.InstProcess != null)
 					{
 						Inst.InstProcess.Kill();
 					}
@@ -127,9 +127,10 @@ namespace MultiMC
 			statusIcon.PopupMenu += (object o, PopupMenuArgs args) => 
 				statusIcon.PresentMenu(trayMenu, (uint)args.Args[0], (uint)args.Args[1]);
 			
-			Message("Instance started with command: " + 
-			        inst.InstProcess.StartInfo.FileName +
-			        " " + inst.InstProcess.StartInfo.Arguments.ToString());
+			Inst.InstLaunch += (sender, e) => Message("Instance started with command: " + 
+			                                          inst.InstProcess.StartInfo.FileName +
+			                                          " " + 
+			                                          inst.InstProcess.StartInfo.Arguments.ToString());
 		}
 		
 		void AttachOutputListeners()

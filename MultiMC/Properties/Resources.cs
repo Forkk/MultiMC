@@ -24,17 +24,14 @@ namespace MultiMC
 	public class Resources
 	{
 		public const string InstanceXmlFile = "instance.xml";
-		
 		public const string VInfoUrl = "http://multimc.tk/MultiMC/cs-version";
-		
 		public const string InstDir = "instances";
-		
-		public const string NewVersionFileName  = "update.exe";
-		
+		public const string NewVersionFileName = "update.exe";
 		public const string LatestVersionURL = "http://multimc.tk/MultiMC/MultiMC.exe";
-		
 		public const string LauncherURL = 
 			"https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft.jar";
+		public const string DotNetZipURL = "http://multimc.tk/MultiMC/DotNetZip.dll";
+		public const string ConfigFileName = "multimc.cfg";
 		
 		public static Pixbuf GetInstIcon(string key)
 		{

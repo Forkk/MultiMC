@@ -45,6 +45,7 @@ namespace MultiMC
 				}
 				else
 				{
+					Console.WriteLine("Loading settings...");
 					inst = new AppSettings();
 					inst.Load();
 					return inst;
@@ -52,15 +53,16 @@ namespace MultiMC
 			}
 		}
 		
-		public void Save(string path = "multimc.cfg")
+		public void Save(string path = Resources.ConfigFileName)
 		{
-			string[] line = new string[dict.Count]; int i = 0;
+			string[] line = new string[dict.Count];
+			int i = 0;
 			foreach (KeyValuePair<string, string> kv in dict)
 				line[i++] = kv.Key + "=" + kv.Value;
 			File.WriteAllLines(path, line);
 		}
 		
-		public void Load(string path = "multimc.cfg")
+		public void Load(string path = Resources.ConfigFileName)
 		{
 			try
 			{
@@ -71,7 +73,9 @@ namespace MultiMC
 			} catch (IndexOutOfRangeException e)
 			{
 				Console.WriteLine(e.ToString());
-			} catch (FileNotFoundException) {}
+			} catch (FileNotFoundException)
+			{
+			}
 		}
 		
 		protected Dictionary<string, string> dict;
@@ -116,13 +120,13 @@ namespace MultiMC
 		
 		public string LauncherPath
 		{
-			get { return this["LauncherFilename", "launcher.jar"].ToString(); }
+			get { return this["LauncherFilename", "launcher.jar"]; }
 			set { this["LauncherFilename"] = value; }
 		}
 		
 		public string JavaPath
 		{
-			get { return this["JavaPath", "java"].ToString(); }
+			get { return this["JavaPath", "java"]; }
 			set { this["JavaPath"] = value; }
 		}
 		

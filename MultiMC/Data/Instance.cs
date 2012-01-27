@@ -186,6 +186,8 @@ namespace MultiMC.Data
 			int xmx = AppSettings.Main.MaxMemoryAlloc;
 			string launcher = AppSettings.Main.LauncherPath;
 			string javaPath = AppSettings.Main.JavaPath;
+			
+			
 
 			Console.WriteLine("Launching instance '" + Name + "' with '" + launcher + "'");
 
@@ -196,7 +198,7 @@ namespace MultiMC.Data
 			mcProcStart.FileName = javaPath;
 			mcProcStart.Arguments =
 				"-jar " +
-					(!OSUtils.Windows ? "-Duser.home=" + this.RootDir : "") +
+					(OSUtils.Windows ? "" : "-Duser.home=" + this.RootDir + " ") +
 				"-Xmx" + xmx + "m " +
 				"-Xms" + xms + "m " +
 				launcher + "";

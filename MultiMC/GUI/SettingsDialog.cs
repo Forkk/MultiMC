@@ -33,11 +33,13 @@ namespace MultiMC
 			
 			spinbuttonInitialMemory.Value = settings.InitialMemoryAlloc;
 			spinbuttonMaxMemory.Value = settings.MaxMemoryAlloc;
+			
+			entryJavaPath.Text = settings.JavaPath;
 		}
 
 		protected void OnCancel(object sender, System.EventArgs e)
 		{
-			Hide();
+			Destroy();
 		}
 
 		protected void OnOK(object sender, System.EventArgs e)
@@ -51,12 +53,14 @@ namespace MultiMC
 			
 			settings.AutoUpdate = checkbuttonAutoUpdate.Active;
 			
-			settings.InitialMemoryAlloc = (int) spinbuttonInitialMemory.Value;
-			settings.MaxMemoryAlloc = (int) spinbuttonMaxMemory.Value;
+			settings.InitialMemoryAlloc = (int)spinbuttonInitialMemory.Value;
+			settings.MaxMemoryAlloc = (int)spinbuttonMaxMemory.Value;
+			
+			settings.JavaPath = entryJavaPath.Text;
 			
 			settings.Save();
 			
-			Hide();
+			Destroy();
 		}
 	}
 }
