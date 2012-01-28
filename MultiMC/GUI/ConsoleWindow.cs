@@ -14,8 +14,10 @@
 //    limitations under the License.
 using System;
 using System.Diagnostics;
+using System.Threading;
 
 using MultiMC.Data;
+using MultiMC.ProblemDetection;
 
 using Gtk;
 using Gdk;
@@ -151,23 +153,44 @@ namespace MultiMC
 		}
 		
 		// Error detection values
-		public const string VerifyErrorName = "java.lang.VerifyError";
+		public const string WrongVersionErrorMsg = "MultiMC detected an error. " +
+			"This might mean that " +
+				"you're using the wrong version of some of your mods. " +
+				"Try downloading the correct version of your mods " +
+				"and try again.";
 		
 		void OnInstProcError(object sender, DataReceivedEventArgs e)
 		{
+			if (e == null || e.Data == null)
+			{
+				Message("", "err");
+				return;
+			}
+			
 			Message(e.Data, "err");
-			if (e.Data.Contains(VerifyErrorName))
+			
+			bool killMC = false;
+			IMinecraftProblem prob = Problems.GetRelevantProblem(e.Data);
+			if (prob != null)
 			{
 				Application.Invoke(
 					(sender2, e2) => 
 				{
-					MessageUtils.ShowMessageBox(MessageType.Error,
-					                            "You're doing it wrong!",
-					                            "MultiMC detected a verify error. This probably means " +
-					                            "you're using the wrong version of some of your mods. " +
-					                            "Please go download the correct version of your mods " +
-					                            "and try again.");
+					MessageUtils.ShowMessageBox(this, 
+					                            MessageType.Error,
+					                            "You dun goofed!",
+					                            prob.GetErrorMessage(e.Data));
 				});
+				killMC = prob.ShouldTerminate(e.Data);
+			}
+			
+			if (killMC)
+			{
+				new Thread(() =>
+				{
+					Thread.Sleep(1000);
+					Inst.InstProcess.Kill();
+				}).Start();
 			}
 		}
 		
@@ -193,18 +216,12 @@ namespace MultiMC
 			{
 				Message("Instance quit");
 				
-				if (e.ExitCode != 0 ||
-				    ConsoleView.Buffer.Text.Contains("java.lang.VerifyError"))
-				{
-					Message("Crash detected!");
-				}
 				this.Deletable = true;
+				CloseButton.Sensitive = true;
 				if (AppSettings.Main.AutoCloseConsole || !ShowConsole)
 				{
 					CloseConsole();
-					return;
 				}
-				CloseButton.Sensitive = true;
 			});
 		}
 

@@ -398,7 +398,6 @@ namespace MultiMC
 					(sender, e) => 
 				{
 					Visible = true;
-					consoleWindow.Destroy();
 				});
 			};
 			Visible = false;
@@ -436,7 +435,6 @@ namespace MultiMC
 			instMenu.Add(imDelete = new MenuItem("Delete"));
 			
 			instMenu.ShowAll();
-			
 			
 			imPlay.Activated += (sender, e) =>
 			{

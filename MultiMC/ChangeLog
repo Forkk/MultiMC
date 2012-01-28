@@ -1,3 +1,9 @@
+2012-01-28  Andrew Okin  <razorblades13@gmail.com>
+
+	* Problems.cs, MinecraftProblem.cs: Added easily extendable
+	  problem detection for telling users what certain error
+	  messages mean.
+
 2012-01-27  Andrew Okin  <razorblades13@gmail.com>
 
 	* MessageUtils.cs, Instance.cs, ConsoleWindow.cs,

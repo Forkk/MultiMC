@@ -16,6 +16,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Diagnostics;
+using System.Threading;
 
 using Gtk;
 
@@ -76,27 +77,29 @@ namespace MultiMC
 				}
 			}
 			
-			AppDomain.CurrentDomain.UnhandledException += (sender, ea) => 
+			AppDomain.CurrentDomain.UnhandledException += (sender, ueArgs) => 
 			{
-				Exception e = (Exception)ea.ExceptionObject;
-				
-				MessageDialog errorDialog = new MessageDialog(null,
-					DialogFlags.Modal,
-					MessageType.Error,
-					ButtonsType.Ok,
-					"MultiMC has encountered a fatal error and needs to close. " +
-					"Sorry for the inconvenience.\n" +
-					"Technical Details:\n" +
-					"Exception type: {0}\n" +
-					"Message: {1}\n\n" +
-					"ToString: {2}",
-					e.GetType().ToString(),
-					e.Message,
-					e.ToString());
-				errorDialog.Title = "Uncaught Exception";
-				errorDialog.Show();
-				Environment.Exit(1);
+				if ((ueArgs.ExceptionObject as Exception) != null)
+					FatalException(ueArgs.ExceptionObject as Exception);
+				else
+				{
+					Console.WriteLine("Fatal error: " + ueArgs.ToString());
+					Environment.Exit(1);
+				}
 			};
+			
+			GLib.ExceptionManager.UnhandledException += (GLib.UnhandledExceptionArgs ueArgs) => 
+			{
+				if ((ueArgs.ExceptionObject as Exception) != null)
+					FatalException(ueArgs.ExceptionObject as Exception);
+				else
+				{
+					Console.WriteLine("Fatal error: " + ueArgs.ToString());
+					Environment.Exit(1);
+				}
+			};
+			
+			
 			
 			if (File.Exists(Resources.NewVersionFileName))
 				File.Delete(Resources.NewVersionFileName);
@@ -115,6 +118,35 @@ namespace MultiMC
 				Process.Start(Resources.NewVersionFileName,
 				              string.Format("-u \"{0}\"", currentFile));
 			}
+		}
+		
+		public static void FatalError(string errorMessage, string title)
+		{
+			MessageDialog errorDialog = new MessageDialog(null,
+					DialogFlags.Modal,
+					MessageType.Error,
+					ButtonsType.Ok,
+					errorMessage);
+			errorDialog.Title = title;
+			errorDialog.Response += (o, args) => errorDialog.Destroy();
+			errorDialog.Show();
+			Application.Quit();
+			Environment.Exit(1);
+		}
+		
+		public static void FatalException(Exception e)
+		{
+			string errorMessage = string.Format(
+				"MultiMC has encountered a fatal error and needs to close. " +
+				"Sorry for the inconvenience.\n" +
+				"Technical Details:\n" +
+				"Exception type: {0}\n" +
+				"Message: {1}\n\n" +
+				"ToString: {2}",
+				e.GetType().ToString(),
+				e.Message,
+				e.ToString());
+			FatalError(errorMessage, "Unknown Error");
 		}
 		
 		/// <summary>
