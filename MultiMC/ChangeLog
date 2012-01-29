@@ -1,5 +1,11 @@
 2012-01-29  Andrew Okin  <razorblades13@gmail.com>
 
+	* MultiMC.csproj, MainWindow.cs, gui.stetic,
+	  EditModsDialog.cs, MultiMC.MainWindow.cs,
+	  MultiMC.EditModsDialog.cs: Added a dialog for removing mods
+
+2012-01-29  Andrew Okin  <razorblades13@gmail.com>
+
 	* MainWindow.cs: Fixed dialog window parents
 
 2012-01-29  Andrew Okin  <razorblades13@gmail.com>

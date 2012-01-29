@@ -513,7 +513,9 @@ namespace MultiMC
 		
 		void EditModsActivated(object sender, EventArgs e)
 		{
-			// TODO Implement mod removal
+			EditModsDialog emd = new EditModsDialog(SelectedInst);
+			emd.ParentWindow = this.GdkWindow;
+			emd.Run();
 		}
 		
 		void RebuildActivated(object sender, EventArgs e)

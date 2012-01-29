@@ -11,7 +11,7 @@ namespace MultiMC
 		private global::Gtk.Action newInstAction;
 		private global::Gtk.Action refreshAction;
 		private global::Gtk.VBox windowbox;
-		private global::Gtk.Toolbar toolbar;
+		private global::Gtk.Toolbar menuToolbar;
 		private global::Gtk.IconView instIconView;
 		private global::Gtk.HBox hboxStatus;
 		private global::Gtk.ProgressBar statusProgBar;
@@ -52,14 +52,14 @@ namespace MultiMC
 			this.windowbox = new global::Gtk.VBox ();
 			this.windowbox.Name = "windowbox";
 			// Container child windowbox.Gtk.Box+BoxChild
-			this.UIManager.AddUiFromString (@"<ui><toolbar name='toolbar'><toolitem name='newInstAction' action='newInstAction'/><toolitem name='openInstDirAction' action='openInstDirAction'/><toolitem name='refreshAction' action='refreshAction'/><separator/><toolitem name='preferencesAction' action='preferencesAction'/><toolitem name='updateAction' action='updateAction'/></toolbar></ui>");
-			this.toolbar = ((global::Gtk.Toolbar)(this.UIManager.GetWidget ("/toolbar")));
-			this.toolbar.Name = "toolbar";
-			this.toolbar.ShowArrow = false;
-			this.toolbar.ToolbarStyle = ((global::Gtk.ToolbarStyle)(0));
-			this.toolbar.IconSize = ((global::Gtk.IconSize)(2));
-			this.windowbox.Add (this.toolbar);
-			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.windowbox [this.toolbar]));
+			this.UIManager.AddUiFromString (@"<ui><toolbar name='menuToolbar'><toolitem name='newInstAction' action='newInstAction'/><toolitem name='openInstDirAction' action='openInstDirAction'/><toolitem name='refreshAction' action='refreshAction'/><separator/><toolitem name='preferencesAction' action='preferencesAction'/><toolitem name='updateAction' action='updateAction'/></toolbar></ui>");
+			this.menuToolbar = ((global::Gtk.Toolbar)(this.UIManager.GetWidget ("/menuToolbar")));
+			this.menuToolbar.Name = "menuToolbar";
+			this.menuToolbar.ShowArrow = false;
+			this.menuToolbar.ToolbarStyle = ((global::Gtk.ToolbarStyle)(0));
+			this.menuToolbar.IconSize = ((global::Gtk.IconSize)(2));
+			this.windowbox.Add (this.menuToolbar);
+			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.windowbox [this.menuToolbar]));
 			w4.Position = 0;
 			w4.Expand = false;
 			w4.Fill = false;
