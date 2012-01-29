@@ -36,7 +36,9 @@ namespace MultiMC.Tasks
 		public Instance Target
 		{
 			get { return _Target; }
-		} Instance _Target;
+		}
+
+		Instance _Target;
 
 		//public override bool Running
 		//{
@@ -49,16 +51,13 @@ namespace MultiMC.Tasks
 			set
 			{
 				step = value;
-				int p = (100 / TotalSteps) * TaskStep;
-				Progress = (p < 100 ? p : 100);
+				int p = (int)(((float)TaskStep / (float)totalSteps) * 100);
+				Progress = p;
 			}
-		} int step;
+		}
 
-		private int TotalSteps
-		{
-			get { return totalSteps; }
-			set { totalSteps = value; }
-		} int totalSteps;
+		int step;
+		const int totalSteps = 5;
 
 		#endregion
 
@@ -83,8 +82,6 @@ namespace MultiMC.Tasks
 
 			//ArrayList cFiles = new ArrayList();
 
-			totalSteps = 5;
-
 			string mcBin = Target.BinDir;
 			string mcJar = Path.Combine(mcBin, "minecraft.jar");
 			string mcBackup = Path.Combine(mcBin, "mcbackup.jar");
@@ -100,8 +97,7 @@ namespace MultiMC.Tasks
 			try
 			{
 				File.Delete(mcJar);
-			}
-			catch (IOException e)
+			} catch (IOException e)
 			{
 				if (e.Message.Contains("being used"))
 				{

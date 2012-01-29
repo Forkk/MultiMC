@@ -364,8 +364,7 @@ namespace MultiMC
 			Gtk.Application.Invoke(
 				(sender1, e1) =>
 			{
-				Console.WriteLine("Progress: " + e.Progress);
-				statusProgBar.Fraction = e.Progress / 100;
+				statusProgBar.Fraction = ((float)e.Progress) / 100;
 			});
 		}
 		
