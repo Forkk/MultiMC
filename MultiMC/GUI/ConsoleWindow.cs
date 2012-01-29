@@ -147,9 +147,13 @@ namespace MultiMC
 			Inst.InstProcess.BeginErrorReadLine();
 		}
 
-		void OnInstProcOutput(object sender, System.Diagnostics.DataReceivedEventArgs e)
+		void OnInstProcOutput(object sender, DataReceivedEventArgs e)
 		{
 			Message(e.Data, "std");
+			
+			Console.WriteLine(e.Data);
+			
+			ScanOutput(e.Data);
 		}
 		
 		// Error detection values
@@ -169,19 +173,32 @@ namespace MultiMC
 			
 			Message(e.Data, "err");
 			
+			ScanOutput(e.Data);
+		}
+		
+		void ScanOutput(string mcOutput)
+		{
+			if (mcOutput == null)
+				return;
+			
 			bool killMC = false;
-			IMinecraftProblem prob = Problems.GetRelevantProblem(e.Data);
+			IMinecraftProblem prob = Problems.GetRelevantProblem(mcOutput);
 			if (prob != null)
 			{
 				Application.Invoke(
 					(sender2, e2) => 
 				{
+					if (!Visible)
+						Show();
+					else
+						GdkWindow.Raise();
 					MessageUtils.ShowMessageBox(this, 
 					                            MessageType.Error,
 					                            "You dun goofed!",
-					                            prob.GetErrorMessage(e.Data));
+					                            prob.GetErrorMessage(mcOutput));
 				});
-				killMC = prob.ShouldTerminate(e.Data);
+				killMC = prob.ShouldTerminate(mcOutput);
+				ErrorOccurred = killMC;
 			}
 			
 			if (killMC)
@@ -218,7 +235,7 @@ namespace MultiMC
 				
 				this.Deletable = true;
 				CloseButton.Sensitive = true;
-				if (AppSettings.Main.AutoCloseConsole || !ShowConsole)
+				if (AppSettings.Main.AutoCloseConsole || (!ShowConsole && !ErrorOccurred))
 				{
 					CloseConsole();
 				}
@@ -258,6 +275,12 @@ namespace MultiMC
 				Visible = value;
 				AppSettings.Main.ShowConsole = value;
 			}
+		}
+		
+		private bool ErrorOccurred
+		{
+			get;
+			set;
 		}
 		
 		public event EventHandler ConsoleClosed;

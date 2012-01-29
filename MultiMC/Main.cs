@@ -77,27 +77,27 @@ namespace MultiMC
 				}
 			}
 			
-			AppDomain.CurrentDomain.UnhandledException += (sender, ueArgs) => 
-			{
-				if ((ueArgs.ExceptionObject as Exception) != null)
-					FatalException(ueArgs.ExceptionObject as Exception);
-				else
-				{
-					Console.WriteLine("Fatal error: " + ueArgs.ToString());
-					Environment.Exit(1);
-				}
-			};
-			
-			GLib.ExceptionManager.UnhandledException += (GLib.UnhandledExceptionArgs ueArgs) => 
-			{
-				if ((ueArgs.ExceptionObject as Exception) != null)
-					FatalException(ueArgs.ExceptionObject as Exception);
-				else
-				{
-					Console.WriteLine("Fatal error: " + ueArgs.ToString());
-					Environment.Exit(1);
-				}
-			};
+//			AppDomain.CurrentDomain.UnhandledException += (sender, ueArgs) => 
+//			{
+//				if ((ueArgs.ExceptionObject as Exception) != null)
+//					FatalException(ueArgs.ExceptionObject as Exception);
+//				else
+//				{
+//					Console.WriteLine("Fatal error: " + ueArgs.ToString());
+//					Environment.Exit(1);
+//				}
+//			};
+//			
+//			GLib.ExceptionManager.UnhandledException += (GLib.UnhandledExceptionArgs ueArgs) => 
+//			{
+//				if ((ueArgs.ExceptionObject as Exception) != null)
+//					FatalException(ueArgs.ExceptionObject as Exception);
+//				else
+//				{
+//					Console.WriteLine("Fatal error: " + ueArgs.ToString());
+//					Environment.Exit(1);
+//				}
+//			};
 			
 			
 			

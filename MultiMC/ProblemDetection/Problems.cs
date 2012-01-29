@@ -12,6 +12,8 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
+
+//#define LIST_PROBS
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -38,6 +40,9 @@ namespace MultiMC.ProblemDetection
 			
 			foreach (IMinecraftProblem prob in problems)
 			{
+#if LIST_PROBS
+				Console.WriteLine("Checking against " + prob.ToString());
+#endif
 				if (prob.IsRelevant(mcOutput))
 				{
 					return prob;
@@ -48,11 +53,6 @@ namespace MultiMC.ProblemDetection
 		
 		public static void RegisterProblem(IMinecraftProblem prob)
 		{
-			if (problems.Count < 1)
-			{
-				problems.Add(prob);
-				return;
-			}
 			for (int i = 0; i < problems.Count; i++)
 			{
 				if ((problems[i] as IMinecraftProblem) == null)
@@ -63,6 +63,7 @@ namespace MultiMC.ProblemDetection
 					return;
 				}
 			}
+			problems.Add(prob);
 		}
 		
 		public static void UnregisterProblem(IMinecraftProblem prob)
@@ -81,6 +82,8 @@ namespace MultiMC.ProblemDetection
 				"version of your mods. Try redownloading and then reinstalling them.",
 				true, 0,
 				"java.lang.VerifyError"));
+			
+			RegisterProblem(new ModLoadFailedProblem());
 			
 			Initialized = true;
 		}

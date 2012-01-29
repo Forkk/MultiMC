@@ -1,5 +1,10 @@
 2012-01-28  Andrew Okin  <razorblades13@gmail.com>
 
+	* ConsoleWindow.cs, Problems.cs, ModLoaderProblems.cs: Added
+	  more problem detection
+
+2012-01-28  Andrew Okin  <razorblades13@gmail.com>
+
 	* Problems.cs, MinecraftProblem.cs: Added easily extendable
 	  problem detection for telling users what certain error
 	  messages mean.
