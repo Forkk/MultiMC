@@ -59,6 +59,11 @@ namespace MultiMC
 				}
 			};
 			
+			instIconView.ItemActivated += (object o, ItemActivatedArgs args) => 
+			{
+				StartInstance(SelectedInst);
+			};
+			
 			InitMenu();
 //			InitDND();
 			
@@ -83,7 +88,6 @@ namespace MultiMC
 		private void RunStartupTasks()
 		{
 			Downloader dl = null;
-			Console.WriteLine(AppSettings.Main.JavaPath);
 			// Get the launcher
 			dl = CheckDownloadFile(AppSettings.Main.LauncherPath,
 			                       Resources.LauncherURL,
