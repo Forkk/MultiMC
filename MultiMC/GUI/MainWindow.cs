@@ -153,7 +153,7 @@ namespace MultiMC
 		protected void OnSettingsClicked(object sender, System.EventArgs e)
 		{
 			SettingsDialog settingsDlg = new SettingsDialog();
-			settingsDlg.ParentWindow = this.GdkWindow;
+			settingsDlg.Parent = this;
 			settingsDlg.Show();
 		}
 		
@@ -473,7 +473,10 @@ namespace MultiMC
 
 		void ChangeIconActivated(object sender, EventArgs e)
 		{
-			// TODO Implement change icon
+			ChangeIconDialog iconDlg = new ChangeIconDialog(SelectedInst);
+			iconDlg.Parent = this;
+			iconDlg.Run();
+			LoadInstances();
 		}
 
 		void EditNotesActivated(object sender, EventArgs e)

@@ -34,7 +34,7 @@ namespace MultiMC.ProblemDetection
 		public string GetErrorMessage(string mcOutput)
 		{
 			int q = mcOutput.IndexOf('"');
-			string modName = mcOutput.Substring(q + 1, mcOutput.IndexOf('"', q + 1) - q);
+			string modName = mcOutput.Substring(q + 1, mcOutput.IndexOf('"', q) - q);
 			
 			return string.Format(
 				"MultiMC detected that one of your mods ({0}) failed to load. " +

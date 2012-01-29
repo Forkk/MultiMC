@@ -123,6 +123,8 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <Compile Include="ProblemDetection\MinecraftProblem.cs" />
     <Compile Include="ProblemDetection\Problems.cs" />
     <Compile Include="ProblemDetection\ModLoaderProblems.cs" />
+    <Compile Include="GUI\ChangeIconDialog.cs" />
+    <Compile Include="gtk-gui\MultiMC.ChangeIconDialog.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

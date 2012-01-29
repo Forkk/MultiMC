@@ -41,6 +41,16 @@ namespace MultiMC
 				return iconDict["stone"];
 		}
 		
+		public static string[] IconKeys
+		{
+			get
+			{
+				string[] keyArray = new string[iconDict.Keys.Count];
+				iconDict.Keys.CopyTo(keyArray, 0);
+				return keyArray;
+			}
+		}
+		
 		private static Dictionary<string, Pixbuf> iconDict = LoadIcons();
 		
 		public static Dictionary<string, Pixbuf> LoadIcons()
