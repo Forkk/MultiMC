@@ -57,9 +57,12 @@ namespace MultiMC
 		{
 			Dictionary<string, Pixbuf> pixBufDict = new Dictionary<string, Pixbuf>();
 			
-			foreach (string f in Directory.GetFiles("icons"))
+			if (Directory.Exists("icons"))
 			{
-				pixBufDict.Add(Path.GetFileNameWithoutExtension(f), new Pixbuf(f));
+				foreach (string f in Directory.GetFiles("icons"))
+				{
+					pixBufDict.Add(Path.GetFileNameWithoutExtension(f), new Pixbuf(f));
+				}
 			}
 			
 			foreach (string name in 
@@ -67,7 +70,7 @@ namespace MultiMC
 				"diamond", "dirt", "gold", "grass", "iron", "planks", "tnt" })
 			{
 				if (!pixBufDict.ContainsKey(name))
-					pixBufDict.Add(name, Pixbuf.LoadFromResource("icons/" + name + ".png"));
+					pixBufDict.Add(name, Pixbuf.LoadFromResource("MultiMC.icons." + name + ".png"));
 			}
 			
 			return pixBufDict;

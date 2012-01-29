@@ -1,5 +1,10 @@
 2012-01-29  Andrew Okin  <razorblades13@gmail.com>
 
+	* MultiMC.csproj, Resources.cs: Icons are no longer copied to
+	  the output directory on build.
+
+2012-01-29  Andrew Okin  <razorblades13@gmail.com>
+
 	* MainWindow.cs: Instances can be launched by double clicking
 	  their icons.
 	Removed some debug messages that were no longer needed.

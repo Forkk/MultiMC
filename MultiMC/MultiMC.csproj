@@ -65,32 +65,16 @@ It also allows you to install mods by dragging and dropping their files.</Descri
       <LogicalName>gui.stetic</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="icons\brick.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <LogicalName>MultiMC.icons.brick</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="icons\diamond.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="icons\dirt.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="icons\gold.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="icons\grass.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="icons\iron.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="icons\planks.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="icons\stone.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="icons\tnt.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="icons\diamond.png" />
+    <EmbeddedResource Include="icons\dirt.png" />
+    <EmbeddedResource Include="icons\gold.png" />
+    <EmbeddedResource Include="icons\grass.png" />
+    <EmbeddedResource Include="icons\iron.png" />
+    <EmbeddedResource Include="icons\planks.png" />
+    <EmbeddedResource Include="icons\stone.png" />
+    <EmbeddedResource Include="icons\tnt.png" />
     <EmbeddedResource Include="MultiMC.ico">
       <LogicalName>MainIcon</LogicalName>
     </EmbeddedResource>
