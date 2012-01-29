@@ -120,8 +120,12 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <Folder Include="GUI\" />
     <Folder Include="icons\" />
     <Folder Include="ProblemDetection\" />
+    <Folder Include="Java Launcher\" />
+    <Folder Include="Java Launcher\src\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README" />
+    <None Include="Java Launcher\src\MultiMCLauncher.java" />
+    <None Include="Java Launcher\MultiMCLauncher.class" />
   </ItemGroup>
 </Project>

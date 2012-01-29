@@ -1,3 +1,8 @@
+2012-01-29  Shawn  <${AuthorEmail}>
+
+	* MultiMC.csproj, MultiMCLauncher.class, MultiMCLauncher.java:
+
+
 2012-01-29  Andrew Okin  <razorblades13@gmail.com>
 
 	* Modder.cs, MainWindow.cs: Fixed the progress bar
