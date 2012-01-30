@@ -17,6 +17,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace MultiMC.ProblemDetection
 {
@@ -71,19 +72,46 @@ namespace MultiMC.ProblemDetection
 			problems.Remove(prob);
 		}
 		
+		public static void LoadProblemsFromAssembly(Assembly asm)
+		{
+			foreach (Type type in asm.GetTypes())
+			{
+				if (type.IsClass && type.IsPublic && !type.IsAbstract)
+				{
+					if (typeof(IMinecraftProblem).IsAssignableFrom(type))
+					{
+						if (type.GetConstructor(Type.EmptyTypes) != null)
+						{
+							try
+							{
+								IMinecraftProblem problem = (IMinecraftProblem)Activator.CreateInstance(type);
+								RegisterProblem(problem);
+							} catch
+							{
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		
 		/// <summary>
 		/// Initializes the <see cref="MultiMC.ProblemDetection.Problems"/> class by
 		/// registering problems.
 		/// </summary>
 		public static void InitProblems()
 		{
+			
+			LoadProblemsFromAssembly(Assembly.GetExecutingAssembly());
+			
 			RegisterProblem(new BasicProblem(
 				"MultiMC has detected an error. This might be because you are using the wrong " +
 				"version of your mods. Try redownloading and then reinstalling them.",
 				true, 0,
 				"java.lang.VerifyError"));
 			
-			RegisterProblem(new ModLoadFailedProblem());
+			//RegisterProblem(new ModLoadFailedProblem()); // If there are no arguments in the constructor, don't add it. It will add those automatically.
 			
 			Initialized = true;
 		}

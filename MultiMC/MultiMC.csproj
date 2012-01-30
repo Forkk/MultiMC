@@ -106,11 +106,14 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <Compile Include="StyleUtils.cs" />
     <Compile Include="ProblemDetection\MinecraftProblem.cs" />
     <Compile Include="ProblemDetection\Problems.cs" />
-    <Compile Include="ProblemDetection\ModLoaderProblems.cs" />
     <Compile Include="GUI\ChangeIconDialog.cs" />
     <Compile Include="gtk-gui\MultiMC.ChangeIconDialog.cs" />
     <Compile Include="gtk-gui\MultiMC.EditModsDialog.cs" />
     <Compile Include="GUI\EditModsDialog.cs" />
+    <Compile Include="ProblemDetection\RegexProblem.cs" />
+    <Compile Include="ProblemDetection\BasicProblem.cs" />
+    <Compile Include="ProblemDetection\Problems\BlockConflict.cs" />
+    <Compile Include="ProblemDetection\Problems\ModLoaderProblems.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -122,6 +125,7 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <Folder Include="ProblemDetection\" />
     <Folder Include="Java Launcher\" />
     <Folder Include="Java Launcher\src\" />
+    <Folder Include="ProblemDetection\Problems\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README" />

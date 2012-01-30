@@ -1,3 +1,10 @@
+2012-01-30  Shawn  <${AuthorEmail}>
+
+	* MultiMC.csproj, Problems.cs, RegexProblem.cs,
+	  BasicProblem.cs, MinecraftProblem.cs, ModLoaderProblems.cs,
+	  VerifyError.cs, BlockConflict.cs, ModLoaderProblems.cs,
+	  VerifyError.cs, BlockConflict.cs: 
+
 2012-01-29  Shawn  <${AuthorEmail}>
 
 	* MultiMC.csproj, MultiMCLauncher.class, MultiMCLauncher.java:
