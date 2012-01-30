@@ -1,5 +1,23 @@
 2012-01-30  Andrew Okin  <razorblades13@gmail.com>
 
+	* GameUpdater.cs: Bugfixes
+
+	* LoginDialog.cs, EditModsDialog.cs, SettingsDialog.cs,
+	  EditNotesDialog.cs, ChangeIconDialog.cs,
+	  NewInstanceDialog.cs: Dialogs are now properly parented to
+	  the main window
+
+	* MainWindow.cs: Dialogs are now properly parented to the main
+	  window. Started rewriting the login code.
+
+	* gui.stetic, MultiMC.LoginDialog.cs: Working on adding error
+	  messages, force update, and remember password to the login
+	  dialog
+
+	* MultiMC.MainWindow.cs, MultiMC.NewInstanceDialog.cs: 
+
+2012-01-30  Andrew Okin  <razorblades13@gmail.com>
+
 	* AppUtils.cs: SSL Certificate check is properly disabled. It
 	  was disabled before, but now it doesn't cause unreachable
 	  code warnings. It is only temporarily disabled until I have

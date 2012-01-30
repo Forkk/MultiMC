@@ -21,7 +21,8 @@ namespace MultiMC
 {
 	public partial class EditNotesDialog : Gtk.Dialog
 	{
-		public EditNotesDialog(Instance inst)
+		public EditNotesDialog(Instance inst, Window parent = null)
+			: base("", parent, DialogFlags.Modal)
 		{
 			this.Build();
 			this.Inst = inst;
@@ -30,7 +31,8 @@ namespace MultiMC
 		
 		public Instance Inst
 		{
-			get; protected set;
+			get;
+			protected set;
 		}
 
 		protected void OnButtonOkActivated(object sender, System.EventArgs e)

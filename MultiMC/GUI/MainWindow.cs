@@ -146,7 +146,7 @@ namespace MultiMC
 		
 		protected void OnNewClicked(object sender, System.EventArgs e)
 		{
-			NewInstanceDialog newDlg = new NewInstanceDialog();
+			NewInstanceDialog newDlg = new NewInstanceDialog(this);
 			newDlg.ParentWindow = this.GdkWindow;
 			newDlg.Show();
 			newDlg.OKClicked += (sender1, e1) => 
@@ -166,7 +166,7 @@ namespace MultiMC
 
 		protected void OnSettingsClicked(object sender, System.EventArgs e)
 		{
-			SettingsDialog settingsDlg = new SettingsDialog();
+			SettingsDialog settingsDlg = new SettingsDialog(this);
 			settingsDlg.ParentWindow = this.GdkWindow;
 			settingsDlg.Show();
 		}
@@ -411,81 +411,151 @@ namespace MultiMC
 //					Visible = true;
 //			};
 			
-			LoginDialog loginDlg = new LoginDialog();
+			LoginInfo loginInfo = DoLogin();
+			
+			if (loginInfo == null)
+				return;
+			
+//			GameUpdater updater = new GameUpdater(inst, 
+//			                                      loginInfo., 
+//			                                      "minecraft.jar?user="
+//			                                      + username + "&ticket=" + 
+//			                                      downloadTicket,
+//			                                      true);
+		}
+		
+		/// <summary>
+		/// Opens a login dialog to allow the user to login.
+		/// </summary>
+		/// <returns>
+		/// A <c>LoginInfo</c> struct filled in with the data returned by the log in or
+		/// <c>null</c> if the user cancelled login.
+		/// </returns>
+		private LoginInfo DoLogin()
+		{
+			LoginInfo retval = null;
+			
+			LoginDialog loginDlg = new LoginDialog(this);
 			loginDlg.Response += (object o, ResponseArgs args) => 
 			{
 				if (args.ResponseId == ResponseType.Ok)
 				{
-					string parameters = "user=" + Uri.EscapeUriString(loginDlg.Username) +
-						"&password=" + Uri.EscapeUriString(loginDlg.Password) +
-							"&version=" + 13;
+					string parameters = Uri.EscapeUriString(string.Format(
+						"user={0}&password={1}&version={2}", 
+						loginDlg.Username, loginDlg.Password, 13));
 					
-					string result = AppUtils.ExecutePost("https://login.minecraft.net", parameters);
-					
-					if (!result.Contains(":"))
+					// Start a new thread and post the login info to login.minecraft.net
+					Thread loginThread = new Thread(
+						() =>
 					{
-						MessageUtils.ShowMessageBox(this, 
-						                            MessageType.Error,
-						                            "Login Failed",
-						                            result);
-						return;
-					}
-					string[] values = result.Split(':');
-					
-					string latestVersion = values[0];
-					string downloadTicket = values[1];
-					string username = values[2];
-					string sessionId = values[3];
-					GameUpdater updater = new GameUpdater(inst, 
-					                                      latestVersion, 
-					                                      "minecraft.jar?user="
-					                                      + username + "&ticket=" + 
-					                                      downloadTicket,
-					                                      true);
-					updater.AskUpdate += (object sender, AskUpdateEventArgs e) => 
-					{
-						Dialog qDialog = new Dialog("Update?", 
-						                            this, 
-						                            DialogFlags.Modal, 
-						                            new Button("gtk-no"), 
-						                            new Button("gtk-yes"));
-						TextView tv = new TextView();
-						tv.Buffer.Text = e.Message;
-						qDialog.VBox.Add(tv);
-						tv.Show();
-						qDialog.Response += (object o2, ResponseArgs args2) =>
-							e.ShouldUpdate = args2.ResponseId == ResponseType.Yes;
-						qDialog.Run();
-					};
-					
-					updater.Completed += (sender, e) => 
-					{
-						if (e.Cancelled)
-							return;
-						Application.Invoke(
-							(sender2, e2) =>
+						string reply = AppUtils.ExecutePost("https://login.minecraft.net", 
+						                                    parameters);
+						
+						// If the login failed
+						if (!reply.Contains(":"))
 						{
-							inst.Launch();
-							
-							ConsoleWindow consoleWindow = new ConsoleWindow(inst);
-							consoleWindow.ConsoleClosed += (o2, args2) =>
+							// Translate the error message to a more user friendly wording
+							string errorMessage = reply;
+							switch (reply.ToLower())
 							{
-								Gtk.Application.Invoke(
-									(sender3, e3) => 
+							case "bad login":
+								errorMessage = "Invalid username or password";
+								break;
+							// TODO add more error messages
+							default:
+								errorMessage = "Unknown error: " + reply;
+								break;
+							}
+							
+							// Show the login dialog again
+							Application.Invoke(
+								(sender, e) => 
+							{
+								loginDlg.ErrorBell();
+								loginDlg.ErrorMessage = errorMessage;
+								loginDlg.Run();
+							});
+						}
+						
+						// If the login succeeded
+						else
+						{
+							string[] responseValues = reply.Split(':');
+							
+							// The response must have 4 values or it's invalid
+							if (responseValues.Length != 4)
+							{
+								// Show the login dialog again
+								Application.Invoke(
+								(sender, e) => 
 								{
-									Visible = true;
+									loginDlg.ErrorBell();
+									loginDlg.ErrorMessage = 
+										"Got an invalid response from server";
+									loginDlg.Run();
 								});
-							};
-							Visible = false;
-							consoleWindow.Show();
-						});
-					};
-					
-					StartTask(updater);
+							}
+							// Now we can finally return our login info.
+							else
+							{
+								retval = new LoginInfo(responseValues);
+							}
+						}
+					});
+					loginThread.Start();
 				}
-				loginDlg.Destroy();
+				else
+				{
+					// Login cancelled
+					loginDlg.Destroy();
+					retval = null;
+				}
 			};
-			loginDlg.Run();
+			return retval;
+		}
+		
+		private class LoginInfo
+		{
+			public string LatestVersion
+			{
+				get;
+				private set;
+			}
+
+			public string DownloadTicket
+			{
+				get;
+				private set;
+			}
+
+			public string Username
+			{
+				get;
+				private set;
+			}
+
+			public string SessionID
+			{
+				get;
+				private set;
+			}
+			
+			public bool Cancelled
+			{
+				get;
+				private set;
+			}
+			
+			public LoginInfo(string[] values = null)
+			{
+				Cancelled = values == null;
+				if (values == null)
+					values = new[] {"", "", "", ""};
+				LatestVersion = values[0];
+				DownloadTicket = values[1];
+				Username = values[2];
+				SessionID = values[3];
+			}
 		}
 		
 		#endregion
@@ -557,7 +627,7 @@ namespace MultiMC
 
 		void ChangeIconActivated(object sender, EventArgs e)
 		{
-			ChangeIconDialog iconDlg = new ChangeIconDialog(SelectedInst);
+			ChangeIconDialog iconDlg = new ChangeIconDialog(SelectedInst, this);
 			iconDlg.ParentWindow = this.GdkWindow;
 			iconDlg.Run();
 			LoadInstances();
@@ -565,7 +635,7 @@ namespace MultiMC
 
 		void EditNotesActivated(object sender, EventArgs e)
 		{
-			EditNotesDialog end = new EditNotesDialog(SelectedInst);
+			EditNotesDialog end = new EditNotesDialog(SelectedInst, this);
 			end.ParentWindow = this.GdkWindow;
 			end.Run();
 		}
@@ -597,7 +667,7 @@ namespace MultiMC
 		
 		void EditModsActivated(object sender, EventArgs e)
 		{
-			EditModsDialog emd = new EditModsDialog(SelectedInst);
+			EditModsDialog emd = new EditModsDialog(SelectedInst, this);
 			emd.ParentWindow = this.GdkWindow;
 			emd.Run();
 		}
@@ -747,6 +817,21 @@ namespace MultiMC
 				}
 			}
 		}
+		
+		public bool UIEnabled
+		{
+			get { return _uiEnabled;}
+			set
+			{
+				_uiEnabled = value;
+				foreach (Widget w in AllChildren)
+				{
+					w.Sensitive = value;
+				}
+			}
+		}
+
+		bool _uiEnabled;
 		
 		#endregion
 		

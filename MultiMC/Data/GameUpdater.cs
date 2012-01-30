@@ -269,16 +269,49 @@ namespace MultiMC.Tasks
 			
 			string nativesJar = 
 				Path.Combine(Inst.BinDir, GetFileName(uriList[uriList.Length - 1]));
+			string nativesDir = Path.Combine(Inst.BinDir, "native");
 			
-			if (!Directory.Exists(Path.Combine(Inst.BinDir, "native")))
-				Directory.CreateDirectory(Path.Combine(Inst.BinDir, "native"));
+			if (!Directory.Exists(nativesDir))
+				Directory.CreateDirectory(nativesDir);
 			
 			ZipFile zf = new ZipFile(nativesJar);
-			zf.ExtractAll(Path.Combine(Inst.BinDir, "native"), 
-			              ExtractExistingFileAction.OverwriteSilently);
+			Console.WriteLine(string.Format("Extracting natives from {0} to {1}", nativesJar, nativesDir));
+			ExtractRecursive(zf, nativesDir);
+			zf.Dispose();
 			
-			if (Directory.Exists(Path.Combine(Inst.BinDir, "native", "META-INF")))
-				Directory.Delete(Path.Combine(Inst.BinDir, "native", "META-INF"), true);
+			if (Directory.Exists(Path.Combine(nativesDir, "META-INF")))
+				Directory.Delete(Path.Combine(nativesDir, "META-INF"), true);
+			
+			File.Delete(nativesJar);
+		}
+		
+		protected void ExtractRecursive(ZipFile zf, string dest, string pathinzip = "/")
+		{
+			foreach (ZipEntry entry in zf)
+			{
+				if (entry.FileName.Contains("META-INF"))
+					continue;
+				
+				if (entry.IsDirectory)
+				{
+					string dir = Path.Combine(dest, entry.FileName);
+					if (!Directory.Exists(dir))
+						Directory.CreateDirectory(dir);
+					ExtractRecursive(zf, dir, string.Format("{0}/{1}", pathinzip, entry.FileName));
+				}
+				else
+				{
+					string destFile = Path.Combine(dest, entry.FileName);
+					Console.WriteLine("Extracting to " + destFile);
+					
+					if (!Directory.Exists(dest))
+						Directory.CreateDirectory(dest);
+					
+					FileStream destStream = File.Open(destFile, FileMode.Create);
+					entry.Extract(destStream);
+					destStream.Close();
+				}
+			}
 		}
 		
 		protected void AskToUpdate()

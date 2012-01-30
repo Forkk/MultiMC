@@ -14,29 +14,63 @@
 //    limitations under the License.
 using System;
 
+using Gtk;
+
 namespace MultiMC
 {
 	public partial class LoginDialog : Gtk.Dialog
 	{
-		public LoginDialog()
+		public LoginDialog(Gtk.Window parent, string errorMessage = "")
+			: base("Login", parent, DialogFlags.Modal)
 		{
 			this.Build();
+			this.ErrorMessage = errorMessage;
 		}
 		
 		public string Username
 		{
-			get
-			{
-				return userEntry.Text;
-			}
+			get { return userEntry.Text; }
 		}
 		
 		public string Password
 		{
-			get
+			get { return passwordEntry.Text; }
+		}
+		
+		public bool ForceUpdate
+		{
+			get { return toggleForceUpdate.Active; }
+		}
+		
+		public string ErrorMessage
+		{
+			get { return labelErrorMsg.Text; }
+			set
 			{
-				return passwordEntry.Text;
+				if (string.IsNullOrEmpty(value))
+				{
+					labelErrorMsg.Text = "";
+					labelErrorMsg.Visible = false;
+				}
+				else
+				{
+					labelErrorMsg.Text = value;
+					labelErrorMsg.Visible = true;
+				}
 			}
+		}
+
+		protected void OnUserEntryActivated(object sender, System.EventArgs e)
+		{
+			if (!string.IsNullOrEmpty(passwordEntry.Text))
+				buttonOk.Activate();
+			else
+				passwordEntry.GrabFocus();
+		}
+
+		protected void OnPasswordEntryActivated(object sender, System.EventArgs e)
+		{
+			buttonOk.Activate();
 		}
 	}
 }

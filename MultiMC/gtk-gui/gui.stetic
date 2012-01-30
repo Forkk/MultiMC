@@ -671,6 +671,7 @@
     <property name="TypeHint">Dialog</property>
     <property name="WindowPosition">CenterOnParent</property>
     <property name="Modal">True</property>
+    <property name="AllowGrow">False</property>
     <property name="AllowShrink">True</property>
     <property name="Buttons">2</property>
     <property name="HelpButton">False</property>
@@ -1190,7 +1191,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Dialog" id="MultiMC.LoginDialog" design-size="400 150">
+  <widget class="Gtk.Dialog" id="MultiMC.LoginDialog" design-size="402 194">
     <property name="MemberName" />
     <property name="WidthRequest">400</property>
     <property name="Title" translatable="yes">Login</property>
@@ -1210,18 +1211,60 @@
             <child>
               <widget class="Gtk.Table" id="loginTable">
                 <property name="MemberName" />
-                <property name="NRows">2</property>
+                <property name="NRows">4</property>
                 <property name="NColumns">2</property>
                 <property name="RowSpacing">6</property>
                 <property name="ColumnSpacing">6</property>
+                <child>
+                  <widget class="Gtk.CheckButton" id="checkRememberPwd">
+                    <property name="MemberName" />
+                    <property name="CanFocus">True</property>
+                    <property name="Label" translatable="yes">Remember password</property>
+                    <property name="DrawIndicator">True</property>
+                    <property name="HasLabel">True</property>
+                    <property name="UseUnderline">True</property>
+                  </widget>
+                  <packing>
+                    <property name="TopAttach">3</property>
+                    <property name="BottomAttach">4</property>
+                    <property name="LeftAttach">1</property>
+                    <property name="RightAttach">2</property>
+                    <property name="AutoSize">True</property>
+                    <property name="XOptions">Fill</property>
+                    <property name="YOptions">Fill</property>
+                    <property name="XExpand">False</property>
+                    <property name="XFill">True</property>
+                    <property name="XShrink">False</property>
+                    <property name="YExpand">False</property>
+                    <property name="YFill">True</property>
+                    <property name="YShrink">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="Gtk.Label" id="labelErrorMsg">
+                    <property name="MemberName" />
+                    <property name="LabelProp" translatable="yes">Error</property>
+                  </widget>
+                  <packing>
+                    <property name="RightAttach">2</property>
+                    <property name="AutoSize">False</property>
+                    <property name="YOptions">Fill</property>
+                    <property name="XExpand">True</property>
+                    <property name="XFill">True</property>
+                    <property name="XShrink">False</property>
+                    <property name="YExpand">False</property>
+                    <property name="YFill">True</property>
+                    <property name="YShrink">False</property>
+                  </packing>
+                </child>
                 <child>
                   <widget class="Gtk.Label" id="labelPassword">
                     <property name="MemberName" />
                     <property name="LabelProp" translatable="yes">Password: </property>
                   </widget>
                   <packing>
-                    <property name="TopAttach">1</property>
-                    <property name="BottomAttach">2</property>
+                    <property name="TopAttach">2</property>
+                    <property name="BottomAttach">3</property>
                     <property name="AutoSize">True</property>
                     <property name="XOptions">Fill</property>
                     <property name="YOptions">Fill</property>
@@ -1239,7 +1282,9 @@
                     <property name="LabelProp" translatable="yes">Username: </property>
                   </widget>
                   <packing>
-                    <property name="AutoSize">True</property>
+                    <property name="TopAttach">1</property>
+                    <property name="BottomAttach">2</property>
+                    <property name="AutoSize">False</property>
                     <property name="XOptions">Fill</property>
                     <property name="YOptions">Fill</property>
                     <property name="XExpand">False</property>
@@ -1258,15 +1303,38 @@
                     <property name="ActivatesDefault">True</property>
                     <property name="Visibility">False</property>
                     <property name="InvisibleChar">●</property>
+                    <signal name="Activated" handler="OnPasswordEntryActivated" />
                   </widget>
                   <packing>
-                    <property name="TopAttach">1</property>
-                    <property name="BottomAttach">2</property>
+                    <property name="TopAttach">2</property>
+                    <property name="BottomAttach">3</property>
                     <property name="LeftAttach">1</property>
                     <property name="RightAttach">2</property>
-                    <property name="AutoSize">True</property>
+                    <property name="AutoSize">False</property>
                     <property name="YOptions">Fill</property>
                     <property name="XExpand">True</property>
+                    <property name="XFill">True</property>
+                    <property name="XShrink">False</property>
+                    <property name="YExpand">False</property>
+                    <property name="YFill">True</property>
+                    <property name="YShrink">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="Gtk.ToggleButton" id="toggleForceUpdate">
+                    <property name="MemberName" />
+                    <property name="CanFocus">True</property>
+                    <property name="Type">TextOnly</property>
+                    <property name="Label" translatable="yes">Force Update</property>
+                    <property name="UseUnderline">True</property>
+                  </widget>
+                  <packing>
+                    <property name="TopAttach">3</property>
+                    <property name="BottomAttach">4</property>
+                    <property name="AutoSize">True</property>
+                    <property name="XOptions">Fill</property>
+                    <property name="YOptions">Fill</property>
+                    <property name="XExpand">False</property>
                     <property name="XFill">True</property>
                     <property name="XShrink">False</property>
                     <property name="YExpand">False</property>
@@ -1281,11 +1349,14 @@
                     <property name="IsEditable">True</property>
                     <property name="ActivatesDefault">True</property>
                     <property name="InvisibleChar">●</property>
+                    <signal name="Activated" handler="OnUserEntryActivated" />
                   </widget>
                   <packing>
+                    <property name="TopAttach">1</property>
+                    <property name="BottomAttach">2</property>
                     <property name="LeftAttach">1</property>
                     <property name="RightAttach">2</property>
-                    <property name="AutoSize">True</property>
+                    <property name="AutoSize">False</property>
                     <property name="YOptions">Fill</property>
                     <property name="XExpand">True</property>
                     <property name="XFill">True</property>

@@ -25,7 +25,8 @@ namespace MultiMC
 	{
 		ListStore iconList;
 		
-		public ChangeIconDialog(Instance inst)
+		public ChangeIconDialog(Instance inst, Gtk.Window parent)
+			: base("Change Icon", parent, Gtk.DialogFlags.Modal)
 		{
 			Inst = inst;
 			

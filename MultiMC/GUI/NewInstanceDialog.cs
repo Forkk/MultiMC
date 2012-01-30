@@ -21,7 +21,8 @@ namespace MultiMC
 {
 	public partial class NewInstanceDialog : Gtk.Dialog
 	{
-		public NewInstanceDialog()
+		public NewInstanceDialog(Gtk.Window parent = null)
+			: base("", parent, Gtk.DialogFlags.Modal)
 		{
 			this.Build();
 		}

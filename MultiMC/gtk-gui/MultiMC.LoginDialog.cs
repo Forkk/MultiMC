@@ -6,9 +6,12 @@ namespace MultiMC
 	{
 		private global::Gtk.Alignment alignment;
 		private global::Gtk.Table loginTable;
+		private global::Gtk.CheckButton checkRememberPwd;
+		private global::Gtk.Label labelErrorMsg;
 		private global::Gtk.Label labelPassword;
 		private global::Gtk.Label labelUser;
 		private global::Gtk.Entry passwordEntry;
+		private global::Gtk.ToggleButton toggleForceUpdate;
 		private global::Gtk.Entry userEntry;
 		private global::Gtk.Button buttonCancel;
 		private global::Gtk.Button buttonOk;
@@ -32,28 +35,53 @@ namespace MultiMC
 			this.alignment.Name = "alignment";
 			this.alignment.BorderWidth = ((uint)(6));
 			// Container child alignment.Gtk.Container+ContainerChild
-			this.loginTable = new global::Gtk.Table (((uint)(2)), ((uint)(2)), false);
+			this.loginTable = new global::Gtk.Table (((uint)(4)), ((uint)(2)), false);
 			this.loginTable.Name = "loginTable";
 			this.loginTable.RowSpacing = ((uint)(6));
 			this.loginTable.ColumnSpacing = ((uint)(6));
+			// Container child loginTable.Gtk.Table+TableChild
+			this.checkRememberPwd = new global::Gtk.CheckButton ();
+			this.checkRememberPwd.CanFocus = true;
+			this.checkRememberPwd.Name = "checkRememberPwd";
+			this.checkRememberPwd.Label = global::Mono.Unix.Catalog.GetString ("Remember password");
+			this.checkRememberPwd.DrawIndicator = true;
+			this.checkRememberPwd.UseUnderline = true;
+			this.loginTable.Add (this.checkRememberPwd);
+			global::Gtk.Table.TableChild w2 = ((global::Gtk.Table.TableChild)(this.loginTable [this.checkRememberPwd]));
+			w2.TopAttach = ((uint)(3));
+			w2.BottomAttach = ((uint)(4));
+			w2.LeftAttach = ((uint)(1));
+			w2.RightAttach = ((uint)(2));
+			w2.XOptions = ((global::Gtk.AttachOptions)(4));
+			w2.YOptions = ((global::Gtk.AttachOptions)(4));
+			// Container child loginTable.Gtk.Table+TableChild
+			this.labelErrorMsg = new global::Gtk.Label ();
+			this.labelErrorMsg.Name = "labelErrorMsg";
+			this.labelErrorMsg.LabelProp = global::Mono.Unix.Catalog.GetString ("Error");
+			this.loginTable.Add (this.labelErrorMsg);
+			global::Gtk.Table.TableChild w3 = ((global::Gtk.Table.TableChild)(this.loginTable [this.labelErrorMsg]));
+			w3.RightAttach = ((uint)(2));
+			w3.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child loginTable.Gtk.Table+TableChild
 			this.labelPassword = new global::Gtk.Label ();
 			this.labelPassword.Name = "labelPassword";
 			this.labelPassword.LabelProp = global::Mono.Unix.Catalog.GetString ("Password: ");
 			this.loginTable.Add (this.labelPassword);
-			global::Gtk.Table.TableChild w2 = ((global::Gtk.Table.TableChild)(this.loginTable [this.labelPassword]));
-			w2.TopAttach = ((uint)(1));
-			w2.BottomAttach = ((uint)(2));
-			w2.XOptions = ((global::Gtk.AttachOptions)(4));
-			w2.YOptions = ((global::Gtk.AttachOptions)(4));
+			global::Gtk.Table.TableChild w4 = ((global::Gtk.Table.TableChild)(this.loginTable [this.labelPassword]));
+			w4.TopAttach = ((uint)(2));
+			w4.BottomAttach = ((uint)(3));
+			w4.XOptions = ((global::Gtk.AttachOptions)(4));
+			w4.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child loginTable.Gtk.Table+TableChild
 			this.labelUser = new global::Gtk.Label ();
 			this.labelUser.Name = "labelUser";
 			this.labelUser.LabelProp = global::Mono.Unix.Catalog.GetString ("Username: ");
 			this.loginTable.Add (this.labelUser);
-			global::Gtk.Table.TableChild w3 = ((global::Gtk.Table.TableChild)(this.loginTable [this.labelUser]));
-			w3.XOptions = ((global::Gtk.AttachOptions)(4));
-			w3.YOptions = ((global::Gtk.AttachOptions)(4));
+			global::Gtk.Table.TableChild w5 = ((global::Gtk.Table.TableChild)(this.loginTable [this.labelUser]));
+			w5.TopAttach = ((uint)(1));
+			w5.BottomAttach = ((uint)(2));
+			w5.XOptions = ((global::Gtk.AttachOptions)(4));
+			w5.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child loginTable.Gtk.Table+TableChild
 			this.passwordEntry = new global::Gtk.Entry ();
 			this.passwordEntry.CanFocus = true;
@@ -63,12 +91,24 @@ namespace MultiMC
 			this.passwordEntry.Visibility = false;
 			this.passwordEntry.InvisibleChar = '●';
 			this.loginTable.Add (this.passwordEntry);
-			global::Gtk.Table.TableChild w4 = ((global::Gtk.Table.TableChild)(this.loginTable [this.passwordEntry]));
-			w4.TopAttach = ((uint)(1));
-			w4.BottomAttach = ((uint)(2));
-			w4.LeftAttach = ((uint)(1));
-			w4.RightAttach = ((uint)(2));
-			w4.YOptions = ((global::Gtk.AttachOptions)(4));
+			global::Gtk.Table.TableChild w6 = ((global::Gtk.Table.TableChild)(this.loginTable [this.passwordEntry]));
+			w6.TopAttach = ((uint)(2));
+			w6.BottomAttach = ((uint)(3));
+			w6.LeftAttach = ((uint)(1));
+			w6.RightAttach = ((uint)(2));
+			w6.YOptions = ((global::Gtk.AttachOptions)(4));
+			// Container child loginTable.Gtk.Table+TableChild
+			this.toggleForceUpdate = new global::Gtk.ToggleButton ();
+			this.toggleForceUpdate.CanFocus = true;
+			this.toggleForceUpdate.Name = "toggleForceUpdate";
+			this.toggleForceUpdate.UseUnderline = true;
+			this.toggleForceUpdate.Label = global::Mono.Unix.Catalog.GetString ("Force Update");
+			this.loginTable.Add (this.toggleForceUpdate);
+			global::Gtk.Table.TableChild w7 = ((global::Gtk.Table.TableChild)(this.loginTable [this.toggleForceUpdate]));
+			w7.TopAttach = ((uint)(3));
+			w7.BottomAttach = ((uint)(4));
+			w7.XOptions = ((global::Gtk.AttachOptions)(4));
+			w7.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child loginTable.Gtk.Table+TableChild
 			this.userEntry = new global::Gtk.Entry ();
 			this.userEntry.CanFocus = true;
@@ -77,22 +117,24 @@ namespace MultiMC
 			this.userEntry.ActivatesDefault = true;
 			this.userEntry.InvisibleChar = '●';
 			this.loginTable.Add (this.userEntry);
-			global::Gtk.Table.TableChild w5 = ((global::Gtk.Table.TableChild)(this.loginTable [this.userEntry]));
-			w5.LeftAttach = ((uint)(1));
-			w5.RightAttach = ((uint)(2));
-			w5.YOptions = ((global::Gtk.AttachOptions)(4));
+			global::Gtk.Table.TableChild w8 = ((global::Gtk.Table.TableChild)(this.loginTable [this.userEntry]));
+			w8.TopAttach = ((uint)(1));
+			w8.BottomAttach = ((uint)(2));
+			w8.LeftAttach = ((uint)(1));
+			w8.RightAttach = ((uint)(2));
+			w8.YOptions = ((global::Gtk.AttachOptions)(4));
 			this.alignment.Add (this.loginTable);
 			w1.Add (this.alignment);
-			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(w1 [this.alignment]));
-			w7.Position = 0;
-			w7.Expand = false;
-			w7.Fill = false;
+			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(w1 [this.alignment]));
+			w10.Position = 0;
+			w10.Expand = false;
+			w10.Fill = false;
 			// Internal child MultiMC.LoginDialog.ActionArea
-			global::Gtk.HButtonBox w8 = this.ActionArea;
-			w8.Name = "dialog1_ActionArea";
-			w8.Spacing = 10;
-			w8.BorderWidth = ((uint)(5));
-			w8.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
+			global::Gtk.HButtonBox w11 = this.ActionArea;
+			w11.Name = "dialog1_ActionArea";
+			w11.Spacing = 10;
+			w11.BorderWidth = ((uint)(5));
+			w11.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonCancel = new global::Gtk.Button ();
 			this.buttonCancel.CanDefault = true;
@@ -102,9 +144,9 @@ namespace MultiMC
 			this.buttonCancel.UseUnderline = true;
 			this.buttonCancel.Label = "gtk-cancel";
 			this.AddActionWidget (this.buttonCancel, -6);
-			global::Gtk.ButtonBox.ButtonBoxChild w9 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w8 [this.buttonCancel]));
-			w9.Expand = false;
-			w9.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w12 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w11 [this.buttonCancel]));
+			w12.Expand = false;
+			w12.Fill = false;
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonOk = new global::Gtk.Button ();
 			this.buttonOk.CanDefault = true;
@@ -114,15 +156,17 @@ namespace MultiMC
 			this.buttonOk.UseUnderline = true;
 			this.buttonOk.Label = "gtk-ok";
 			this.AddActionWidget (this.buttonOk, -5);
-			global::Gtk.ButtonBox.ButtonBoxChild w10 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w8 [this.buttonOk]));
-			w10.Position = 1;
-			w10.Expand = false;
-			w10.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w13 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w11 [this.buttonOk]));
+			w13.Position = 1;
+			w13.Expand = false;
+			w13.Fill = false;
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
-			this.DefaultHeight = 150;
+			this.DefaultHeight = 194;
 			this.Show ();
+			this.userEntry.Activated += new global::System.EventHandler (this.OnUserEntryActivated);
+			this.passwordEntry.Activated += new global::System.EventHandler (this.OnPasswordEntryActivated);
 		}
 	}
 }
