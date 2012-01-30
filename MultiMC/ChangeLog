@@ -1,5 +1,35 @@
 2012-01-30  Andrew Okin  <razorblades13@gmail.com>
 
+	* AppUtils.cs: SSL Certificate check is properly disabled. It
+	  was disabled before, but now it doesn't cause unreachable
+	  code warnings. It is only temporarily disabled until I have
+	  the time to fix it.
+
+	* GameUpdater.cs: Caught some exceptions, removed some debug
+	  messages, and made a minor change to the progress
+	  calculation.
+
+	* MainWindow.cs: Window title now shows the name of the
+	  current OS. MultiMC no longer sets the progress bar's
+	  progress greater than 100%, however, it will send warnings
+	  to the console if a task's progress is greater than 100%.
+	  The game no longer starts if the game updater cancels.
+
+	* Task.cs: The task completed event now has event arguments
+	  that tell whether the task was cancelled or not.
+
+	* Updater.cs: Removed unnecessarily overridden code.
+
+	* gui.stetic, generated.cs, MultiMC.MainWindow.cs,
+	  MultiMC.LoginDialog.cs, MultiMC.ConsoleWindow.cs,
+	  MultiMC.SettingsDialog.cs, MultiMC.EditModsDialog.cs,
+	  MultiMC.EditNotesDialog.cs, MultiMC.ChangeIconDialog.cs,
+	  MultiMC.NewInstanceDialog.cs: It seems MonoDevelop's GUI
+	  builder decided to completely re-generate all of it's code
+	  again...
+
+2012-01-30  Andrew Okin  <razorblades13@gmail.com>
+
 	* minecraft.key, MultiMC.csproj, MainWindow.cs,
 	  LoginDialog.cs, GameUpdater.cs, Resources.cs,
 	  MultiMC.LoginDialog.cs: Started implementing built in

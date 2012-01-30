@@ -99,7 +99,7 @@ namespace MultiMC.Tasks
 		public void Cancel()
 		{
 			OnCancel();
-			OnComplete();
+			OnComplete(true);
 			TaskThread.Abort();
 		}
 
@@ -132,13 +132,13 @@ namespace MultiMC.Tasks
 		/// <summary>
 		/// Called when the task ends
 		/// </summary>
-		public event EventHandler Completed;
+		public event EventHandler<TaskCompleteEventArgs> Completed;
 
-		protected virtual void OnComplete()
+		protected virtual void OnComplete(bool cancelled = false)
 		{
 			running = false;
 			if (Completed != null)
-				Completed(this, EventArgs.Empty);
+				Completed(this, new TaskCompleteEventArgs(cancelled));
 		}
 
 		/// <summary>
@@ -288,6 +288,20 @@ namespace MultiMC.Tasks
 			string message;
 
 			#endregion
+		}
+		
+		public class TaskCompleteEventArgs : EventArgs
+		{
+			public TaskCompleteEventArgs(bool cancelled = false)
+			{
+				this.Cancelled = cancelled;
+			}
+			
+			public bool Cancelled
+			{
+				get;
+				protected set;
+			}
 		}
 
 		#endregion

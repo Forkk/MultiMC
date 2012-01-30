@@ -35,7 +35,17 @@ namespace MultiMC
 				base(Gtk.WindowType.Toplevel)
 		{
 			this.Build();
-			Title = "MultiMC " + AppUtils.GetVersion().ToString();
+			
+			string osString = "Unknown OS";
+			
+			if (OSUtils.Windows)
+				osString = "Windows";
+			else if (OSUtils.Linux)
+				osString = "Linux";
+			else if (OSUtils.MacOSX)
+				osString = "Mac OS X";
+			
+			Title = "MultiMC " + AppUtils.GetVersion().ToString() + " " + osString;
 			Icon = Pixbuf.LoadFromResource("MainIcon");
 			
 			instList = new ListStore(typeof(string), typeof(Instance), typeof(Gdk.Pixbuf));
@@ -197,7 +207,7 @@ namespace MultiMC
 			this.currentTask = task;
 
 			currentTask.Started += new EventHandler(taskStarted);
-			currentTask.Completed += new EventHandler(taskCompleted);
+			currentTask.Completed += taskCompleted;
 			currentTask.ProgressChange +=
 				new Task.ProgressChangeEventHandler(taskProgressChange);
 			currentTask.StatusChange +=
@@ -280,7 +290,7 @@ namespace MultiMC
 		{
 			updateDL = new Downloader(Resources.NewVersionFileName,
 				Resources.LatestVersionURL, "Downloading updates...");
-			updateDL.Completed += new EventHandler(updateDL_Completed);
+			updateDL.Completed += updateDL_Completed;
 			StartTask(updateDL);
 		}
 
@@ -350,7 +360,7 @@ namespace MultiMC
 			});
 		}
 
-		void taskCompleted(object sender, EventArgs e)
+		void taskCompleted(object sender, Task.TaskCompleteEventArgs e)
 		{
 			Gtk.Application.Invoke(
 				(sender1, e1) =>
@@ -364,7 +374,15 @@ namespace MultiMC
 			Gtk.Application.Invoke(
 				(sender1, e1) =>
 			{
-				statusProgBar.Fraction = ((float)e.Progress) / 100;
+				float progFraction = ((float)e.Progress) / 100;
+				if (progFraction > 1)
+				{
+					Console.WriteLine(string.Format("Warning: Progress fraction " +
+						"({0}) is greater than the maximum value (1)", progFraction));
+					progFraction = 1;
+				}
+				
+				statusProgBar.Fraction = 0;
 			});
 		}
 		
@@ -442,6 +460,8 @@ namespace MultiMC
 					
 					updater.Completed += (sender, e) => 
 					{
+						if (e.Cancelled)
+							return;
 						Application.Invoke(
 							(sender2, e2) =>
 						{

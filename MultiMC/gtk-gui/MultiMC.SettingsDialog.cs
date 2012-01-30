@@ -281,13 +281,13 @@ namespace MultiMC
 			w22.XOptions = ((global::Gtk.AttachOptions)(4));
 			w22.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child tableMemory.Gtk.Table+TableChild
-			this.spinbuttonInitialMemory = new global::Gtk.SpinButton (512D, 65536D, 512D);
+			this.spinbuttonInitialMemory = new global::Gtk.SpinButton (512, 65536, 512);
 			this.spinbuttonInitialMemory.CanFocus = true;
 			this.spinbuttonInitialMemory.Name = "spinbuttonInitialMemory";
-			this.spinbuttonInitialMemory.Adjustment.PageIncrement = 1024D;
-			this.spinbuttonInitialMemory.ClimbRate = 1D;
+			this.spinbuttonInitialMemory.Adjustment.PageIncrement = 1024;
+			this.spinbuttonInitialMemory.ClimbRate = 1;
 			this.spinbuttonInitialMemory.Numeric = true;
-			this.spinbuttonInitialMemory.Value = 512D;
+			this.spinbuttonInitialMemory.Value = 512;
 			this.tableMemory.Add (this.spinbuttonInitialMemory);
 			global::Gtk.Table.TableChild w23 = ((global::Gtk.Table.TableChild)(this.tableMemory [this.spinbuttonInitialMemory]));
 			w23.LeftAttach = ((uint)(1));
@@ -295,13 +295,13 @@ namespace MultiMC
 			w23.XOptions = ((global::Gtk.AttachOptions)(4));
 			w23.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child tableMemory.Gtk.Table+TableChild
-			this.spinbuttonMaxMemory = new global::Gtk.SpinButton (1024D, 65536D, 512D);
+			this.spinbuttonMaxMemory = new global::Gtk.SpinButton (1024, 65536, 512);
 			this.spinbuttonMaxMemory.CanFocus = true;
 			this.spinbuttonMaxMemory.Name = "spinbuttonMaxMemory";
-			this.spinbuttonMaxMemory.Adjustment.PageIncrement = 1024D;
-			this.spinbuttonMaxMemory.ClimbRate = 1D;
+			this.spinbuttonMaxMemory.Adjustment.PageIncrement = 1024;
+			this.spinbuttonMaxMemory.ClimbRate = 1;
 			this.spinbuttonMaxMemory.Numeric = true;
-			this.spinbuttonMaxMemory.Value = 1024D;
+			this.spinbuttonMaxMemory.Value = 1024;
 			this.tableMemory.Add (this.spinbuttonMaxMemory);
 			global::Gtk.Table.TableChild w24 = ((global::Gtk.Table.TableChild)(this.tableMemory [this.spinbuttonMaxMemory]));
 			w24.TopAttach = ((uint)(1));

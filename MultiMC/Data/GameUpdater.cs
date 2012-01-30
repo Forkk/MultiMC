@@ -80,7 +80,16 @@ namespace MultiMC.Tasks
 					{
 						File.WriteAllText(versionFile, "");
 						
-						DownloadJars();
+						try
+						{
+							DownloadJars();
+							
+						} catch (WebException e)
+						{
+							OnErrorMessage(
+								string.Format("An error occurred when downloading packages.\n" +
+									"Details:\n{0}", e.ToString()));
+						}
 						ExtractNatives();
 						Progress = 100;
 					}
@@ -157,7 +166,7 @@ namespace MultiMC.Tasks
 				                  fileSizes[i] + " bytes");
 			}
 			
-			int initialPercentage = Progress = 0;
+			int initialPercentage = Progress;
 			
 			byte[] buffer = new byte[1024 * 10];
 			for (int i = 0; i < this.uriList.Length; i++)
@@ -201,7 +210,7 @@ namespace MultiMC.Tasks
 						int readSize;
 						while ((readSize = dlStream.Read(buffer, 0, buffer.Length)) > 0)
 						{
-							Console.WriteLine("Read " + readSize + " bytes");
+//							Console.WriteLine("Read " + readSize + " bytes");
 							fos.Write(buffer, 0, readSize);
 							
 							this.currentDownloadSize += readSize;

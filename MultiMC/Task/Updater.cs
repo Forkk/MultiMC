@@ -14,7 +14,6 @@
 //    limitations under the License.
 
 //#define UPDATE_DEBUG
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +37,7 @@ namespace MultiMC.Tasks
 		{
 			get { return nVer; }
 		}
+
 		Version nVer;
 
 		#endregion
@@ -88,8 +88,7 @@ namespace MultiMC.Tasks
 #else
 				nVersion = new Version(UpdateClient.DownloadString(Resources.VInfoUrl));
 #endif
-			}
-			catch (WebException e)
+			} catch (WebException e)
 			{
 				OnErrorMessage("Update check failed:\n" + e.Message + 
 					"\nVisit http://www.tinyurl.com/multiplemc to check for updates manually.");
@@ -111,16 +110,6 @@ namespace MultiMC.Tasks
 
 		#region Events
 
-		protected override void OnStart()
-		{
-			base.OnStart();
-		}
-
-		protected override void OnComplete()
-		{
-			base.OnComplete();
-		}
-
 		#endregion
 
 		#region Classes
@@ -137,7 +126,8 @@ namespace MultiMC.Tasks
 			public Version NewVersion
 			{
 				get { return nVersion; }
-			} Version nVersion;
+			}
+			Version nVersion;
 
 			#endregion
 		}

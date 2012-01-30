@@ -12,6 +12,8 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
+
+#define BYPASS_SSL_CHECK
 using System;
 using System.IO;
 using System.Reflection;
@@ -50,8 +52,7 @@ namespace MultiMC
 		                              X509Chain chain, 
 		                              SslPolicyErrors error)
 		{
-			return true;
-			
+#if !BYPASS_SSL_CHECK
 			if (cert == null)
 			{
 				Console.WriteLine("Warning: Certificate is null!");
@@ -72,7 +73,7 @@ namespace MultiMC
 					return false;
 				}
 			}
-			
+#endif
 			return true;
 		}
 	}
