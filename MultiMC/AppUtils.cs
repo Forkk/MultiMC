@@ -13,6 +13,11 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 using System;
+using System.IO;
+using System.Reflection;
+using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 namespace MultiMC
 {
@@ -29,6 +34,46 @@ namespace MultiMC
 			Version appVersion = System.Reflection.Assembly.GetExecutingAssembly().
 					GetName().Version;
 			return appVersion;
+		}
+		
+		public static string ExecutePost(string url, string urlParams)
+		{
+			ServicePointManager.ServerCertificateValidationCallback = 
+				new RemoteCertificateValidationCallback(CertCheck);
+			
+			WebClient webClient = new WebClient();
+			return webClient.DownloadString(new Uri(url + "?" + urlParams));
+		}
+		
+		private static bool CertCheck(object sender, 
+		                              X509Certificate cert, 
+		                              X509Chain chain, 
+		                              SslPolicyErrors error)
+		{
+			return true;
+			
+			if (cert == null)
+			{
+				Console.WriteLine("Warning: Certificate is null!");
+				return false;
+			}
+			
+			FileStream stream = Assembly.GetCallingAssembly().GetFile("PublicKey");
+			byte[] bytes = new byte[stream.Length];
+			stream.Read(bytes, 0, bytes.Length);
+			
+			if (bytes.Length < cert.GetPublicKey().Length)
+				return false;
+			
+			for (int i = 0; i < bytes.Length; i++)
+			{
+				if (bytes[i] != cert.GetPublicKey()[i])
+				{
+					return false;
+				}
+			}
+			
+			return true;
 		}
 	}
 }

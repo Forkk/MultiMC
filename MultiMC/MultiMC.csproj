@@ -78,6 +78,9 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <EmbeddedResource Include="MultiMC.ico">
       <LogicalName>MainIcon</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="minecraft.key">
+      <LogicalName>PublicKey</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="gtk-gui\generated.cs" />
@@ -111,6 +114,10 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <Compile Include="gtk-gui\MultiMC.ChangeIconDialog.cs" />
     <Compile Include="gtk-gui\MultiMC.EditModsDialog.cs" />
     <Compile Include="GUI\EditModsDialog.cs" />
+    <Compile Include="Data\GameUpdater.cs" />
+    <Compile Include="Data\Properties.cs" />
+    <Compile Include="GUI\LoginDialog.cs" />
+    <Compile Include="gtk-gui\MultiMC.LoginDialog.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

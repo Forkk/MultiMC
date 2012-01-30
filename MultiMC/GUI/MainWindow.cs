@@ -392,19 +392,80 @@ namespace MultiMC
 //				if (!cwin.Visible)
 //					Visible = true;
 //			};
-			inst.Launch();
 			
-			ConsoleWindow consoleWindow = new ConsoleWindow(inst);
-			consoleWindow.ConsoleClosed += (o, args) =>
+			LoginDialog loginDlg = new LoginDialog();
+			loginDlg.Response += (object o, ResponseArgs args) => 
 			{
-				Gtk.Application.Invoke(
-					(sender, e) => 
+				if (args.ResponseId == ResponseType.Ok)
 				{
-					Visible = true;
-				});
+					string parameters = "user=" + Uri.EscapeUriString(loginDlg.Username) +
+						"&password=" + Uri.EscapeUriString(loginDlg.Password) +
+							"&version=" + 13;
+					
+					string result = AppUtils.ExecutePost("https://login.minecraft.net", parameters);
+					
+					if (!result.Contains(":"))
+					{
+						MessageUtils.ShowMessageBox(this, 
+						                            MessageType.Error,
+						                            "Login Failed",
+						                            result);
+						return;
+					}
+					string[] values = result.Split(':');
+					
+					string latestVersion = values[0];
+					string downloadTicket = values[1];
+					string username = values[2];
+					string sessionId = values[3];
+					GameUpdater updater = new GameUpdater(inst, 
+					                                      latestVersion, 
+					                                      "minecraft.jar?user="
+					                                      + username + "&ticket=" + 
+					                                      downloadTicket,
+					                                      true);
+					updater.AskUpdate += (object sender, AskUpdateEventArgs e) => 
+					{
+						Dialog qDialog = new Dialog("Update?", 
+						                            this, 
+						                            DialogFlags.Modal, 
+						                            new Button("gtk-no"), 
+						                            new Button("gtk-yes"));
+						TextView tv = new TextView();
+						tv.Buffer.Text = e.Message;
+						qDialog.VBox.Add(tv);
+						tv.Show();
+						qDialog.Response += (object o2, ResponseArgs args2) =>
+							e.ShouldUpdate = args2.ResponseId == ResponseType.Yes;
+						qDialog.Run();
+					};
+					
+					updater.Completed += (sender, e) => 
+					{
+						Application.Invoke(
+							(sender2, e2) =>
+						{
+							inst.Launch();
+							
+							ConsoleWindow consoleWindow = new ConsoleWindow(inst);
+							consoleWindow.ConsoleClosed += (o2, args2) =>
+							{
+								Gtk.Application.Invoke(
+									(sender3, e3) => 
+								{
+									Visible = true;
+								});
+							};
+							Visible = false;
+							consoleWindow.Show();
+						});
+					};
+					
+					StartTask(updater);
+				}
+				loginDlg.Destroy();
 			};
-			Visible = false;
-			consoleWindow.Show();
+			loginDlg.Run();
 		}
 		
 		#endregion
