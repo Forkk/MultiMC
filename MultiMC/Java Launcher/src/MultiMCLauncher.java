@@ -12,17 +12,14 @@ public class MultiMCLauncher {
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		if (args.length != 3) {
+			System.out.println("Not enough arguments.");
 			System.exit(-1);
 		}
+
 		try {
 			@SuppressWarnings("rawtypes")
 			// Get the Minecraft Class.
 			Class mc = Class.forName("net.minecraft.client.Minecraft");
-
-			if (mc == null) {
-				// This shouldn't ever be called, but just in case.
-				throw new ClassNotFoundException();
-			}
 			Field[] fields = mc.getDeclaredFields();
 
 			for (int i = 0; i < fields.length; i++) {
@@ -48,16 +45,22 @@ public class MultiMCLauncher {
 
 			mc.getMethod("main", String[].class).invoke(null, (Object) mcArgs);
 		} catch (ClassNotFoundException e) {
+			System.out.println("ClassNotFoundException, " + e.toString());
 			System.exit(1);
 		} catch (IllegalArgumentException e) {
+			System.out.println("IllegalArgumentException, " + e.toString());
 			System.exit(2);
 		} catch (IllegalAccessException e) {
+			System.out.println("IllegalAccessException, " + e.toString());
 			System.exit(2);
 		} catch (InvocationTargetException e) {
+			System.out.println("InvocationTargetException, " + e.toString());
 			System.exit(3);
 		} catch (NoSuchMethodException e) {
+			System.out.println("NoSuchMethodException, " + e.toString());
 			System.exit(3);
 		} catch (SecurityException e) {
+			System.out.println("SecurityException, " + e.toString());
 			System.exit(4);
 		}
 	}
