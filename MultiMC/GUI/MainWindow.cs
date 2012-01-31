@@ -30,6 +30,7 @@ namespace MultiMC
 	public partial class MainWindow : Gtk.Window
 	{
 		private ListStore instList;
+		private HBox progBarHBox;
 		
 		public MainWindow() : 
 				base(Gtk.WindowType.Toplevel)
@@ -76,6 +77,11 @@ namespace MultiMC
 			
 			InitMenu();
 //			InitDND();
+			
+			progBarHBox = new HBox();
+			windowbox.PackEnd(progBarHBox, false, true, 0);
+			
+			progBarHBox.ShowAll();
 			
 			LoadInstances();
 			
