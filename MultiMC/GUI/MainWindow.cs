@@ -201,6 +201,7 @@ namespace MultiMC
 		
 		private void StartTask(Task task)
 		{
+			Console.WriteLine("task");
 			if (currentTask != null && currentTask.Running)
 				throw new TaskAlreadyOccupiedException("A task is already running.");
 
@@ -382,7 +383,7 @@ namespace MultiMC
 					progFraction = 1;
 				}
 				
-				statusProgBar.Fraction = 0;
+				statusProgBar.Fraction = progFraction;
 			});
 		}
 		
@@ -411,12 +412,38 @@ namespace MultiMC
 //					Visible = true;
 //			};
 			
-			LoginInfo loginInfo = DoLogin();
-			
-			if (loginInfo == null)
-				return;
-			
-//			GameUpdater updater = new GameUpdater(inst, 
+			string message = "";
+			UIEnabled = false;
+			DoLogin(
+				(LoginInfo info) => 
+			{
+				string mainGameUrl = string.Format("minecraft.jar?user={0}&ticket={1}",
+				                                   info.Username, info.DownloadTicket);
+				if (!info.Cancelled)
+				{
+					Console.WriteLine(info.ForceUpdate);
+					GameUpdater updater = 
+						new GameUpdater(inst,
+						                info.LatestVersion,
+						                mainGameUrl,
+						                info.ForceUpdate);
+					updater.Completed += (sender, e) => Application.Invoke((sender2, e2) => 
+					{
+						Visible = false;
+						UIEnabled = true;
+						inst.Launch();
+						ConsoleWindow cwin = new ConsoleWindow(inst);
+						cwin.ConsoleClosed += (sender3, e3) => 
+						{
+							Visible = true;
+						};
+					});
+					StartTask(updater);
+				}
+				else
+					UIEnabled = true;
+			}, message);
+			//			GameUpdater updater = new GameUpdater(inst, 
 //			                                      loginInfo., 
 //			                                      "minecraft.jar?user="
 //			                                      + username + "&ticket=" + 
@@ -424,22 +451,19 @@ namespace MultiMC
 //			                                      true);
 		}
 		
+		private delegate void LoginCompleteHandler(LoginInfo info);
+		
 		/// <summary>
 		/// Opens a login dialog to allow the user to login.
 		/// </summary>
-		/// <returns>
-		/// A <c>LoginInfo</c> struct filled in with the data returned by the log in or
-		/// <c>null</c> if the user cancelled login.
-		/// </returns>
-		private LoginInfo DoLogin()
+		private void DoLogin(LoginCompleteHandler done, string message = "")
 		{
-			LoginInfo retval = null;
-			
-			LoginDialog loginDlg = new LoginDialog(this);
+			LoginDialog loginDlg = new LoginDialog(this, message);
 			loginDlg.Response += (object o, ResponseArgs args) => 
 			{
 				if (args.ResponseId == ResponseType.Ok)
 				{
+					Console.WriteLine("OK Clicked");
 					string parameters = Uri.EscapeUriString(string.Format(
 						"user={0}&password={1}&version={2}", 
 						loginDlg.Username, loginDlg.Password, 13));
@@ -463,18 +487,12 @@ namespace MultiMC
 								break;
 							// TODO add more error messages
 							default:
-								errorMessage = "Unknown error: " + reply;
+								errorMessage = "Login failed: " + reply;
 								break;
 							}
 							
-							// Show the login dialog again
-							Application.Invoke(
-								(sender, e) => 
-							{
-								loginDlg.ErrorBell();
-								loginDlg.ErrorMessage = errorMessage;
-								loginDlg.Run();
-							});
+							// Error
+							Application.Invoke((sender, e) => DoLogin(done, errorMessage));
 						}
 						
 						// If the login succeeded
@@ -485,20 +503,17 @@ namespace MultiMC
 							// The response must have 4 values or it's invalid
 							if (responseValues.Length != 4)
 							{
-								// Show the login dialog again
+								// Error
 								Application.Invoke(
-								(sender, e) => 
-								{
-									loginDlg.ErrorBell();
-									loginDlg.ErrorMessage = 
-										"Got an invalid response from server";
-									loginDlg.Run();
-								});
+									(sender, e) => 
+									DoLogin(done, "Got an invalid response from server"));
 							}
 							// Now we can finally return our login info.
 							else
 							{
-								retval = new LoginInfo(responseValues);
+								LoginInfo info = new LoginInfo(responseValues, 
+								                               loginDlg.ForceUpdate);
+								done(info);
 							}
 						}
 					});
@@ -507,15 +522,16 @@ namespace MultiMC
 				else
 				{
 					// Login cancelled
-					loginDlg.Destroy();
-					retval = null;
+					done(new LoginInfo());
 				}
+				loginDlg.Destroy();
 			};
-			return retval;
+			loginDlg.Run();
 		}
 		
 		private class LoginInfo
 		{
+			#region Properties
 			public string LatestVersion
 			{
 				get;
@@ -546,16 +562,33 @@ namespace MultiMC
 				private set;
 			}
 			
-			public LoginInfo(string[] values = null)
+			public bool ForceUpdate
 			{
-				Cancelled = values == null;
+				get;
+				private set;
+			}
+			#endregion
+			
+			public LoginInfo(string[] values = null, bool forceUpdate = true)
+			{
+				ForceUpdate = forceUpdate;
 				if (values == null)
+				{
 					values = new[] {"", "", "", ""};
+					Cancelled = true;
+					
+				}
 				LatestVersion = values[0];
 				DownloadTicket = values[1];
 				Username = values[2];
 				SessionID = values[3];
 			}
+			
+//			public LoginInfo(string errorMessage)
+//			{
+//				ErrorMessage = errorMessage;
+//				Failed = true;
+//			}
 		}
 		
 		#endregion
@@ -826,7 +859,8 @@ namespace MultiMC
 				_uiEnabled = value;
 				foreach (Widget w in AllChildren)
 				{
-					w.Sensitive = value;
+					if (w != statusProgBar)
+						w.Sensitive = value;
 				}
 			}
 		}

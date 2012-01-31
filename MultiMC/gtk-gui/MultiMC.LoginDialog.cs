@@ -61,6 +61,7 @@ namespace MultiMC
 			this.loginTable.Add (this.labelErrorMsg);
 			global::Gtk.Table.TableChild w3 = ((global::Gtk.Table.TableChild)(this.loginTable [this.labelErrorMsg]));
 			w3.RightAttach = ((uint)(2));
+			w3.XOptions = ((global::Gtk.AttachOptions)(4));
 			w3.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child loginTable.Gtk.Table+TableChild
 			this.labelPassword = new global::Gtk.Label ();

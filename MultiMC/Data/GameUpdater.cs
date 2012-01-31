@@ -47,6 +47,7 @@ namespace MultiMC.Tasks
 		protected override void TaskStart()
 		{
 			OnStart();
+			Console.WriteLine("updating");
 			State = EnumState.CHECKING_CACHE;
 			Progress = 5;
 			
@@ -240,7 +241,7 @@ namespace MultiMC.Tasks
 						if (md5Matches && fileSize == fileSizes[i] || fileSizes[i] <= 0)
 						{
 							md5s[(currentFile.Contains("natives") ?
-							      currentFile + ".lzma" : currentFile)] = etag;
+							      currentFile : currentFile)] = etag;
 							md5s.Save(Path.Combine(Inst.BinDir, "md5s"));
 						}
 						else
