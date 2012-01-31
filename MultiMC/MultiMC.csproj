@@ -39,7 +39,6 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
-    <Reference Include="Mono.Posix" />
     <Reference Include="Ionic.Zip.Reduced, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c">
       <HintPath>Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
@@ -59,22 +58,41 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <Private>False</Private>
     </Reference>
+    <Reference Include="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">
       <LogicalName>gui.stetic</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="icons\brick.png">
-      <LogicalName>MultiMC.icons.brick.pnf</LogicalName>
+      <LogicalName>MultiMC.icons.brick</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="icons\diamond.png" />
-    <EmbeddedResource Include="icons\dirt.png" />
-    <EmbeddedResource Include="icons\gold.png" />
-    <EmbeddedResource Include="icons\grass.png" />
-    <EmbeddedResource Include="icons\iron.png" />
-    <EmbeddedResource Include="icons\planks.png" />
-    <EmbeddedResource Include="icons\stone.png" />
-    <EmbeddedResource Include="icons\tnt.png" />
+    <EmbeddedResource Include="icons\diamond.png">
+      <LogicalName>MultiMC.icons.diamond</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="icons\dirt.png">
+      <LogicalName>MultiMC.icons.dirt</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="icons\gold.png">
+      <LogicalName>MultiMC.icons.gold</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="icons\grass.png">
+      <LogicalName>MultiMC.icons.grass</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="icons\iron.png">
+      <LogicalName>MultiMC.icons.iron</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="icons\planks.png">
+      <LogicalName>MultiMC.icons.planks</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="icons\stone.png">
+      <LogicalName>MultiMC.icons.stone</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="icons\tnt.png">
+      <LogicalName>MultiMC.icons.tnt</LogicalName>
+    </EmbeddedResource>
     <EmbeddedResource Include="MultiMC.ico">
       <LogicalName>MainIcon</LogicalName>
     </EmbeddedResource>

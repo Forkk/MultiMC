@@ -1,3 +1,8 @@
+2012-01-31  ShaRose  <ShawnAndrewRose@Gmail.Com>
+
+	* AppUtils.cs, Task.cs, MultiMC.csproj, MainWindow.cs,
+	  Resources.cs: 
+
 2012-01-30  ShaRose  <ShawnAndrewRose@Gmail.Com>
 
 	* MultiMCLauncher.java: 

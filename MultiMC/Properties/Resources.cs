@@ -72,7 +72,7 @@ namespace MultiMC
 				"diamond", "dirt", "gold", "grass", "iron", "planks", "tnt" })
 			{
 				if (!pixBufDict.ContainsKey(name))
-					pixBufDict.Add(name, Pixbuf.LoadFromResource("MultiMC.icons." + name + ".png"));
+					pixBufDict.Add(name, Pixbuf.LoadFromResource("MultiMC.icons." + name));
 			}
 			
 			return pixBufDict;

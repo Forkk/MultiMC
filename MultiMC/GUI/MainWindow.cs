@@ -98,13 +98,6 @@ namespace MultiMC
 		private void RunStartupTasks()
 		{
 			Downloader dl = null;
-			// Get the launcher
-			dl = CheckDownloadFile(AppSettings.Main.LauncherPath,
-			                       Resources.LauncherURL,
-			                       "Downloading Minecraft launcher...");
-			if (dl != null)
-				dl.TaskThread.Join();
-			
 			// Get DotNetZip
 			dl = CheckDownloadFile("Ionic.Zip.Reduced.dll",
 			                       Resources.DotNetZipURL,
@@ -197,25 +190,27 @@ namespace MultiMC
 		
 		#region Task System
 		
-		Task currentTask;
+		List<Task> currentTasks = new List<Task>();
+		
+		private void addTask(Task newTask)
+		{
+			currentTasks.Add(newTask);
+			int index = currentTasks.IndexOf(newTask);
+			newTask.TaskID = index;
+		}
 		
 		private void StartTask(Task task)
 		{
 			Console.WriteLine("task");
-			if (currentTask != null && currentTask.Running)
-				throw new TaskAlreadyOccupiedException("A task is already running.");
-
-			this.currentTask = task;
-
-			currentTask.Started += new EventHandler(taskStarted);
-			currentTask.Completed += taskCompleted;
-			currentTask.ProgressChange +=
+			addTask(task);
+			task.Started += new EventHandler(taskStarted);
+			task.Completed += taskCompleted;
+			task.ProgressChange +=
 				new Task.ProgressChangeEventHandler(taskProgressChange);
-			currentTask.StatusChange +=
+			task.StatusChange +=
 				new Task.StatusChangeEventHandler(taskStatusChange);
-			currentTask.ErrorMessage += new Task.ErrorMessageEventHandler(TaskErrorMessage);
-
-			currentTask.Start();
+			task.ErrorMessage += new Task.ErrorMessageEventHandler(TaskErrorMessage);
+			task.Start();
 		}
 
 		void TaskErrorMessage(object sender, Task.ErrorMessageEventArgs e)
@@ -417,8 +412,7 @@ namespace MultiMC
 			DoLogin(
 				(LoginInfo info) => 
 			{
-				string mainGameUrl = string.Format("minecraft.jar?user={0}&ticket={1}",
-				                                   info.Username, info.DownloadTicket);
+				string mainGameUrl = "minecraft.jar";
 				if (!info.Cancelled)
 				{
 					Console.WriteLine(info.ForceUpdate);
