@@ -40,7 +40,7 @@ namespace MultiMC.ProblemDetection
 				InitProblems();
 			
 			if (mcOutput == null)
-				return;
+				return null;
 			
 			foreach (IMinecraftProblem prob in problems)
 			{

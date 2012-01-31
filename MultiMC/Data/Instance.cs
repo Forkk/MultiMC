@@ -8,6 +8,7 @@ using System.Xml;
 using System.Diagnostics;
 
 using MultiMC;
+using MultiMC.Data;
 
 namespace MultiMC.Data
 {
@@ -428,6 +429,23 @@ namespace MultiMC.Data
 		public bool Running
 		{
 			get { return (instProc != null && !instProc.HasExited); }
+		}
+		
+		public bool CanPlayOffline
+		{
+			get
+			{
+				if (File.Exists(BinDir) &&
+				    File.Exists(Path.Combine(BinDir, "version")))
+				{
+					string version = Tasks.GameUpdater.ReadVersionFile(
+						Path.Combine(BinDir, "version"));
+					
+					if (version != null && version.Length > 0)
+						return true;
+				}
+				return false;
+			}
 		}
 
 		#endregion

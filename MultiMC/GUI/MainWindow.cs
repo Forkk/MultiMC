@@ -450,7 +450,7 @@ namespace MultiMC
 				}
 				else
 					UIEnabled = true;
-			}, message);
+			}, message, inst.CanPlayOffline);
 			//			GameUpdater updater = new GameUpdater(inst, 
 //			                                      loginInfo., 
 //			                                      "minecraft.jar?user="
@@ -464,9 +464,11 @@ namespace MultiMC
 		/// <summary>
 		/// Opens a login dialog to allow the user to login.
 		/// </summary>
-		private void DoLogin(LoginCompleteHandler done, string message = "")
+		/// 
+		private void DoLogin(LoginCompleteHandler done, string message = "", 
+		                     bool canplayOffline = false)
 		{
-			LoginDialog loginDlg = new LoginDialog(this, message);
+			LoginDialog loginDlg = new LoginDialog(this, message, canplayOffline);
 			loginDlg.Response += (object o, ResponseArgs args) => 
 			{
 				if (args.ResponseId == ResponseType.Ok)

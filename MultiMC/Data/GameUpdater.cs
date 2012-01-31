@@ -79,7 +79,7 @@ namespace MultiMC.Tasks
 						AskToUpdate();
 					if (this.shouldUpdate)
 					{
-						File.WriteAllText(versionFile, "");
+						WriteVersionFile(versionFile, latestVersion);
 						
 						try
 						{
@@ -330,6 +330,25 @@ namespace MultiMC.Tasks
 //			if (str.IndexOf("?") > 0)
 //				str = str.Substring(0, str.IndexOf("?"));
 //			return str;
+		}
+		
+		public static string ReadVersionFile(string vfile)
+		{
+			if (!File.Exists(vfile))
+				return null;
+			string data = "";
+			BinaryReader binRead = new BinaryReader(File.OpenRead(vfile));
+			data = binRead.ReadString();
+			binRead.Close();
+			return data;
+		}
+		
+		public static void WriteVersionFile(string vfile, string version)
+		{
+			BinaryWriter binWrite = new BinaryWriter(File.Open(vfile, FileMode.Create));
+			binWrite.Write(version);
+			binWrite.Flush();
+			binWrite.Close();
 		}
 		
 		protected EnumState State

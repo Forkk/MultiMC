@@ -20,11 +20,12 @@ namespace MultiMC
 {
 	public partial class LoginDialog : Gtk.Dialog
 	{
-		public LoginDialog(Gtk.Window parent, string errorMessage = "")
+		public LoginDialog(Gtk.Window parent, string errorMessage = "", bool canplayOffline = false)
 			: base("Login", parent, DialogFlags.Modal)
 		{
 			this.Build();
 			this.ErrorMessage = errorMessage;
+			this.buttonOffline.Sensitive = canplayOffline;
 		}
 		
 		public string Username
