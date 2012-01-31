@@ -18,7 +18,8 @@ namespace MultiMC
 {
 	public partial class SettingsDialog : Gtk.Dialog
 	{
-		public SettingsDialog()
+		public SettingsDialog(Gtk.Window parent)
+			: base("Settings", parent, Gtk.DialogFlags.Modal)
 		{
 			this.Build();
 			

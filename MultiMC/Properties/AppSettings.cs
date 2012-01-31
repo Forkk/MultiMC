@@ -17,14 +17,15 @@ using System.Configuration;
 using System.Collections.Generic;
 using System.IO;
 
+using MultiMC.Data;
+
 namespace MultiMC
 {
-	public class AppSettings
+	public class AppSettings : Properties
 	{
 		public AppSettings()
 			: base()
 		{
-			dict = new Dictionary<string, string>();
 		}
 		
 		private static AppSettings inst;
@@ -47,63 +48,20 @@ namespace MultiMC
 				{
 					Console.WriteLine("Loading settings...");
 					inst = new AppSettings();
-					inst.Load();
+					inst.Load(Resources.ConfigFileName);
 					return inst;
 				}
 			}
 		}
 		
-		public void Save(string path = Resources.ConfigFileName)
+		public override void Load(string path = Resources.ConfigFileName)
 		{
-			string[] line = new string[dict.Count];
-			int i = 0;
-			foreach (KeyValuePair<string, string> kv in dict)
-				line[i++] = kv.Key + "=" + kv.Value;
-			File.WriteAllLines(path, line);
+			base.Load(path);
 		}
 		
-		public void Load(string path = Resources.ConfigFileName)
+		public override void Save(string path = Resources.ConfigFileName)
 		{
-			try
-			{
-				dict.Clear();
-				string[] lines = File.ReadAllLines(path);
-				foreach (string line in lines)
-					dict.Add(line.Split('=')[0], line.Split('=')[1]);
-			} catch (IndexOutOfRangeException e)
-			{
-				Console.WriteLine(e.ToString());
-			} catch (FileNotFoundException)
-			{
-			}
-		}
-		
-		protected Dictionary<string, string> dict;
-		
-		/// <summary>
-		/// Gets the setting with the specified key.
-		/// </summary>
-		/// <param name='key'>
-		/// The setting's key
-		/// </param>
-		/// <param name='def'>
-		/// The default value
-		/// </param>
-		private string this[string key, string def]
-		{
-			get
-			{
-				if (dict.ContainsKey(key))
-					return dict[key];
-				else
-					return def;
-			}
-		}
-		
-		private string this[string key]
-		{
-			get { return dict[key]; }
-			set { dict[key] = value; }
+			base.Save(path);
 		}
 		
 		public int InitialMemoryAlloc

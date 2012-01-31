@@ -30,6 +30,8 @@ namespace MultiMC
 		public const string LatestVersionURL = "http://multimc.tk/MultiMC/MultiMC.exe";
 		public const string LauncherURL = 
 			"https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft.jar";
+		public const string MinecraftDLUri = 
+			"http://s3.amazonaws.com/MinecraftDownload/";
 		public const string DotNetZipURL = "http://multimc.tk/MultiMC/DotNetZip.dll";
 		public const string ConfigFileName = "multimc.cfg";
 		

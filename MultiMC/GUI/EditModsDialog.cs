@@ -28,7 +28,8 @@ namespace MultiMC
 		TreeView modView;
 		ScrolledWindow editModScroll;
 		
-		public EditModsDialog(Instance inst)
+		public EditModsDialog(Instance inst, Gtk.Window parent = null)
+			: base("Edit Mods", parent, DialogFlags.Modal)
 		{
 			Inst = inst;
 			

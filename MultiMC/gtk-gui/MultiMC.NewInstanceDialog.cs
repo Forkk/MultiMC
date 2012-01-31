@@ -21,6 +21,7 @@ namespace MultiMC
 			this.TypeHint = ((global::Gdk.WindowTypeHint)(1));
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			this.Modal = true;
+			this.AllowGrow = false;
 			this.AllowShrink = true;
 			// Internal child MultiMC.NewInstanceDialog.VBox
 			global::Gtk.VBox w1 = this.VBox;

@@ -65,7 +65,7 @@ It also allows you to install mods by dragging and dropping their files.</Descri
       <LogicalName>gui.stetic</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="icons\brick.png">
-      <LogicalName>MultiMC.icons.brick</LogicalName>
+      <LogicalName>MultiMC.icons.brick.pnf</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="icons\diamond.png" />
     <EmbeddedResource Include="icons\dirt.png" />
@@ -77,6 +77,9 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <EmbeddedResource Include="icons\tnt.png" />
     <EmbeddedResource Include="MultiMC.ico">
       <LogicalName>MainIcon</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="minecraft.key">
+      <LogicalName>PublicKey</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +113,10 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <Compile Include="gtk-gui\MultiMC.ChangeIconDialog.cs" />
     <Compile Include="gtk-gui\MultiMC.EditModsDialog.cs" />
     <Compile Include="GUI\EditModsDialog.cs" />
+    <Compile Include="Data\GameUpdater.cs" />
+    <Compile Include="Data\Properties.cs" />
+    <Compile Include="GUI\LoginDialog.cs" />
+    <Compile Include="gtk-gui\MultiMC.LoginDialog.cs" />
     <Compile Include="ProblemDetection\RegexProblem.cs" />
     <Compile Include="ProblemDetection\BasicProblem.cs" />
     <Compile Include="ProblemDetection\Problems\BlockConflict.cs" />

@@ -5,11 +5,81 @@
 	  VerifyError.cs, BlockConflict.cs, ModLoaderProblems.cs,
 	  VerifyError.cs, BlockConflict.cs: 
 
+2012-01-30  Andrew Okin  <razorblades13@gmail.com>
+
+	* MultiMC.csproj, MultiMC.EditModsDialog.cs: Minor GUI changes
+
+2012-01-30  Andrew Okin  <razorblades13@gmail.com>
+
+	* MainWindow.cs, GameUpdater.cs: Finished login system
+
+2012-01-30  Andrew Okin  <razorblades13@gmail.com>
+
+	* GameUpdater.cs: Bugfixes
+
+	* LoginDialog.cs, EditModsDialog.cs, SettingsDialog.cs,
+	  EditNotesDialog.cs, ChangeIconDialog.cs,
+	  NewInstanceDialog.cs: Dialogs are now properly parented to
+	  the main window
+
+	* MainWindow.cs: Dialogs are now properly parented to the main
+	  window. Started rewriting the login code.
+
+	* gui.stetic, MultiMC.LoginDialog.cs: Working on adding error
+	  messages, force update, and remember password to the login
+	  dialog
+
+	* MultiMC.MainWindow.cs, MultiMC.NewInstanceDialog.cs: 
+
+2012-01-30  Andrew Okin  <razorblades13@gmail.com>
+
+	* AppUtils.cs: SSL Certificate check is properly disabled. It
+	  was disabled before, but now it doesn't cause unreachable
+	  code warnings. It is only temporarily disabled until I have
+	  the time to fix it.
+
+	* GameUpdater.cs: Caught some exceptions, removed some debug
+	  messages, and made a minor change to the progress
+	  calculation.
+
+	* MainWindow.cs: Window title now shows the name of the
+	  current OS. MultiMC no longer sets the progress bar's
+	  progress greater than 100%, however, it will send warnings
+	  to the console if a task's progress is greater than 100%.
+	  The game no longer starts if the game updater cancels.
+
+	* Task.cs: The task completed event now has event arguments
+	  that tell whether the task was cancelled or not.
+
+	* Updater.cs: Removed unnecessarily overridden code.
+
+	* gui.stetic, generated.cs, MultiMC.MainWindow.cs,
+	  MultiMC.LoginDialog.cs, MultiMC.ConsoleWindow.cs,
+	  MultiMC.SettingsDialog.cs, MultiMC.EditModsDialog.cs,
+	  MultiMC.EditNotesDialog.cs, MultiMC.ChangeIconDialog.cs,
+	  MultiMC.NewInstanceDialog.cs: It seems MonoDevelop's GUI
+	  builder decided to completely re-generate all of it's code
+	  again...
+
+2012-01-30  Andrew Okin  <razorblades13@gmail.com>
+
+	* minecraft.key, MultiMC.csproj, MainWindow.cs,
+	  LoginDialog.cs, GameUpdater.cs, Resources.cs,
+	  MultiMC.LoginDialog.cs: Started implementing built in
+	  launcher
+
+	* Properties.cs: Added class for reading / writing ini files
+	  (similar to Java's properties class)
+	  
+	* AppUtils.cs: Added execute post method
+
+	* AppSettings.cs: App settings now inherits Properties
+
 2012-01-29  Shawn  <${AuthorEmail}>
 
 	* MultiMC.csproj, MultiMCLauncher.class, MultiMCLauncher.java:
-
-
+	
+	
 2012-01-29  Andrew Okin  <razorblades13@gmail.com>
 
 	* Modder.cs, MainWindow.cs: Fixed the progress bar
