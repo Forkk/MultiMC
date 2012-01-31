@@ -639,28 +639,6 @@
             <property name="AutoSize">False</property>
           </packing>
         </child>
-        <child>
-          <widget class="Gtk.HBox" id="hboxStatus">
-            <property name="MemberName" />
-            <property name="Spacing">6</property>
-            <child>
-              <widget class="Gtk.ProgressBar" id="statusProgBar">
-                <property name="MemberName" />
-                <property name="Text" translatable="yes" />
-              </widget>
-              <packing>
-                <property name="Position">0</property>
-                <property name="AutoSize">True</property>
-              </packing>
-            </child>
-          </widget>
-          <packing>
-            <property name="Position">2</property>
-            <property name="AutoSize">True</property>
-            <property name="Expand">False</property>
-            <property name="Fill">False</property>
-          </packing>
-        </child>
       </widget>
     </child>
   </widget>

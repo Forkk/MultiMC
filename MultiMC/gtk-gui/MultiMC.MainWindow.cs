@@ -5,23 +5,27 @@ namespace MultiMC
 	public partial class MainWindow
 	{
 		private global::Gtk.UIManager UIManager;
+		private global::Gtk.Action preferencesAction;
+		private global::Gtk.Action updateAction;
 		private global::Gtk.Action openInstDirAction;
 		private global::Gtk.Action newInstAction;
 		private global::Gtk.Action refreshAction;
-		private global::Gtk.Action preferencesAction;
-		private global::Gtk.Action updateAction;
 		private global::Gtk.VBox windowbox;
 		private global::Gtk.Toolbar menuToolbar;
 		private global::Gtk.IconView instIconView;
-		private global::Gtk.HBox hboxStatus;
-		private global::Gtk.ProgressBar statusProgBar;
 		
 		protected virtual void Build ()
 		{
 			global::Stetic.Gui.Initialize (this);
 			// Widget MultiMC.MainWindow
 			this.UIManager = new global::Gtk.UIManager ();
-			global::Gtk.ActionGroup w1 = new global::Gtk.ActionGroup ("Default");
+			global::Gtk.ActionGroup w1 = new global::Gtk.ActionGroup ("Settings Actions");
+			this.preferencesAction = new global::Gtk.Action ("preferencesAction", global::Mono.Unix.Catalog.GetString ("_Settings"), global::Mono.Unix.Catalog.GetString ("Change your settings"), "gtk-preferences");
+			this.preferencesAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("_Settings");
+			w1.Add (this.preferencesAction, null);
+			this.updateAction = new global::Gtk.Action ("updateAction", global::Mono.Unix.Catalog.GetString ("Check for _Updates"), global::Mono.Unix.Catalog.GetString ("Check for updates."), "gtk-ok");
+			this.updateAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("_Updates");
+			w1.Add (this.updateAction, null);
 			this.UIManager.InsertActionGroup (w1, 0);
 			global::Gtk.ActionGroup w2 = new global::Gtk.ActionGroup ("Instance Actions");
 			this.openInstDirAction = new global::Gtk.Action ("openInstDirAction", global::Mono.Unix.Catalog.GetString ("_Open Instance Folder"), global::Mono.Unix.Catalog.GetString ("Open instance folder"), "gtk-open");
@@ -34,13 +38,7 @@ namespace MultiMC
 			this.refreshAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Refresh");
 			w2.Add (this.refreshAction, "<Control>r");
 			this.UIManager.InsertActionGroup (w2, 1);
-			global::Gtk.ActionGroup w3 = new global::Gtk.ActionGroup ("Settings Actions");
-			this.preferencesAction = new global::Gtk.Action ("preferencesAction", global::Mono.Unix.Catalog.GetString ("_Settings"), global::Mono.Unix.Catalog.GetString ("Change your settings"), "gtk-preferences");
-			this.preferencesAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("_Settings");
-			w3.Add (this.preferencesAction, null);
-			this.updateAction = new global::Gtk.Action ("updateAction", global::Mono.Unix.Catalog.GetString ("Check for _Updates"), global::Mono.Unix.Catalog.GetString ("Check for updates."), "gtk-ok");
-			this.updateAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("_Updates");
-			w3.Add (this.updateAction, null);
+			global::Gtk.ActionGroup w3 = new global::Gtk.ActionGroup ("Default");
 			this.UIManager.InsertActionGroup (w3, 2);
 			this.AddAccelGroup (this.UIManager.AccelGroup);
 			this.Name = "MultiMC.MainWindow";
@@ -70,33 +68,17 @@ namespace MultiMC
 			this.windowbox.Add (this.instIconView);
 			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.windowbox [this.instIconView]));
 			w5.Position = 1;
-			// Container child windowbox.Gtk.Box+BoxChild
-			this.hboxStatus = new global::Gtk.HBox ();
-			this.hboxStatus.Name = "hboxStatus";
-			this.hboxStatus.Spacing = 6;
-			// Container child hboxStatus.Gtk.Box+BoxChild
-			this.statusProgBar = new global::Gtk.ProgressBar ();
-			this.statusProgBar.Name = "statusProgBar";
-			this.statusProgBar.Text = "";
-			this.hboxStatus.Add (this.statusProgBar);
-			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.hboxStatus [this.statusProgBar]));
-			w6.Position = 0;
-			this.windowbox.Add (this.hboxStatus);
-			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.windowbox [this.hboxStatus]));
-			w7.Position = 2;
-			w7.Expand = false;
-			w7.Fill = false;
 			this.Add (this.windowbox);
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
 			this.Show ();
 			this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);
+			this.preferencesAction.Activated += new global::System.EventHandler (this.OnSettingsClicked);
+			this.updateAction.Activated += new global::System.EventHandler (this.OnUpdateClicked);
 			this.openInstDirAction.Activated += new global::System.EventHandler (this.OnViewFolderClicked);
 			this.newInstAction.Activated += new global::System.EventHandler (this.OnNewClicked);
 			this.refreshAction.Activated += new global::System.EventHandler (this.OnRefreshClicked);
-			this.preferencesAction.Activated += new global::System.EventHandler (this.OnSettingsClicked);
-			this.updateAction.Activated += new global::System.EventHandler (this.OnUpdateClicked);
 		}
 	}
 }
