@@ -23,6 +23,7 @@ public class MultiMCLauncher
 		
 		try
 		{
+			System.out.println("Loading jars...");
 			String[] jarFiles = new String[] {
 				"minecraft.jar", "lwjgl.jar", "lwjgl_util.jar", "jinput.jar"
 			};
@@ -44,14 +45,14 @@ public class MultiMCLauncher
 				}
 			}
 			
-			System.out.println("Setting natives");
-			System.setProperty("java.library.path", 
-					new File(new File(args[0], "bin"), "natives").toString());
-			System.out.println("java.library.path set to " + 
-					System.getProperty("java.library.path"));
+			System.out.println("Loading natives...");
+			String nativesDir = new File(new File(args[0], "bin"), "natives").toString();
 			
-			System.out.println("Loading jars...");
-			URLClassLoader cl = new URLClassLoader(urls, MultiMCLauncher.class.getClassLoader());
+			System.setProperty("org.lwjgl.librarypath", nativesDir);
+			System.setProperty("net.java.games.input.librarypath", nativesDir);
+			
+			URLClassLoader cl = 
+					new URLClassLoader(urls, MultiMCLauncher.class.getClassLoader());
 			
 			// Get the Minecraft Class.
 			Class<?> mc = cl.loadClass("net.minecraft.client.Minecraft");

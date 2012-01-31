@@ -152,7 +152,6 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <Folder Include="icons\" />
     <Folder Include="ProblemDetection\" />
     <Folder Include="Java Launcher\" />
-    <Folder Include="Java Launcher\src\" />
     <Folder Include="ProblemDetection\Problems\" />
   </ItemGroup>
   <ItemGroup>

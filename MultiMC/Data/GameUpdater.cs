@@ -146,6 +146,7 @@ namespace MultiMC.Tasks
 				Console.WriteLine("Getting header " + uriList[i].ToString());
 				
 				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uriList[i]);
+				request.Timeout = 1000 * 15; // Set a 15 second timeout
 				request.Method = "HEAD";
 				
 				string etagOnDisk = null;

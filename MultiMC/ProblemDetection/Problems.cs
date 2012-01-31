@@ -39,6 +39,9 @@ namespace MultiMC.ProblemDetection
 			if (!Initialized)
 				InitProblems();
 			
+			if (mcOutput == null)
+				return;
+			
 			foreach (IMinecraftProblem prob in problems)
 			{
 #if LIST_PROBS
