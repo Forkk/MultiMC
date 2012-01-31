@@ -25,6 +25,12 @@ namespace MultiMC
 {
 	public class AppUtils
 	{
+		static AppUtils()
+		{
+			ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(CertCheck);
+		}
+		
+		
 		/// <summary>
 		/// Gets the version of the program.
 		/// </summary>
@@ -40,9 +46,6 @@ namespace MultiMC
 		
 		public static string ExecutePost(string url, string urlParams)
 		{
-			ServicePointManager.ServerCertificateValidationCallback = 
-				new RemoteCertificateValidationCallback(CertCheck);
-			
 			WebClient webClient = new WebClient();
 			return webClient.DownloadString(new Uri(url + "?" + urlParams));
 		}

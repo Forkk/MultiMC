@@ -58,6 +58,13 @@ namespace MultiMC.Tasks
 		}
 
 		private int _Progress;
+		
+		public virtual int TaskID
+		{
+			get;
+			set;
+		}
+		
 
 		/// <summary>
 		/// True if the task is running
