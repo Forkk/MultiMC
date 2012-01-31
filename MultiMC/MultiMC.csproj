@@ -65,7 +65,7 @@ It also allows you to install mods by dragging and dropping their files.</Descri
       <LogicalName>gui.stetic</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="icons\brick.png">
-      <LogicalName>MultiMC.icons.brick.pnh</LogicalName>
+      <LogicalName>MultiMC.icons.brick.pnf</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="icons\diamond.png" />
     <EmbeddedResource Include="icons\dirt.png" />

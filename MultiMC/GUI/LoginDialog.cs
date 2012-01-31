@@ -39,7 +39,7 @@ namespace MultiMC
 		
 		public bool ForceUpdate
 		{
-			get { return toggleForceUpdate.Active; }
+			get { return forceToggle.Active; }
 		}
 		
 		public string ErrorMessage
