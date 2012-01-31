@@ -431,7 +431,7 @@ namespace MultiMC
 					{
 						Visible = false;
 						UIEnabled = true;
-						inst.Launch();
+						inst.Launch(info.Username, info.SessionID);
 						ConsoleWindow cwin = new ConsoleWindow(inst);
 						cwin.ConsoleClosed += (sender3, e3) => 
 						{
