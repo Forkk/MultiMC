@@ -268,7 +268,7 @@ namespace MultiMC.Tasks
 			
 			string nativesJar = 
 				Path.Combine(Inst.BinDir, GetFileName(uriList[uriList.Length - 1]));
-			string nativesDir = Path.Combine(Inst.BinDir, "native");
+			string nativesDir = Path.Combine(Inst.BinDir, "natives");
 			
 			if (!Directory.Exists(nativesDir))
 				Directory.CreateDirectory(nativesDir);

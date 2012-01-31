@@ -206,7 +206,9 @@ namespace MultiMC
 				new Thread(() =>
 				{
 					Thread.Sleep(1000);
-					Inst.InstProcess.Kill();
+					if (Inst.InstProcess != null &&
+					    !Inst.InstProcess.HasExited)
+						Inst.InstProcess.Kill();
 				}).Start();
 			}
 		}

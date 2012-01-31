@@ -30,7 +30,7 @@ namespace MultiMC
 	public partial class MainWindow : Gtk.Window
 	{
 		private ListStore instList;
-		private HBox progBarHBox;
+		private Box progBarBox;
 		
 		public MainWindow() : 
 				base(Gtk.WindowType.Toplevel)
@@ -78,10 +78,10 @@ namespace MultiMC
 			InitMenu();
 //			InitDND();
 			
-			progBarHBox = new HBox();
-			windowbox.PackEnd(progBarHBox, false, true, 0);
+			progBarBox = new VBox();
+			windowbox.PackEnd(progBarBox, false, true, 0);
 			
-			progBarHBox.ShowAll();
+			progBarBox.ShowAll();
 			
 			LoadInstances();
 			
@@ -197,18 +197,23 @@ namespace MultiMC
 		#region Task System
 		
 		List<Task> currentTasks = new List<Task>();
+		Dictionary<int, ProgressBar> progBars = new Dictionary<int, ProgressBar>();
 		
-		private void addTask(Task newTask)
+		private void AddTask(Task newTask)
 		{
 			currentTasks.Add(newTask);
 			int index = currentTasks.IndexOf(newTask);
 			newTask.TaskID = index;
+			
+			ProgressBar taskProgBar = new ProgressBar();
+			taskProgBar.HeightRequest = 20;
+			progBars[newTask.TaskID] = taskProgBar;
+			progBarBox.PackEnd(taskProgBar, true, true, 0);
 		}
 		
 		private void StartTask(Task task)
 		{
-			Console.WriteLine("task");
-			addTask(task);
+			AddTask(task);
 			task.Started += new EventHandler(taskStarted);
 			task.Completed += taskCompleted;
 			task.ProgressChange +=
@@ -250,8 +255,6 @@ namespace MultiMC
 				return;
 			}
 			Modder modder = new Modder(SelectedInst);
-			instIconView.Sensitive = false;
-			modder.Completed += (sender2, e2) => instIconView.Sensitive = true;
 			StartTask(modder);
 		}
 		
@@ -264,6 +267,12 @@ namespace MultiMC
 
 		private void DoUpdateCheck()
 		{
+			if (updater != null &&
+			    updater.Running)
+			{
+				return;
+			}
+			
 			updater = new Updater();
 			updater.Completed += (sender, e) =>
 			{
@@ -357,8 +366,7 @@ namespace MultiMC
 			Gtk.Application.Invoke(
 				(sender1, e1) =>
 			{
-				this.statusProgBar.Visible = true;
-				this.statusProgBar.Fraction = 0;
+				progBars[(sender as Task).TaskID].Show();
 			});
 		}
 
@@ -367,7 +375,7 @@ namespace MultiMC
 			Gtk.Application.Invoke(
 				(sender1, e1) =>
 			{
-				statusProgBar.Visible = false;
+				progBarBox.Remove(progBars[(sender as Task).TaskID]);
 			});
 		}
 
@@ -384,7 +392,7 @@ namespace MultiMC
 					progFraction = 1;
 				}
 				
-				statusProgBar.Fraction = progFraction;
+				progBars[(sender as Task).TaskID].Fraction = progFraction;
 			});
 		}
 		
@@ -393,7 +401,7 @@ namespace MultiMC
 			Gtk.Application.Invoke(
 				(sender1, e1) =>
 			{
-				statusProgBar.Text = e.Status;
+				progBars[(sender as Task).TaskID].Text = e.Status;
 			});
 		}
 
@@ -438,7 +446,7 @@ namespace MultiMC
 							Visible = true;
 						};
 					});
-					StartTask(updater);
+					Application.Invoke((sender, e) => StartTask(updater));
 				}
 				else
 					UIEnabled = true;
@@ -859,7 +867,7 @@ namespace MultiMC
 				_uiEnabled = value;
 				foreach (Widget w in AllChildren)
 				{
-					if (w != statusProgBar)
+					if (!(w is ProgressBar))
 						w.Sensitive = value;
 				}
 			}

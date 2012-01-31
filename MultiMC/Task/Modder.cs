@@ -69,7 +69,15 @@ namespace MultiMC.Tasks
 		protected override void TaskStart()
 		{
 			// Ignore if there's nothing to install
-			InstallMods();
+			
+			try
+			{
+				InstallMods();
+			} catch (IOException e)
+			{
+				OnErrorMessage("Failed to install mods. An error occurred:\n" + e.ToString());
+				Cancel();
+			}
 		}
 
 		/// <summary>
