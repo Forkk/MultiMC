@@ -1,5 +1,9 @@
 2012-01-30  Andrew Okin  <razorblades13@gmail.com>
 
+	* MultiMC.csproj, MultiMC.EditModsDialog.cs: Minor GUI changes
+
+2012-01-30  Andrew Okin  <razorblades13@gmail.com>
+
 	* MainWindow.cs, GameUpdater.cs: Finished login system
 
 2012-01-30  Andrew Okin  <razorblades13@gmail.com>
