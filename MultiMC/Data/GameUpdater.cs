@@ -194,9 +194,7 @@ namespace MultiMC.Tasks
 						HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uriList[i]);
 						request.Headers[HttpRequestHeader.CacheControl] = "no-cache";
 						
-						Console.WriteLine("Getting response");
 						HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-						Console.WriteLine("Done");
 						
 						string etag = response.Headers[HttpResponseHeader.ETag];
 						etag = etag.TrimEnd('"').TrimStart('"');

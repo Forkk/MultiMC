@@ -180,21 +180,21 @@ namespace MultiMC.Data
 		/// <returns>The process the instance is running in</returns>
 		public Process Launch(string username, string sessionID)
 		{
-			if (!File.Exists("Launcher.class"))
-			{
-				FileStream output = File.Open("Launcher.class", FileMode.Create);
-				Stream input = System.Reflection.Assembly.
+//			if (!File.Exists("MultiMCLauncher.class"))
+//			{
+			FileStream output = File.Open("MultiMCLauncher.class", FileMode.Create);
+			Stream input = System.Reflection.Assembly.
 					GetCallingAssembly().GetManifestResourceStream("MultiMC.JavaLauncher");
 				
-				byte[] buffer = new byte[1024 * 2];
-				int count = 0;
-				while ((count = input.Read(buffer, 0, buffer.Length)) > 0)
-				{
-					output.Write(buffer, 0, count);
-				}
-				input.Close();
-				output.Close();
+			byte[] buffer = new byte[1024 * 2];
+			int count = 0;
+			while ((count = input.Read(buffer, 0, buffer.Length)) > 0)
+			{
+				output.Write(buffer, 0, count);
 			}
+			input.Close();
+			output.Close();
+//			}
 			
 			int xms = AppSettings.Main.InitialMemoryAlloc;
 			int xmx = AppSettings.Main.MaxMemoryAlloc;
@@ -206,35 +206,13 @@ namespace MultiMC.Data
 			Process mcProc = new Process();
 			ProcessStartInfo mcProcStart = new ProcessStartInfo();
 			
-			string[] cps = new string[] 
-			{ 
-				"minecraft.jar", "lwjgl.jar", "lwjgl_util.jar", "jinput.jar", "natives" 
-			};
-			for (int i = 0; i < cps.Length; i++)
-			{
-				cps[i] = Path.GetFullPath(Path.Combine(BinDir, cps[i]));
-			}
-			
-			string cp = "";
-			foreach (string c in cps)
-			{
-				cp += c + " ";
-			}
-			
-			
 			//mcProcStart.FileName = "cmd";
 			mcProcStart.FileName = javaPath;
 			mcProcStart.Arguments = string.Format(
-				"-Xmx{0}m -Xms{1}m -cp {2} {6} {3} {4} {5}",
-				xmx, xms, 
-				Path.GetFullPath("Launcher.jar"),
-				Path.GetFullPath(MinecraftDir), username, sessionID,
-				cp);
-			
-			if (OSUtils.Windows)
-			{
-				mcProcStart.EnvironmentVariables["APPDATA"] = this.RootDir;
-			}
+				"-Xmx{4}m -Xms{5}m " +
+				"{0} \"{1}\" \"{2}\" {3}",
+				"MultiMCLauncher", Path.GetFullPath(MinecraftDir), username, sessionID,
+				xmx, xms);
 
 			mcProc.EnableRaisingEvents = true;
 			mcProcStart.CreateNoWindow = true;

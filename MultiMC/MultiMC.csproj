@@ -157,6 +157,6 @@ It also allows you to install mods by dragging and dropping their files.</Descri
   </ItemGroup>
   <ItemGroup>
     <None Include="README" />
-    <None Include="Java Launcher\src\MultiMCLauncher.java" />
+    <None Include="Java Launcher\MultiMCLauncher.java" />
   </ItemGroup>
 </Project>
