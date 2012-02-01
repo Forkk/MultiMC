@@ -23,16 +23,25 @@ namespace MultiMC
 {
 	public class Resources
 	{
-		public const string InstanceXmlFile = "instance.xml";
-		public const string VInfoUrl = "http://multimc.tk/MultiMC/cs-version";
-		public const string InstDir = "instances";
-		public const string NewVersionFileName = "update.exe";
-		public const string LatestVersionURL = "http://multimc.tk/MultiMC/MultiMC.exe";
+		// Dropbox: http://dl.dropbox.com/u/52412912/
+		
+		// URLs
+//		public const string DotNetZipURL = "http://multimc.tk/MultiMC/DotNetZip.dll";
+//		public const string VInfoUrl = "http://multimc.tk/MultiMC/cs-version";
+//		public const string LatestVersionURL = "http://multimc.tk/MultiMC/MultiMC.exe";
+		
+		public const string VInfoUrl = "http://dl.dropbox.com/u/52412912/MultiMC/cs-version";
+		public const string LatestVersionURL = "http://dl.dropbox.com/u/52412912/MultiMC/MultiMC.exe";
+		public const string DotNetZipURL = "http://dl.dropbox.com/u/52412912/MultiMC/DotNetZip.dll";
 		public const string LauncherURL = 
 			"https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft.jar";
 		public const string MinecraftDLUri = 
 			"http://s3.amazonaws.com/MinecraftDownload/";
-		public const string DotNetZipURL = "http://multimc.tk/MultiMC/DotNetZip.dll";
+		
+		// Other
+		public const string InstanceXmlFile = "instance.xml";
+		public const string InstDir = "instances";
+		public const string NewVersionFileName = "update.exe";
 		public const string ConfigFileName = "multimc.cfg";
 		public const string LastLoginFileName = "lastlogin";
 		public const string LastLoginKey = 
