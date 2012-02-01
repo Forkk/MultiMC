@@ -201,8 +201,10 @@ namespace MultiMC
 			this.labelPassword.MnemonicWidget = this.passwordEntry;
 			this.labelUser.MnemonicWidget = this.userEntry;
 			this.Show ();
+			this.Shown += new global::System.EventHandler (this.OnShown);
 			this.userEntry.Activated += new global::System.EventHandler (this.OnUserEntryActivated);
 			this.passwordEntry.Activated += new global::System.EventHandler (this.OnPasswordEntryActivated);
+			this.checkRememberUsername.Clicked += new global::System.EventHandler (this.OnCheckRememberUsernameClicked);
 		}
 	}
 }

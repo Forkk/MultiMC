@@ -55,7 +55,7 @@ namespace MultiMC
 		
 		public bool RememberPassword
 		{
-			get { return checkRememberPwd.Active; }
+			get { return checkRememberPwd.Active && checkRememberPwd.Sensitive; }
 			set { checkRememberPwd.Active = value; }
 		}
 		
@@ -88,6 +88,18 @@ namespace MultiMC
 		protected void OnPasswordEntryActivated(object sender, System.EventArgs e)
 		{
 			buttonOk.Activate();
+		}
+
+		protected void OnShown(object sender, System.EventArgs e)
+		{
+			if (string.IsNullOrWhiteSpace(userEntry.Text))
+				passwordEntry.GrabFocus();
+			checkRememberPwd.Sensitive = checkRememberUsername.Active;
+		}
+
+		protected void OnCheckRememberUsernameClicked(object sender, System.EventArgs e)
+		{
+			checkRememberPwd.Sensitive = checkRememberUsername.Active;
 		}
 	}
 }

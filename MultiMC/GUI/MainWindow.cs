@@ -502,6 +502,9 @@ namespace MultiMC
 					Thread loginThread = new Thread(
 						() =>
 					{
+						WriteUserInfo((loginDlg.RememberUsername ? loginDlg.Username : ""), 
+						              (loginDlg.RememberPassword ? loginDlg.Password : ""));
+						
 						string reply = AppUtils.ExecutePost("https://login.minecraft.net", 
 						                                    parameters);
 						
@@ -543,10 +546,6 @@ namespace MultiMC
 							// Now we can finally return our login info.
 							else
 							{
-								// ... After we write lastlogin
-								WriteUserInfo((loginDlg.RememberUsername ? loginDlg.Username : ""), 
-								              (loginDlg.RememberPassword ? loginDlg.Password : ""));
-								
 								LoginInfo info = new LoginInfo(responseValues, 
 								                               loginDlg.ForceUpdate);
 								done(info);
@@ -661,7 +660,7 @@ namespace MultiMC
 				rijAlg.Key = key;
 				rijAlg.IV = IV;
 				
-				ICryptoTransform decryptor = rijAlg.CreateEncryptor(key, IV);
+				ICryptoTransform decryptor = rijAlg.CreateDecryptor(key, IV);
 				
 				using (FileStream fsDecrypt = File.OpenRead(Resources.LastLoginFileName))
 				{
@@ -671,7 +670,6 @@ namespace MultiMC
 						using (StreamReader srDecrypt = new StreamReader(csDecrypt))
 						{
 							string str = srDecrypt.ReadToEnd();
-							Console.WriteLine(str);
 							string[] data = str.Split(':');
 							username = data[0];
 							password = data[1];

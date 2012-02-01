@@ -1179,6 +1179,7 @@
     <property name="DefaultWidth">300</property>
     <property name="Buttons">3</property>
     <property name="HelpButton">False</property>
+    <signal name="Shown" handler="OnShown" />
     <child internal-child="VBox">
       <widget class="Gtk.VBox" id="dialog1_VBox">
         <property name="MemberName" />
@@ -1227,6 +1228,7 @@
                         <property name="DrawIndicator">True</property>
                         <property name="HasLabel">True</property>
                         <property name="UseUnderline">True</property>
+                        <signal name="Clicked" handler="OnCheckRememberUsernameClicked" />
                       </widget>
                       <packing>
                         <property name="Position">0</property>
