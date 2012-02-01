@@ -18,6 +18,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 
 using Gtk;
 using Gdk;
@@ -45,6 +46,9 @@ namespace MultiMC
 				osString = "Linux";
 			else if (OSUtils.MacOSX)
 				osString = "Mac OS X";
+			
+			if (!File.Exists(AppSettings.Main.JavaPath))
+				AppSettings.Main.JavaPath = OSUtils.FindJava();
 			
 			Title = "MultiMC " + AppUtils.GetVersion().ToString() + " " + osString;
 			Icon = Pixbuf.LoadFromResource("MainIcon");
@@ -421,6 +425,8 @@ namespace MultiMC
 //					Visible = true;
 //			};
 			
+//			Console.WriteLine("Offline allowed: " + inst.CanPlayOffline);
+			
 			string message = "";
 			UIEnabled = false;
 			DoLogin(
@@ -468,7 +474,21 @@ namespace MultiMC
 		private void DoLogin(LoginCompleteHandler done, string message = "", 
 		                     bool canplayOffline = false)
 		{
+			string username = "";
+			string password = "";
+			ReadUserInfo(out username, out password);
+			
 			LoginDialog loginDlg = new LoginDialog(this, message, canplayOffline);
+			if (!string.IsNullOrEmpty(username))
+			{
+				loginDlg.RememberUsername = true;
+				loginDlg.Username = username;
+			}
+			if (!string.IsNullOrEmpty(password))
+			{
+				loginDlg.RememberPassword = true;
+				loginDlg.Password = password;
+			}
 			loginDlg.Response += (object o, ResponseArgs args) => 
 			{
 				if (args.ResponseId == ResponseType.Ok)
@@ -493,9 +513,11 @@ namespace MultiMC
 							switch (reply.ToLower())
 							{
 							case "bad login":
-								errorMessage = "Invalid username or password";
+								errorMessage = "Invalid username or password.";
 								break;
-							// TODO add more error messages
+							case "old version":
+								errorMessage = "Please update.";
+								break;
 							default:
 								errorMessage = "Login failed: " + reply;
 								break;
@@ -521,6 +543,10 @@ namespace MultiMC
 							// Now we can finally return our login info.
 							else
 							{
+								// ... After we write lastlogin
+								WriteUserInfo((loginDlg.RememberUsername ? loginDlg.Username : ""), 
+								              (loginDlg.RememberPassword ? loginDlg.Password : ""));
+								
 								LoginInfo info = new LoginInfo(responseValues, 
 								                               loginDlg.ForceUpdate);
 								done(info);
@@ -528,6 +554,11 @@ namespace MultiMC
 						}
 					});
 					loginThread.Start();
+				}
+				else if (args.ResponseId == ResponseType.Reject)
+				{
+					// Play offline
+					done(new LoginInfo(null, false, false));
 				}
 				else
 				{
@@ -572,6 +603,12 @@ namespace MultiMC
 				private set;
 			}
 			
+			public bool Offline
+			{
+				get;
+				private set;
+			}
+			
 			public bool ForceUpdate
 			{
 				get;
@@ -579,14 +616,14 @@ namespace MultiMC
 			}
 			#endregion
 			
-			public LoginInfo(string[] values = null, bool forceUpdate = true)
+			public LoginInfo(string[] values = null, bool forceUpdate = false, bool cancel = true)
 			{
 				ForceUpdate = forceUpdate;
 				if (values == null)
 				{
 					values = new[] {"", "", "", ""};
-					Cancelled = true;
-					
+					Cancelled = cancel;
+					Offline = !cancel;
 				}
 				LatestVersion = values[0];
 				DownloadTicket = values[1];
@@ -599,6 +636,83 @@ namespace MultiMC
 //				ErrorMessage = errorMessage;
 //				Failed = true;
 //			}
+		}
+		
+		private void ReadUserInfo(out string username, out string password)
+		{
+			if (!File.Exists(Resources.LastLoginFileName))
+			{
+				username = password = "";
+				return;
+			}
+			
+			SHA384 sha = SHA384.Create();
+			byte[] hash = sha.ComputeHash(
+				System.Text.ASCIIEncoding.ASCII.GetBytes(Resources.LastLoginKey));
+			
+			byte[] key = new byte[32];
+			byte[] IV = new byte[16];
+			
+			Array.Copy(hash, key, key.Length);
+			Array.ConstrainedCopy(hash, key.Length, IV, 0, IV.Length);
+			
+			using (Rijndael rijAlg = Rijndael.Create())
+			{
+				rijAlg.Key = key;
+				rijAlg.IV = IV;
+				
+				ICryptoTransform decryptor = rijAlg.CreateEncryptor(key, IV);
+				
+				using (FileStream fsDecrypt = File.OpenRead(Resources.LastLoginFileName))
+				{
+					using (CryptoStream csDecrypt = 
+					       new CryptoStream(fsDecrypt, decryptor, CryptoStreamMode.Read))
+					{
+						using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+						{
+							string str = srDecrypt.ReadToEnd();
+							Console.WriteLine(str);
+							string[] data = str.Split(':');
+							username = data[0];
+							password = data[1];
+						}
+					}
+				}
+			}
+		}
+		
+		private void WriteUserInfo(string username, string password)
+		{
+			SHA384 sha = SHA384.Create();
+			byte[] hash = sha.ComputeHash(
+				System.Text.ASCIIEncoding.ASCII.GetBytes(Resources.LastLoginKey));
+			
+			byte[] key = new byte[32];
+			byte[] IV = new byte[16];
+			
+			Array.Copy(hash, key, key.Length);
+			Array.ConstrainedCopy(hash, key.Length, IV, 0, IV.Length);
+			
+			using (Rijndael rijAlg = Rijndael.Create())
+			{
+				rijAlg.Key = key;
+				rijAlg.IV = IV;
+				
+				ICryptoTransform encryptor = rijAlg.CreateEncryptor(key, IV);
+				
+				using (FileStream fsEncrypt = File.Open(Resources.LastLoginFileName, 
+				                                        FileMode.Create))
+				{
+					using (CryptoStream csEncrypt = 
+					       new CryptoStream(fsEncrypt, encryptor, CryptoStreamMode.Write))
+					{
+						using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+						{
+							swEncrypt.Write(string.Format("{0}:{1}", username, password));
+						}
+					}
+				}
+			}
 		}
 		
 		#endregion

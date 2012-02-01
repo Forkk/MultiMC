@@ -228,7 +228,7 @@ namespace MultiMC.Tasks
 						dlStream.Close();
 						fos.Close();
 						
-						string md5 = HexEncode(digest.Hash);
+						string md5 = DataUtils.HexEncode(digest.Hash);
 						
 						bool md5Matches = true;
 						if (etag != null)
@@ -399,27 +399,6 @@ namespace MultiMC.Tasks
 		{
 			get;
 			protected set;
-		}
-		
-		private static readonly char[] HexLowerChars = new[] 
-		{ 
-			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
-		};
-
-		public static string HexEncode(byte[] rawbytes)
-		{
-			int length = rawbytes.Length;
-			char[] chArray = new char[2 * length];
-			int index = 0;
-			int num3 = 0;
-
-			while (index < length)
-			{
-				chArray[num3++] = HexLowerChars[rawbytes[index] >> 4];
-				chArray[num3++] = HexLowerChars[rawbytes[index] & 15];
-				index++;
-			}
-			return new string(chArray);
 		}
 		
 		public enum EnumState

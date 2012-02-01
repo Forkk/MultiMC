@@ -80,16 +80,22 @@ namespace MultiMC
 		
 		private void LoadMods(string searchdir)
 		{
-			foreach (string f in Directory.GetFileSystemEntries(searchdir))
+			try
 			{
-				if (Directory.Exists(f))
+				foreach (string f in Directory.GetFileSystemEntries(searchdir))
 				{
-					LoadMods(f);
+					if (Directory.Exists(f))
+					{
+						LoadMods(f);
+					}
+					else if (File.Exists(f))
+					{
+						AddFile(f);
+					}
 				}
-				else if (File.Exists(f))
-				{
-					AddFile(f);
-				}
+			} catch (DirectoryNotFoundException)
+			{
+				return;
 			}
 		}
 		

@@ -370,7 +370,14 @@ namespace MultiMC.Data
 		/// </summary>
 		public string MinecraftDir
 		{
-			get { return Path.Combine(RootDir, ".minecraft"); }
+			get
+			{
+				if (Directory.Exists(Path.Combine(RootDir, ".minecraft")) &&
+				    !Directory.Exists(Path.Combine(RootDir, "minecraft")))
+					return Path.Combine(RootDir, ".minecraft");
+				else
+					return Path.Combine(RootDir, "minecraft");
+			}
 		}
 
 		/// <summary>
@@ -425,7 +432,6 @@ namespace MultiMC.Data
 			}
 		}
 		
-		// FIXME Running isn't set to false when instance quits.
 		public bool Running
 		{
 			get { return (instProc != null && !instProc.HasExited); }
@@ -435,12 +441,10 @@ namespace MultiMC.Data
 		{
 			get
 			{
-				if (File.Exists(BinDir) &&
-				    File.Exists(Path.Combine(BinDir, "version")))
+				string vfile = Path.Combine(BinDir, "version");
+				if (Directory.Exists(BinDir) && File.Exists(vfile))
 				{
-					string version = Tasks.GameUpdater.ReadVersionFile(
-						Path.Combine(BinDir, "version"));
-					
+					string version = Tasks.GameUpdater.ReadVersionFile(vfile);
 					if (version != null && version.Length > 0)
 						return true;
 				}

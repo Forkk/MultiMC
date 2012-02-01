@@ -142,6 +142,7 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <Compile Include="ProblemDetection\BasicProblem.cs" />
     <Compile Include="ProblemDetection\Problems\BlockConflict.cs" />
     <Compile Include="ProblemDetection\Problems\ModLoaderProblems.cs" />
+    <Compile Include="DataUtils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

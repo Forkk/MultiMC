@@ -20,7 +20,9 @@ namespace MultiMC
 {
 	public partial class LoginDialog : Gtk.Dialog
 	{
-		public LoginDialog(Gtk.Window parent, string errorMessage = "", bool canplayOffline = false)
+		public LoginDialog(Gtk.Window parent, 
+		                   string errorMessage = "", 
+		                   bool canplayOffline = false)
 			: base("Login", parent, DialogFlags.Modal)
 		{
 			this.Build();
@@ -31,16 +33,30 @@ namespace MultiMC
 		public string Username
 		{
 			get { return userEntry.Text; }
+			set { userEntry.Text = value; }
 		}
 		
 		public string Password
 		{
 			get { return passwordEntry.Text; }
+			set { passwordEntry.Text = value; }
 		}
 		
 		public bool ForceUpdate
 		{
 			get { return forceToggle.Active; }
+		}
+		
+		public bool RememberUsername
+		{
+			get { return checkRememberUsername.Active; }
+			set { checkRememberUsername.Active = value; }
+		}
+		
+		public bool RememberPassword
+		{
+			get { return checkRememberPwd.Active; }
+			set { checkRememberPwd.Active = value; }
 		}
 		
 		public string ErrorMessage

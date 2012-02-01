@@ -34,7 +34,10 @@ namespace MultiMC
 			"http://s3.amazonaws.com/MinecraftDownload/";
 		public const string DotNetZipURL = "http://multimc.tk/MultiMC/DotNetZip.dll";
 		public const string ConfigFileName = "multimc.cfg";
-		
+		public const string LastLoginFileName = "lastlogin";
+		public const string LastLoginKey = 
+			"Bi[r;Yq'/FKM].@wgZoIBh~bkY}&W,0>)Gz%Jbusexx)&ijhXV}b^8m;&jfL73tx";
+
 		public static Pixbuf GetInstIcon(string key)
 		{
 			if (iconDict.ContainsKey(key))

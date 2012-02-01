@@ -93,7 +93,7 @@ namespace MultiMC
 		{
 			get
 			{
-				int p = (int) Environment.OSVersion.Platform;
+				int p = (int)Environment.OSVersion.Platform;
 				return (p == 4) || (p == 128);
 			}
 		}
@@ -116,6 +116,28 @@ namespace MultiMC
 		public static bool IsOnMono()
 		{
 			return Type.GetType("Mono.Runtime") != null;
+		}
+		
+		public static string FindJava()
+		{
+			if (OSUtils.Windows)
+			{
+				string[] paths = new[]
+				{
+					@"C:\Program Files\Java\jre6\bin\java.exe",
+					@"C:\Program Files\Java\jre7\bin\java.exe",
+					@"C:\Program Files (x86)\Java\jre6\bin\java.exe",
+					@"C:\Program Files (x86)\Java\jre6\bin\java.exe",
+				};
+				Console.WriteLine("Detecting Java path for Windows.");
+				
+				foreach (string path in paths)
+					if (File.Exists(path))
+						return path;
+			}
+			// TODO add FindJava for Linux and Mac
+			
+			return "java";
 		}
 	}
 }
