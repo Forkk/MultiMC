@@ -58,9 +58,9 @@ namespace MultiMC.Tasks
 		private void CheckUpdate()
 		{
 			OnStart();
-
 			Status = "Checking for updates - Getting latest version info...";
-			Version nVersion = GetLatestVersion();
+			Version nVersion = null;
+			nVersion = GetLatestVersion();
 			Progress = 50;
 
 			if (nVersion != null)
@@ -81,12 +81,13 @@ namespace MultiMC.Tasks
 		private Version GetLatestVersion()
 		{
 			Version nVersion = null;
+			string vStr = null;
 			try
 			{
 #if UPDATE_DEBUG
-				nVersion = new Version(UpdateClient.DownloadString(Resources.VInfoDebugUrl));
+				vStr = UpdateClient.DownloadString(Resources.VInfoDebugUrl);
 #else
-				nVersion = new Version(UpdateClient.DownloadString(Resources.VInfoUrl));
+				vStr = UpdateClient.DownloadString(Resources.VInfoUrl);
 #endif
 			} catch (WebException e)
 			{
@@ -95,9 +96,11 @@ namespace MultiMC.Tasks
 				Status = "Update check failed:\n" + e.Message;
 				return null;
 			}
+			Console.WriteLine("New version {0}", vStr);
+			nVersion = new Version(vStr);
 			
 			Version cVersion = Assembly.GetExecutingAssembly().GetName().Version;
-
+			
 			if (nVersion.CompareTo(cVersion) > 0)
 			{
 				return nVersion;
@@ -127,6 +130,7 @@ namespace MultiMC.Tasks
 			{
 				get { return nVersion; }
 			}
+
 			Version nVersion;
 
 			#endregion

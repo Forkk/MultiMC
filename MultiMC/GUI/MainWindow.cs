@@ -47,6 +47,9 @@ namespace MultiMC
 			else if (OSUtils.MacOSX)
 				osString = "Mac OS X";
 			
+			if (!Directory.Exists(Resources.InstDir))
+				Directory.CreateDirectory(Resources.InstDir);
+			
 			if (!File.Exists(AppSettings.Main.JavaPath))
 				AppSettings.Main.JavaPath = OSUtils.FindJava();
 			
@@ -90,13 +93,10 @@ namespace MultiMC
 			LoadInstances();
 			
 			/* 
-			 * Run startup tasks such as downloading the launcher and DotNetZip 
-			 * and checking for updates. This is done in a separate thread because 
-			 * the startup task method blocks until each task is finished in order 
-			 * to to prevent task conflicts.
+			 * Run startup tasks such as downloading DotNetZip 
+			 * and checking for updates.
 			 */
-			Thread startupTaskThread = new Thread(RunStartupTasks);
-			startupTaskThread.Start();
+			RunStartupTasks();
 		}
 		
 		#region Startup Tasks
@@ -112,8 +112,6 @@ namespace MultiMC
 			dl = CheckDownloadFile("Ionic.Zip.Reduced.dll",
 			                       Resources.DotNetZipURL,
 			                       "Downloading DotNetZip...");
-			if (dl != null)
-				dl.TaskThread.Join();
 			
 			if (AppSettings.Main.AutoUpdate)
 				DoUpdateCheck();
@@ -287,6 +285,7 @@ namespace MultiMC
 					DownloadNewVersion();
 				}
 			};
+			Console.WriteLine("Checking for updates...");
 			StartTask(updater);
 		}
 
@@ -370,7 +369,10 @@ namespace MultiMC
 			Gtk.Application.Invoke(
 				(sender1, e1) =>
 			{
-				progBars[(sender as Task).TaskID].Show();
+				if (progBars[(sender as Task).TaskID] != null)
+				{
+					progBars[(sender as Task).TaskID].Show();
+				}
 			});
 		}
 
