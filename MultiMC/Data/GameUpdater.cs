@@ -104,7 +104,7 @@ namespace MultiMC.Tasks
 			State = EnumState.DETERMINING_PACKAGES;
 			string[] jarList = new string[]
 			{ 
-				"lwjgl.jar", "jinput.jar", "lwjgl_util.jar", this.mainGameUrl
+				"lwjgl_util.jar", "jinput.jar", "lwjgl.jar", this.mainGameUrl
 			};
 			
 			this.uriList = new Uri[jarList.Length + 1];
@@ -156,16 +156,17 @@ namespace MultiMC.Tasks
 				if (!forceUpdate && !string.IsNullOrEmpty(etagOnDisk))
 					request.Headers[HttpRequestHeader.IfNoneMatch] = etagOnDisk;
 				
-				HttpWebResponse response = ((HttpWebResponse)request.GetResponse());
-				
-				int code = (int)response.StatusCode;
-				if (code == 300)
-					skip[i] = true;
-				
-				fileSizes[i] = (int)response.ContentLength;
-				this.totalDownloadSize += fileSizes[i];
-				Console.WriteLine("Got response: " + code + " and file size of " + 
-				                  fileSizes[i] + " bytes");
+				using (HttpWebResponse response = ((HttpWebResponse)request.GetResponse()))
+				{
+					int code = (int)response.StatusCode;
+					if (code == 300)
+						skip[i] = true;
+					
+					fileSizes[i] = (int)response.ContentLength;
+					this.totalDownloadSize += fileSizes[i];
+					Console.WriteLine("Got response: " + code + " and file size of " + 
+					                  fileSizes[i] + " bytes");
+				}
 			}
 			
 			int initialPercentage = Progress;
