@@ -1,5 +1,8 @@
 MultiMC/bin/*
+MultiMC/obj/*
 MultiMC.mds
 MultiMC.userprefs
 MultiMC/MultiMC.mdp
 MultiMC/MultiMC.pidb
+
+/.gitignore~
