@@ -278,12 +278,16 @@ namespace MultiMC
 			updater = new Updater();
 			updater.Completed += (sender, e) =>
 			{
-				updateVersion = updater.NewVersion;
-				if (updateVersion != null && 
-					updater.NewVersion.CompareTo(AppUtils.GetVersion()) > 0)
+				Application.Invoke(
+					(sender2, e2) => 
 				{
-					DownloadNewVersion();
-				}
+					updateVersion = updater.NewVersion;
+					if (updateVersion != null && 
+					    updater.NewVersion.CompareTo(AppUtils.GetVersion()) > 0)
+					{
+						DownloadNewVersion();
+					}
+				});
 			};
 			Console.WriteLine("Checking for updates...");
 			StartTask(updater);
