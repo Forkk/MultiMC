@@ -43,6 +43,7 @@ namespace MultiMC
 		private global::Gtk.HBox hboxJavaPath;
 		private global::Gtk.Label labelJavaPath;
 		private global::Gtk.Entry entryJavaPath;
+		private global::Gtk.Button btnAutoJavaPath;
 		private global::Gtk.Label labelJava;
 		private global::Gtk.Label labelAdvanced;
 		private global::Gtk.Button buttonCancel;
@@ -69,7 +70,7 @@ namespace MultiMC
 			this.notebook = new global::Gtk.Notebook ();
 			this.notebook.CanFocus = true;
 			this.notebook.Name = "notebook";
-			this.notebook.CurrentPage = 0;
+			this.notebook.CurrentPage = 1;
 			this.notebook.TabPos = ((global::Gtk.PositionType)(0));
 			// Container child notebook.Gtk.Notebook+NotebookChild
 			this.vboxGeneral = new global::Gtk.VBox ();
@@ -265,7 +266,7 @@ namespace MultiMC
 			// Container child tableMemory.Gtk.Table+TableChild
 			this.labelInitialMemory = new global::Gtk.Label ();
 			this.labelInitialMemory.Name = "labelInitialMemory";
-			this.labelInitialMemory.LabelProp = global::Mono.Unix.Catalog.GetString ("Initial Memory Allocation");
+			this.labelInitialMemory.LabelProp = global::Mono.Unix.Catalog.GetString ("Minimum Memory Allocation");
 			this.tableMemory.Add (this.labelInitialMemory);
 			global::Gtk.Table.TableChild w21 = ((global::Gtk.Table.TableChild)(this.tableMemory [this.labelInitialMemory]));
 			w21.XOptions = ((global::Gtk.AttachOptions)(4));
@@ -357,11 +358,22 @@ namespace MultiMC
 			this.hboxJavaPath.Add (this.entryJavaPath);
 			global::Gtk.Box.BoxChild w29 = ((global::Gtk.Box.BoxChild)(this.hboxJavaPath [this.entryJavaPath]));
 			w29.Position = 1;
-			this.vboxJava.Add (this.hboxJavaPath);
-			global::Gtk.Box.BoxChild w30 = ((global::Gtk.Box.BoxChild)(this.vboxJava [this.hboxJavaPath]));
-			w30.Position = 0;
+			// Container child hboxJavaPath.Gtk.Box+BoxChild
+			this.btnAutoJavaPath = new global::Gtk.Button ();
+			this.btnAutoJavaPath.CanFocus = true;
+			this.btnAutoJavaPath.Name = "btnAutoJavaPath";
+			this.btnAutoJavaPath.UseUnderline = true;
+			this.btnAutoJavaPath.Label = global::Mono.Unix.Catalog.GetString ("Auto-detect");
+			this.hboxJavaPath.Add (this.btnAutoJavaPath);
+			global::Gtk.Box.BoxChild w30 = ((global::Gtk.Box.BoxChild)(this.hboxJavaPath [this.btnAutoJavaPath]));
+			w30.Position = 2;
 			w30.Expand = false;
 			w30.Fill = false;
+			this.vboxJava.Add (this.hboxJavaPath);
+			global::Gtk.Box.BoxChild w31 = ((global::Gtk.Box.BoxChild)(this.vboxJava [this.hboxJavaPath]));
+			w31.Position = 0;
+			w31.Expand = false;
+			w31.Fill = false;
 			this.GtkAlignment6.Add (this.vboxJava);
 			this.frameJava.Add (this.GtkAlignment6);
 			this.labelJava = new global::Gtk.Label ();
@@ -370,13 +382,13 @@ namespace MultiMC
 			this.labelJava.UseMarkup = true;
 			this.frameJava.LabelWidget = this.labelJava;
 			this.vboxAdvanced.Add (this.frameJava);
-			global::Gtk.Box.BoxChild w33 = ((global::Gtk.Box.BoxChild)(this.vboxAdvanced [this.frameJava]));
-			w33.Position = 1;
-			w33.Expand = false;
-			w33.Fill = false;
-			this.notebook.Add (this.vboxAdvanced);
-			global::Gtk.Notebook.NotebookChild w34 = ((global::Gtk.Notebook.NotebookChild)(this.notebook [this.vboxAdvanced]));
+			global::Gtk.Box.BoxChild w34 = ((global::Gtk.Box.BoxChild)(this.vboxAdvanced [this.frameJava]));
 			w34.Position = 1;
+			w34.Expand = false;
+			w34.Fill = false;
+			this.notebook.Add (this.vboxAdvanced);
+			global::Gtk.Notebook.NotebookChild w35 = ((global::Gtk.Notebook.NotebookChild)(this.notebook [this.vboxAdvanced]));
+			w35.Position = 1;
 			// Notebook tab
 			this.labelAdvanced = new global::Gtk.Label ();
 			this.labelAdvanced.Name = "labelAdvanced";
@@ -385,14 +397,14 @@ namespace MultiMC
 			this.notebook.SetTabLabel (this.vboxAdvanced, this.labelAdvanced);
 			this.labelAdvanced.ShowAll ();
 			w1.Add (this.notebook);
-			global::Gtk.Box.BoxChild w35 = ((global::Gtk.Box.BoxChild)(w1 [this.notebook]));
-			w35.Position = 0;
+			global::Gtk.Box.BoxChild w36 = ((global::Gtk.Box.BoxChild)(w1 [this.notebook]));
+			w36.Position = 0;
 			// Internal child MultiMC.SettingsDialog.ActionArea
-			global::Gtk.HButtonBox w36 = this.ActionArea;
-			w36.Name = "dialog1_ActionArea";
-			w36.Spacing = 10;
-			w36.BorderWidth = ((uint)(5));
-			w36.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
+			global::Gtk.HButtonBox w37 = this.ActionArea;
+			w37.Name = "dialog1_ActionArea";
+			w37.Spacing = 10;
+			w37.BorderWidth = ((uint)(5));
+			w37.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonCancel = new global::Gtk.Button ();
 			this.buttonCancel.CanDefault = true;
@@ -402,9 +414,9 @@ namespace MultiMC
 			this.buttonCancel.UseUnderline = true;
 			this.buttonCancel.Label = "gtk-cancel";
 			this.AddActionWidget (this.buttonCancel, -6);
-			global::Gtk.ButtonBox.ButtonBoxChild w37 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w36 [this.buttonCancel]));
-			w37.Expand = false;
-			w37.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w38 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w37 [this.buttonCancel]));
+			w38.Expand = false;
+			w38.Fill = false;
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonOk = new global::Gtk.Button ();
 			this.buttonOk.CanDefault = true;
@@ -414,16 +426,18 @@ namespace MultiMC
 			this.buttonOk.UseUnderline = true;
 			this.buttonOk.Label = "gtk-ok";
 			this.AddActionWidget (this.buttonOk, -5);
-			global::Gtk.ButtonBox.ButtonBoxChild w38 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w36 [this.buttonOk]));
-			w38.Position = 1;
-			w38.Expand = false;
-			w38.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w39 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w37 [this.buttonOk]));
+			w39.Position = 1;
+			w39.Expand = false;
+			w39.Fill = false;
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
+			this.frameLauncherSettings.Hide ();
 			this.labelGeneral.MnemonicWidget = this.notebook;
 			this.labelAdvanced.MnemonicWidget = this.notebook;
 			this.Show ();
+			this.btnAutoJavaPath.Clicked += new global::System.EventHandler (this.OnBtnAutoJavaPathClicked);
 			this.buttonCancel.Clicked += new global::System.EventHandler (this.OnCancel);
 			this.buttonOk.Clicked += new global::System.EventHandler (this.OnOK);
 		}

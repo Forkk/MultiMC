@@ -23,16 +23,19 @@ namespace MultiMC
 		{
 			this.Build();
 			
+			LoadSettings();
+		}
+		
+		protected void LoadSettings()
+		{
 			AppSettings settings = AppSettings.Main;
-			
-			entryLauncherFilename.Text = settings.LauncherPath;
 			
 			checkbuttonShowConsole.Active = settings.ShowConsole;
 			checkbuttonAutoCloseConsole.Active = settings.AutoCloseConsole;
 			
 			checkbuttonAutoUpdate.Active = settings.AutoUpdate;
 			
-			spinbuttonInitialMemory.Value = settings.InitialMemoryAlloc;
+			spinbuttonInitialMemory.Value = settings.MinMemoryAlloc;
 			spinbuttonMaxMemory.Value = settings.MaxMemoryAlloc;
 			
 			entryJavaPath.Text = settings.JavaPath;
@@ -47,14 +50,12 @@ namespace MultiMC
 		{
 			AppSettings settings = AppSettings.Main;
 			
-			settings.LauncherPath = entryLauncherFilename.Text;
-			
 			settings.ShowConsole = checkbuttonShowConsole.Active;
 			settings.AutoCloseConsole = checkbuttonAutoCloseConsole.Active;
 			
 			settings.AutoUpdate = checkbuttonAutoUpdate.Active;
 			
-			settings.InitialMemoryAlloc = (int)spinbuttonInitialMemory.Value;
+			settings.MinMemoryAlloc = (int)spinbuttonInitialMemory.Value;
 			settings.MaxMemoryAlloc = (int)spinbuttonMaxMemory.Value;
 			
 			settings.JavaPath = entryJavaPath.Text;
@@ -62,6 +63,17 @@ namespace MultiMC
 			settings.Save();
 			
 			Destroy();
+		}
+
+		protected void OnBtnAutoJavaPathClicked(object sender, System.EventArgs e)
+		{
+			bool success = AppSettings.Main.AutoDetectJavaPath();
+			if (!success)
+				MessageUtils.ShowMessageBox(this, 
+				                            Gtk.MessageType.Warning,
+				                            "Error",
+				                            "Failed to find Java path.");
+			entryJavaPath.Text = AppSettings.Main.JavaPath;
 		}
 	}
 }

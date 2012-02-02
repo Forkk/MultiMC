@@ -197,7 +197,7 @@ namespace MultiMC.Data
 			output.Close();
 //			}
 			
-			int xms = AppSettings.Main.InitialMemoryAlloc;
+			int xms = AppSettings.Main.MinMemoryAlloc;
 			int xmx = AppSettings.Main.MaxMemoryAlloc;
 			string launcher = AppSettings.Main.LauncherPath;
 			string javaPath = AppSettings.Main.JavaPath;

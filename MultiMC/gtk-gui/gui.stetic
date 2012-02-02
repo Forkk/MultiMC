@@ -28,7 +28,7 @@
           <widget class="Gtk.Notebook" id="notebook">
             <property name="MemberName" />
             <property name="CanFocus">True</property>
-            <property name="CurrentPage">0</property>
+            <property name="CurrentPage">1</property>
             <property name="TabPos">Left</property>
             <child>
               <widget class="Gtk.VBox" id="vboxGeneral">
@@ -37,6 +37,7 @@
                 <child>
                   <widget class="Gtk.Frame" id="frameLauncherSettings">
                     <property name="MemberName" />
+                    <property name="Visible">False</property>
                     <property name="ShadowType">None</property>
                     <child>
                       <widget class="Gtk.Alignment" id="GtkAlignment2">
@@ -300,7 +301,7 @@
                             <child>
                               <widget class="Gtk.Label" id="labelInitialMemory">
                                 <property name="MemberName" />
-                                <property name="LabelProp" translatable="yes">Initial Memory Allocation</property>
+                                <property name="LabelProp" translatable="yes">Minimum Memory Allocation</property>
                               </widget>
                               <packing>
                                 <property name="AutoSize">True</property>
@@ -450,6 +451,22 @@
                                   <packing>
                                     <property name="Position">1</property>
                                     <property name="AutoSize">True</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="Gtk.Button" id="btnAutoJavaPath">
+                                    <property name="MemberName" />
+                                    <property name="CanFocus">True</property>
+                                    <property name="Type">TextOnly</property>
+                                    <property name="Label" translatable="yes">Auto-detect</property>
+                                    <property name="UseUnderline">True</property>
+                                    <signal name="Clicked" handler="OnBtnAutoJavaPathClicked" />
+                                  </widget>
+                                  <packing>
+                                    <property name="Position">2</property>
+                                    <property name="AutoSize">True</property>
+                                    <property name="Expand">False</property>
+                                    <property name="Fill">False</property>
                                   </packing>
                                 </child>
                               </widget>

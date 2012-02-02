@@ -16,6 +16,7 @@ using System;
 using System.Configuration;
 using System.Collections.Generic;
 using System.IO;
+using System.Diagnostics;
 
 using MultiMC.Data;
 
@@ -46,7 +47,7 @@ namespace MultiMC
 				}
 				else
 				{
-					Console.WriteLine("Loading settings...");
+					DebugUtils.Print("Loading settings...");
 					inst = new AppSettings();
 					inst.Load(Resources.ConfigFileName);
 					return inst;
@@ -64,10 +65,61 @@ namespace MultiMC
 			base.Save(path);
 		}
 		
-		public int InitialMemoryAlloc
+		/// <summary>
+		/// Automatically finds the path to where java is installed.
+		/// </summary>
+		/// <returns>
+		/// True if java was found. Otherwise, <c>false</c>
+		/// </returns>
+		public bool AutoDetectJavaPath()
 		{
-			get { return Int32.Parse(this["InitialMemoryAlloc", "512"]); }
-			set { this["InitialMemoryAlloc"] = value.ToString(); }
+			if (OSUtils.Windows)
+			{
+				DebugUtils.Print("Finding Java on Windows...");
+				string[] possiblePaths = new string[]
+				{
+					@"C:\Program Files\Java\jre6\bin\java.exe",
+					@"C:\Program Files\Java\jre7\bin\java.exe",
+					@"C:\Program Files (x86)\Java\jre6\bin\java.exe",
+					@"C:\Program Files (x86)\Java\jre7\bin\java.exe",
+				};
+				
+				foreach (string path in possiblePaths)
+				{
+					if (File.Exists(path))
+					{
+						DebugUtils.Print("Found Java at {0}", path);
+						JavaPath = path;
+						return true;
+					}
+				}
+				return false;
+			}
+			else if (OSUtils.Linux)
+			{
+				DebugUtils.Print("Finding Java on Linux...");
+				ProcessStartInfo info = new ProcessStartInfo("which", "java");
+				info.UseShellExecute = false;
+				info.RedirectStandardOutput = true;
+				Process findJavaProc = Process.Start(info);
+				string path = findJavaProc.StandardOutput.ReadToEnd();
+				path = path.Trim();
+				if (File.Exists(path))
+				{
+					DebugUtils.Print("Found Java at {0}", path);
+					JavaPath = path;
+					return true;
+				}
+				else
+					return false;
+			}
+			return false;
+		}
+		
+		public int MinMemoryAlloc
+		{
+			get { return Int32.Parse(this["MinMemoryAlloc", "512"]); }
+			set { this["MinMemoryAlloc"] = value.ToString(); }
 		}
 		
 		public int MaxMemoryAlloc
