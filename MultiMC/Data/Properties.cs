@@ -42,8 +42,13 @@ namespace MultiMC
 				dict.Clear();
 				string[] lines = File.ReadAllLines(path);
 				foreach (string line in lines)
+				{
 					if (!line.StartsWith("#"))
-						dict.Add(line.Split('=')[0], line.Split('=')[1]);
+					{
+						string[] lineData = line.Split('=');
+						dict.Add(lineData[0], lineData[1]);
+					}
+				}
 			} catch (IndexOutOfRangeException e)
 			{
 				Console.WriteLine(e.ToString());
