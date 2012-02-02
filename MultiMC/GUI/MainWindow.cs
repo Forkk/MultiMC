@@ -53,7 +53,7 @@ namespace MultiMC
 			if (!File.Exists(AppSettings.Main.JavaPath))
 				AppSettings.Main.JavaPath = OSUtils.FindJava();
 			
-			Title = "MultiMC BETA " + AppUtils.GetVersion().ToString() + " " + osString;
+			Title = "MultiMC BETA " + Resources.VersionString + " " + osString;
 			Icon = Pixbuf.LoadFromResource("MainIcon");
 			
 			instList = new ListStore(typeof(string), typeof(Instance), typeof(Gdk.Pixbuf));
@@ -113,6 +113,7 @@ namespace MultiMC
 			                       Resources.DotNetZipURL,
 			                       "Downloading DotNetZip...");
 			
+			
 			if (AppSettings.Main.AutoUpdate)
 				DoUpdateCheck();
 		}
@@ -128,6 +129,7 @@ namespace MultiMC
 		{
 			if (!File.Exists(dest))
 			{
+				Console.WriteLine("Downloading {0}.", dest);
 				Downloader downloader = new Downloader(dest, url, message);
 				StartTask(downloader);
 				return downloader;

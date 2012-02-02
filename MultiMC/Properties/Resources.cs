@@ -32,7 +32,8 @@ namespace MultiMC
 		
 		public const string VInfoUrl = "http://dl.dropbox.com/u/52412912/MultiMC/cs-version";
 		public const string LatestVersionURL = "http://dl.dropbox.com/u/52412912/MultiMC/MultiMC.exe";
-		public const string DotNetZipURL = "http://dl.dropbox.com/u/52412912/MultiMC/DotNetZip.dll";
+		public const string DotNetZipURL = 
+			"http://dl.dropbox.com/u/52412912/MultiMC/Ionic.Zip.Reduced.dll";
 		public const string LauncherURL = 
 			"https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft.jar";
 		public const string MinecraftDLUri = 
@@ -46,6 +47,21 @@ namespace MultiMC
 		public const string LastLoginFileName = "lastlogin";
 		public const string LastLoginKey = 
 			"Bi[r;Yq'/FKM].@wgZoIBh~bkY}&W,0>)Gz%Jbusexx)&ijhXV}b^8m;&jfL73tx";
+		
+		/// <summary>
+		/// Gets the version string for displaying to the user.
+		/// </summary>
+		/// <value>
+		/// The version string.
+		/// </value>
+		public static string VersionString
+		{
+			get
+			{
+				Version v = AppUtils.GetVersion();
+				return string.Format("{0}.{1}.{2}.{3}", v.Major, v.Minor, v.Build, v.Revision);
+			}
+		}
 
 		public static Pixbuf GetInstIcon(string key)
 		{

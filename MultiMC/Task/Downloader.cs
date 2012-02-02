@@ -44,12 +44,16 @@ namespace MultiMC.Tasks
 		public string DownloadUrl
 		{
 			get { return downloadUrl; }
-		} string downloadUrl;
+		}
+
+		string downloadUrl;
 
 		public string TargetFile
 		{
 			get { return targFile; }
-		} string targFile;
+		}
+
+		string targFile;
 
 		public int Timeout
 		{
@@ -58,12 +62,13 @@ namespace MultiMC.Tasks
 			{
 				timeout = value;
 			}
-		} int timeout;
+		}
+
+		int timeout;
 
 		#endregion
 
 		int lastProgressTime;
-
 		string tmpFile;
 		WebClient webClient;
 
@@ -83,7 +88,6 @@ namespace MultiMC.Tasks
 			Status = Message;
 			Console.WriteLine("Starting download");
 			tmpFile = Path.GetTempFileName();
-			Console.WriteLine("Temp File: " + tmpFile);
 
 			Console.WriteLine("Creating target directory");
 			string tempDir = Directory.GetParent(tmpFile).FullName;
@@ -115,19 +119,19 @@ namespace MultiMC.Tasks
 
 		void webClient_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
 		{
+			Console.WriteLine("Download complete.");
 			if (!e.Cancelled && e.Error == null)
 			{
-				if (File.Exists(TargetFile))
-				{
-					File.Delete(TargetFile);
-				}
-				File.Copy(tmpFile, TargetFile);
+				File.Copy(tmpFile, TargetFile, true);
 			}
 			else if (e.Error != null)
 			{
 				OnException(e.Error);
 			}
-
+			
+			if (e.Cancelled || e.Error != null)
+				Console.WriteLine("Download failed.");
+			
 			if (File.Exists(tmpFile))
 				File.Delete(tmpFile);
 
