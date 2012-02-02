@@ -48,6 +48,17 @@ namespace MultiMC
 		
 		public static void Main(string[] args)
 		{
+			if (OSUtils.Linux)
+			{
+				if (Environment.CurrentDirectory.Equals(Environment.GetEnvironmentVariable("HOME")))
+				{
+					string workingDir = Directory.GetParent(
+						new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath).FullName;
+					Environment.CurrentDirectory = workingDir;
+					Console.WriteLine("Set working directory to {0}", workingDir);
+				}
+			}
+			
 			Application.Init();
 			
 			if (args.Length > 0)
