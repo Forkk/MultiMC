@@ -5,7 +5,6 @@
     <target-gtk-version>2.12</target-gtk-version>
   </configuration>
   <import>
-    <widget-library name="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <widget-library name="../bin/Debug/MultiMC.exe" internal="true" />
   </import>
   <widget class="Gtk.Dialog" id="MultiMC.SettingsDialog" design-size="474 480">
@@ -947,6 +946,7 @@
           <widget class="Gtk.ScrolledWindow" id="scrolledwindow1">
             <property name="MemberName" />
             <property name="CanFocus">True</property>
+            <property name="HscrollbarPolicy">Never</property>
             <property name="ShadowType">In</property>
             <child>
               <widget class="Gtk.IconView" id="iconView">
