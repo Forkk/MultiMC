@@ -157,6 +157,7 @@ namespace MultiMC
 				Console.WriteLine("Adding inst " + newDlg.InstDir);
 				Instance inst = new Instance(newDlg.InstName, newDlg.InstDir, true);
 				instList.AppendValues(inst.Name, inst);
+				LoadInstances();
 			};
 		}
 
