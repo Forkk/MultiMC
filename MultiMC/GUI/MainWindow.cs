@@ -107,11 +107,10 @@ namespace MultiMC
 		/// </summary>
 		private void RunStartupTasks()
 		{
-			Downloader dl = null;
 			// Get DotNetZip
-			dl = CheckDownloadFile("Ionic.Zip.Reduced.dll",
-			                       Resources.DotNetZipURL,
-			                       "Downloading DotNetZip...");
+			CheckDownloadFile("Ionic.Zip.Reduced.dll",
+			                  Resources.DotNetZipURL,
+			                  "Downloading DotNetZip...");
 			
 			
 			if (AppSettings.Main.AutoUpdate)
