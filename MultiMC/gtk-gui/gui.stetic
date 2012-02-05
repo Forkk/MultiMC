@@ -5,7 +5,7 @@
     <target-gtk-version>2.12</target-gtk-version>
   </configuration>
   <import>
-    <widget-library name="../bin/Debug/MultiMC.exe" internal="true" />
+    <widget-library name="../bin/Release/MultiMC.exe" internal="true" />
   </import>
   <widget class="Gtk.Dialog" id="MultiMC.SettingsDialog" design-size="474 480">
     <property name="MemberName" />
@@ -568,24 +568,7 @@
     </child>
   </widget>
   <widget class="Gtk.Window" id="MultiMC.MainWindow" design-size="633 451">
-    <action-group name="Settings Actions">
-      <action id="preferencesAction">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes">_Settings</property>
-        <property name="ShortLabel" translatable="yes">_Settings</property>
-        <property name="StockId">gtk-preferences</property>
-        <property name="Tooltip" translatable="yes">Change your settings</property>
-        <signal name="Activated" handler="OnSettingsClicked" />
-      </action>
-      <action id="updateAction">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes">Check for _Updates</property>
-        <property name="ShortLabel" translatable="yes">_Updates</property>
-        <property name="StockId">gtk-ok</property>
-        <property name="Tooltip" translatable="yes">Check for updates.</property>
-        <signal name="Activated" handler="OnUpdateClicked" />
-      </action>
-    </action-group>
+    <action-group name="Default" />
     <action-group name="Instance Actions">
       <action id="openInstDirAction">
         <property name="Type">Action</property>
@@ -613,7 +596,24 @@
         <signal name="Activated" handler="OnRefreshClicked" />
       </action>
     </action-group>
-    <action-group name="Default" />
+    <action-group name="Settings Actions">
+      <action id="preferencesAction">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">_Settings</property>
+        <property name="ShortLabel" translatable="yes">_Settings</property>
+        <property name="StockId">gtk-preferences</property>
+        <property name="Tooltip" translatable="yes">Change your settings</property>
+        <signal name="Activated" handler="OnSettingsClicked" />
+      </action>
+      <action id="updateAction">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Check for _Updates</property>
+        <property name="ShortLabel" translatable="yes">_Updates</property>
+        <property name="StockId">gtk-ok</property>
+        <property name="Tooltip" translatable="yes">Check for updates.</property>
+        <signal name="Activated" handler="OnUpdateClicked" />
+      </action>
+    </action-group>
     <property name="MemberName" />
     <property name="Title" translatable="yes">MainWindow</property>
     <property name="WindowPosition">Center</property>

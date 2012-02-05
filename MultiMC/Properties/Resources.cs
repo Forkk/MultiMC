@@ -15,6 +15,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Reflection;
 
 using Gtk;
 using Gdk;
@@ -31,22 +32,57 @@ namespace MultiMC
 //		public const string LatestVersionURL = "http://multimc.tk/MultiMC/MultiMC.exe";
 		
 		public const string VInfoUrl = "http://dl.dropbox.com/u/52412912/MultiMC/cs-version";
-		public const string LatestVersionURL = "http://dl.dropbox.com/u/52412912/MultiMC/MultiMC.exe";
 		public const string DotNetZipURL = 
 			"http://dl.dropbox.com/u/52412912/MultiMC/Ionic.Zip.Reduced.dll";
 		public const string LauncherURL = 
 			"https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft.jar";
-		public const string MinecraftDLUri = 
-			"http://s3.amazonaws.com/MinecraftDownload/";
+		public const string MojangMCDLUri = "http://s3.amazonaws.com/MinecraftDownload/";
+		public const string ForkkMCDLUri = "http://dl.dropbox.com/u/52412912/LWJGL/";
 		
 		// Other
 		public const string InstanceXmlFile = "instance.xml";
 		public const string InstDir = "instances";
-		public const string NewVersionFileName = "update.exe";
 		public const string ConfigFileName = "multimc.cfg";
 		public const string LastLoginFileName = "lastlogin";
 		public const string LastLoginKey = 
 			"Bi[r;Yq'/FKM].@wgZoIBh~bkY}&W,0>)Gz%Jbusexx)&ijhXV}b^8m;&jfL73tx";
+		
+		public static string LatestVersionURL
+		{
+			get
+			{
+				if (OSUtils.Linux)
+					return "http://dl.dropbox.com/u/52412912/MultiMC/Linux/MultiMC";
+				return "http://dl.dropbox.com/u/52412912/MultiMC/MultiMC.exe";
+			}
+		}
+		
+		/// <summary>
+		/// Gets the name of the currently running executable file.
+		/// </summary>
+		/// <value>
+		/// The name of the executable file.
+		/// </value>
+		public static string ExecutableFileName
+		{
+			get
+			{
+				string assemblyName = Assembly.GetExecutingAssembly().Location;
+				if (OSUtils.Linux)
+				{
+					return assemblyName.Substring(0, assemblyName.LastIndexOf('.'));
+				}
+				return assemblyName;
+			}
+		}
+		
+		public static string NewVersionFileName
+		{
+			get
+			{
+				return OSUtils.Linux ? "update" : "update.exe";
+			}
+		}
 		
 		/// <summary>
 		/// Gets the version string for displaying to the user.

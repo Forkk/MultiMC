@@ -14,7 +14,6 @@
 //    limitations under the License.
 using System;
 using System.IO;
-using System.Reflection;
 using System.Diagnostics;
 using System.Threading;
 
@@ -52,8 +51,7 @@ namespace MultiMC
 			{
 				if (Environment.CurrentDirectory.Equals(Environment.GetEnvironmentVariable("HOME")))
 				{
-					string workingDir = Directory.GetParent(
-						new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath).FullName;
+					string workingDir = Resources.ExecutableFileName;
 					Environment.CurrentDirectory = workingDir;
 					Console.WriteLine("Set working directory to {0}", workingDir);
 				}
@@ -110,8 +108,6 @@ namespace MultiMC
 //				}
 //			};
 			
-			
-			
 			if (File.Exists(Resources.NewVersionFileName))
 				File.Delete(Resources.NewVersionFileName);
 			
@@ -122,12 +118,24 @@ namespace MultiMC
 			
 			if (InstallUpdates)
 			{
-				string currentFile = 
-					new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
-				Console.WriteLine(string.Format("-u \"{0}\"", currentFile));
-				
-				Process.Start(Resources.NewVersionFileName,
-				              string.Format("-u \"{0}\"", currentFile));
+				string currentFile = Resources.ExecutableFileName;
+				Console.WriteLine(string.Format("{0} -u \"{1}\"", 
+				                                Resources.NewVersionFileName, currentFile));
+				if (OSUtils.Linux)
+				{
+					Process.Start("chmod",
+					              string.Format("+x \"{0}\"", Resources.NewVersionFileName));
+					ProcessStartInfo info = 
+						new ProcessStartInfo(Resources.NewVersionFileName,
+						                     string.Format("-u \"{0}\"", currentFile));
+					info.UseShellExecute = false;
+					Process.Start(info);
+				}
+				else
+				{
+					Process.Start(Resources.NewVersionFileName,
+					              string.Format("-u \"{0}\"", currentFile));
+				}
 			}
 		}
 		
@@ -213,9 +221,8 @@ namespace MultiMC
 					}
 					else
 					{
-						string currentFile = 
-							new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
-						File.Copy(currentFile, target);
+						Console.WriteLine("File: " + Resources.NewVersionFileName);
+						File.Copy(Resources.NewVersionFileName, target);
 					}
 				}
 				

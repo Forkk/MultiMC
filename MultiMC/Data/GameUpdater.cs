@@ -104,14 +104,24 @@ namespace MultiMC.Tasks
 			State = EnumState.DETERMINING_PACKAGES;
 			string[] jarList = new string[]
 			{ 
-				"lwjgl_util.jar", "jinput.jar", "lwjgl.jar", this.mainGameUrl
+				this.mainGameUrl, "lwjgl_util.jar", "jinput.jar", "lwjgl.jar"
 			};
 			
 			this.uriList = new Uri[jarList.Length + 1];
-			Uri baseUri = new Uri(Resources.MinecraftDLUri);
+			Uri forkkBaseUri = new Uri(Resources.ForkkMCDLUri);
+			Uri mojangBaseUri = new Uri(Resources.MojangMCDLUri);
 			
 			for (int i = 0; i < jarList.Length; i++)
-				this.uriList[i] = new Uri(baseUri, jarList[i]);
+			{
+				// minecraft.jar should be downloaded from mojang
+				if (i == 0)
+					this.uriList[i] = new Uri(mojangBaseUri, jarList[i]);
+				
+				// The latest LWJGL should be downloaded from Forkk's dropbox 
+				// since minecraft's version doesn't work with MultiMC
+				else
+					this.uriList[i] = new Uri(forkkBaseUri, jarList[i]);
+			}
 			
 			string nativeJar = string.Empty;
 			
@@ -127,7 +137,7 @@ namespace MultiMC.Tasks
 				Cancel();
 			}
 			
-			this.uriList[this.uriList.Length - 1] = new Uri(baseUri, nativeJar);
+			this.uriList[this.uriList.Length - 1] = new Uri(forkkBaseUri, nativeJar);
 		}
 		
 		protected void DownloadJars()
@@ -198,8 +208,18 @@ namespace MultiMC.Tasks
 						
 						HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 						
-						string etag = response.Headers[HttpResponseHeader.ETag];
-						etag = etag.TrimEnd('"').TrimStart('"');
+						string etag = "";
+						// If downloading from Mojang, use ETag.
+						if (uriList[i].ToString().StartsWith(Resources.MojangMCDLUri))
+						{
+							etag = response.Headers[HttpResponseHeader.ETag];
+							etag = etag.TrimEnd('"').TrimStart('"');
+						}
+						// If downloading from dropbox, ignore MD5s
+						else
+						{
+							// TODO add a way to verify integrity of files downloaded from dropbox
+						}
 						
 						Stream dlStream = response.GetResponseStream();
 						FileStream fos = 
@@ -229,13 +249,15 @@ namespace MultiMC.Tasks
 						dlStream.Close();
 						fos.Close();
 						
-						string md5 = DataUtils.HexEncode(digest.Hash);
+						string md5 = DataUtils.HexEncode(digest.Hash).Trim();
+						etag = etag.Trim();
 						
 						bool md5Matches = true;
-						if (etag != null)
+						if (!string.IsNullOrEmpty(etag) && !string.IsNullOrEmpty(md5))
 						{
+							// This is temporarily disabled since dropbox doesn't use MD5s as etags
 							md5Matches = md5.Equals(etag);
-//							Console.WriteLine(md5 + "\n" + etag);
+//							Console.WriteLine(md5 + "\n" + etag + "\n");
 						}
 						
 						if (md5Matches && fileSize == fileSizes[i] || fileSizes[i] <= 0)

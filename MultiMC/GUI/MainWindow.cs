@@ -53,7 +53,9 @@ namespace MultiMC
 			if (!File.Exists(AppSettings.Main.JavaPath))
 				AppSettings.Main.JavaPath = OSUtils.FindJava();
 			
-			Title = "MultiMC BETA " + Resources.VersionString + " " + osString;
+			Title = string.Format("MultiMC BETA {0} for {1}",
+			                      Resources.VersionString,
+			                      osString);
 			Icon = Pixbuf.LoadFromResource("MainIcon");
 			
 			instList = new ListStore(typeof(string), typeof(Instance), typeof(Gdk.Pixbuf));
