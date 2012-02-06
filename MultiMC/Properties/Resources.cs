@@ -38,7 +38,7 @@ namespace MultiMC
 		public const string ForkkMCDLUri = "http://dl.dropbox.com/u/52412912/LWJGL/";
 		
 		// Update URLs
-		public const string DownloadSiteURL = "http://multimc.tk/download/";
+		public const string DownloadSiteURL = "http://forkk.net/MultiMC/download/";
 		public const string VInfoUrl = DownloadSiteURL + "cs-version";
 		public const string DotNetZipURL = DownloadSiteURL + "Ionic.Zip.Reduced.dll";
 		public const string OtherUpdateURL = DownloadSiteURL + "MultiMC.exe";
