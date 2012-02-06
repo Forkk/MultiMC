@@ -31,15 +31,20 @@ namespace MultiMC
 //		public const string VInfoUrl = "http://multimc.tk/MultiMC/cs-version";
 //		public const string LatestVersionURL = "http://multimc.tk/MultiMC/MultiMC.exe";
 		
-		public const string VInfoUrl = "http://dl.dropbox.com/u/52412912/MultiMC/cs-version";
-		public const string DotNetZipURL = 
-			"http://dl.dropbox.com/u/52412912/MultiMC/Ionic.Zip.Reduced.dll";
+		// Minecraft URLs
 		public const string LauncherURL = 
 			"https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft.jar";
 		public const string MojangMCDLUri = "http://s3.amazonaws.com/MinecraftDownload/";
 		public const string ForkkMCDLUri = "http://dl.dropbox.com/u/52412912/LWJGL/";
 		
-		// Other
+		// Update URLs
+		public const string DownloadSiteURL = "http://multimc.tk/download/";
+		public const string VInfoUrl = DownloadSiteURL + "cs-version";
+		public const string DotNetZipURL = DownloadSiteURL + "Ionic.Zip.Reduced.dll";
+		public const string OtherUpdateURL = DownloadSiteURL + "MultiMC.exe";
+		public const string LinuxUpdateURL = DownloadSiteURL + "Linux/MultiMC";
+		
+		// Other Stuff
 		public const string InstanceXmlFile = "instance.xml";
 		public const string InstDir = "instances";
 		public const string ConfigFileName = "multimc.cfg";
@@ -52,8 +57,8 @@ namespace MultiMC
 			get
 			{
 				if (OSUtils.Linux)
-					return "http://dl.dropbox.com/u/52412912/MultiMC/Linux/MultiMC";
-				return "http://dl.dropbox.com/u/52412912/MultiMC/MultiMC.exe";
+					return LinuxUpdateURL;
+				return OtherUpdateURL;
 			}
 		}
 		
