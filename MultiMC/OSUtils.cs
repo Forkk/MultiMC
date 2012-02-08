@@ -153,9 +153,9 @@ namespace MultiMC
 			string[] destParts = fullDestPath.Trim(Path.DirectorySeparatorChar).
 				Split(Path.DirectorySeparatorChar);
 			
-			DebugUtils.Print("Path Parts: {0}\nDest Parts: {1}", 
-			                 DataUtils.ArrayToString(pathParts),
-			                 DataUtils.ArrayToString(destParts));
+//			DebugUtils.Print("Path Parts: {0}\nDest Parts: {1}", 
+//			                 DataUtils.ArrayToString(pathParts),
+//			                 DataUtils.ArrayToString(destParts));
 			
 			foreach (string part in destParts)
 			{

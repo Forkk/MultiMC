@@ -81,6 +81,10 @@ namespace MultiMC
 			modView.Reorderable = true;
 			
 			LoadMods();
+			
+			// Auto-refresh
+			Inst.InstMods.ModFileChanged += (sender, e) =>
+				Application.Invoke((sender2, e2) => LoadMods());
 		}
 		
 		protected void LoadMods()

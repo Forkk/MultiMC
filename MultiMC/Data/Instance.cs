@@ -577,17 +577,21 @@ namespace MultiMC.Data
 			
 			watcher.EnableRaisingEvents = true;
 		}
-
+		
 		void FileChanged(object sender, FileSystemEventArgs e)
 		{
+			string filePath = OSUtils.GetRelativePath(e.FullPath, Environment.CurrentDirectory);
+			Console.WriteLine(filePath);
 			switch (e.ChangeType)
 			{
 			case WatcherChangeTypes.Created:
-				modList.Add(OSUtils.GetRelativePath(e.FullPath, Inst.InstModsDir));
+				modList.Add(filePath);
+				OnModFileChanged(ModFileChangeTypes.ADDED, filePath);
 				Save();
 				break;
 			case WatcherChangeTypes.Deleted:
-				modList.Remove(OSUtils.GetRelativePath(e.FullPath, Inst.InstModsDir));
+				modList.Remove(filePath);
+				OnModFileChanged(ModFileChangeTypes.REMOVED, filePath);
 				Save();
 				break;
 			default:
@@ -597,11 +601,15 @@ namespace MultiMC.Data
 		
 		void FileRenamed(object sender, RenamedEventArgs e)
 		{
-//			string oldPath = OSUtils.GetRelativePath(e.OldFullPath, 
-//			                                         Path.GetFullPath(Inst.InstModsDir));
-//			string path = OSUtils.GetRelativePath(e.FullPath, Path.GetFullPath(Inst.InstModsDir));
-//			this[this[oldPath]] = path; // wat
-//			Save();
+			string oldPath = OSUtils.GetRelativePath(e.OldFullPath, 
+			                                         Path.GetFullPath(Environment.CurrentDirectory));
+			string path = 
+				OSUtils.GetRelativePath(e.FullPath, Path.GetFullPath(
+					Path.GetFullPath(Environment.CurrentDirectory)));
+			OnModFileChanged(ModFileChangeTypes.RENAMED, oldPath);
+			int index = this[oldPath];
+			this[index] = path;
+			Save();
 		}
 
 		public Instance Inst
@@ -707,10 +715,10 @@ namespace MultiMC.Data
 			return modList.GetEnumerator();
 		}
 		
-		public virtual void OnModFileChanged(string modFile, int index)
+		public virtual void OnModFileChanged(ModFileChangeTypes type, string modFile)
 		{
 			if (ModFileChanged != null)
-				ModFileChanged(this, new ModFileChangedEventArgs(modFile, index));
+				ModFileChanged(this, new ModFileChangedEventArgs(type, modFile));
 		}
 		
 		public event EventHandler<ModFileChangedEventArgs> ModFileChanged;
@@ -720,10 +728,16 @@ namespace MultiMC.Data
 	
 	public class ModFileChangedEventArgs : EventArgs
 	{
-		public ModFileChangedEventArgs(string modFile, int index)
+		public ModFileChangedEventArgs(ModFileChangeTypes type, string modFile)
 		{
-			Index = index;
+			ChangeType = type;
 			ModFile = modFile;
+		}
+		
+		public ModFileChangeTypes ChangeType
+		{
+			get;
+			protected set;
 		}
 		
 		public string ModFile
@@ -731,12 +745,14 @@ namespace MultiMC.Data
 			get;
 			protected set;
 		}
-		
-		public int Index
-		{
-			get;
-			protected set;
-		}
+	}
+	
+	public enum ModFileChangeTypes
+	{
+		ADDED,
+		REMOVED,
+		RENAMED,
+		OTHER
 	}
 
 	public class InstQuitEventArgs : EventArgs
