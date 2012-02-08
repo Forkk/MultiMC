@@ -118,7 +118,9 @@ namespace MultiMC.Data
 			this.RootDir = rootDir;
 
 			this.autosave = autosave;
-
+			
+			InstMods = new InstanceMods(this);
+			InstMods.Update();
 			AutoSave();
 		}
 
@@ -133,6 +135,9 @@ namespace MultiMC.Data
 			this.rootDir = rootDir;
 
 			this.autosave = autosave;
+			
+			InstMods = new InstanceMods(this);
+			InstMods.Update();
 		}
 
 		/// <summary>
@@ -283,6 +288,12 @@ namespace MultiMC.Data
 				throw new InvalidOperationException("Cannot dispose an instance that is running!");
 			instProc.Dispose();
 		}
+		
+		public InstanceMods InstMods
+		{
+			get;
+			private set;
+		}
 
 		#endregion
 
@@ -363,6 +374,18 @@ namespace MultiMC.Data
 		public string InstModsDir
 		{
 			get { return Path.Combine(RootDir, "instMods"); }
+		}
+		
+		/// <summary>
+		/// Gets the mod list file. This file stores a list of all the mods installed in the
+		/// order that they will be installed.
+		/// </summary>
+		/// <value>
+		/// The mod list file.
+		/// </value>
+		public string ModListFile
+		{
+			get { return Path.Combine(RootDir, Resources.ModListFileName); }
 		}
 
 		/// <summary>
@@ -529,6 +552,160 @@ namespace MultiMC.Data
 		}
 
 		#endregion
+	}
+	
+	public class InstanceMods : IEnumerable<string>
+	{
+		List<string> modList;
+		
+		public InstanceMods(Instance inst)
+		{
+			modList = new List<string>();
+			Inst = inst;
+			
+			if (!Directory.Exists(Inst.InstModsDir))
+				Directory.CreateDirectory(Inst.InstModsDir);
+			
+			FileSystemWatcher watcher = new FileSystemWatcher(Inst.InstModsDir);
+			watcher.Changed += FileChanged;
+			watcher.Deleted += FileChanged;
+			watcher.Created += FileChanged;
+			watcher.Renamed += FileRenamed;
+			watcher.IncludeSubdirectories = true;
+			watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite |
+				NotifyFilters.FileName | NotifyFilters.DirectoryName;
+			
+			watcher.EnableRaisingEvents = true;
+		}
+
+		void FileChanged(object sender, FileSystemEventArgs e)
+		{
+			switch (e.ChangeType)
+			{
+			case WatcherChangeTypes.Created:
+				modList.Add(OSUtils.GetRelativePath(e.FullPath, Inst.InstModsDir));
+				Save();
+				break;
+			case WatcherChangeTypes.Deleted:
+				modList.Remove(OSUtils.GetRelativePath(e.FullPath, Inst.InstModsDir));
+				Save();
+				break;
+			default:
+				break;
+			}
+		}
+		
+		void FileRenamed(object sender, RenamedEventArgs e)
+		{
+//			string oldPath = OSUtils.GetRelativePath(e.OldFullPath, 
+//			                                         Path.GetFullPath(Inst.InstModsDir));
+//			string path = OSUtils.GetRelativePath(e.FullPath, Path.GetFullPath(Inst.InstModsDir));
+//			this[this[oldPath]] = path; // wat
+//			Save();
+		}
+
+		public Instance Inst
+		{
+			get;
+			private set;
+		}
+		
+		public string this[int i]
+		{
+			get  { return modList[i]; }
+			private set { modList[i] = value; }
+		}
+		
+		public int this[string s]
+		{
+			get { return modList.IndexOf(s); }
+			set
+			{
+				if (!modList.Contains(s))
+					throw new KeyNotFoundException("Can't change index of something " +
+					                               "that isn't in the list!");
+				modList.Remove(s);
+				modList.Insert(value, s);
+			}
+		}
+		
+		public void Load()
+		{
+			modList.Clear();
+			if (File.Exists(Inst.ModListFile))
+			{
+				foreach (string modFile in File.ReadAllLines(Inst.ModListFile))
+				{
+					modList.Add(Path.Combine(Inst.InstModsDir, modFile));
+				}
+			}
+		}
+		
+		public void Save()
+		{
+			try
+			{
+				List<string> writeList = new List<string>();
+				writeList.AddRange(modList);
+				for (int i = 0; i < writeList.Count; i++)
+				{
+					writeList[i] = 
+						OSUtils.GetRelativePath(writeList[i], Path.GetFullPath(Inst.InstModsDir));
+				}
+				File.WriteAllLines(Inst.ModListFile, writeList);
+			} catch (IOException e)
+			{
+				if (e.Message.ToLower().Contains("in use"))
+				{
+					Console.WriteLine("Failed to save mod list because " +
+						"something else was using the file.");
+				}
+			}
+		}
+		
+		public void Update()
+		{
+			Load();
+			if (Directory.Exists(Inst.InstModsDir))
+			{
+				for (int i = 0; i < modList.Count; i++)
+				{
+					if (!File.Exists(modList[i]))
+					{
+						modList.Remove(modList[i]);
+						i--;
+					}
+				}
+				RecursiveAdd(Inst.InstModsDir);
+			}
+			Save();
+		}
+		
+		private void RecursiveAdd(string dir)
+		{
+			foreach (string modFile in Directory.GetFileSystemEntries(dir))
+			{
+				if (Directory.Exists(modFile))
+				{
+					RecursiveAdd(Path.Combine(dir, Path.GetFileName(modFile)));
+				}
+				else if (File.Exists(modFile))
+				{
+					if (!modList.Contains(modFile))
+						modList.Add(modFile);
+				}
+			}
+		}
+		
+		public IEnumerator<string> GetEnumerator()
+		{
+			return modList.GetEnumerator();
+		}
+		
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return modList.GetEnumerator();
+		}
 	}
 	
 	#region Event Args

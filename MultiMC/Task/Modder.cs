@@ -85,9 +85,11 @@ namespace MultiMC.Tasks
 		private void InstallMods()
 		{
 			OnStart();
-			//running = true;
-
-			//ArrayList cFiles = new ArrayList();
+			modFileIndices = new Hashtable();
+			foreach (string modFile in Target.InstMods)
+			{
+				modFileIndices[modFile] = Target.InstMods[modFile];
+			}
 
 			string mcBin = Target.BinDir;
 			string mcJar = Path.Combine(mcBin, "minecraft.jar");
@@ -127,7 +129,7 @@ namespace MultiMC.Tasks
 			string metaInfRegex = Path.Combine("META-INF", "*");
 			if (jarFile.SelectEntries(metaInfRegex) != null)
 			{
-				Console.WriteLine("Removing META-INF");
+				DebugUtils.Print("Removing META-INF");
 				jarFile.RemoveEntries(jarFile.SelectEntries(metaInfRegex));
 			}
 
@@ -149,6 +151,7 @@ namespace MultiMC.Tasks
 		}
 
 		const string MODTEMP_DIR_NAME = "modTemp";
+		Hashtable modFileIndices;
 
 		/// <summary>
 		/// Recursively adds files from the given directory into the given jar
@@ -172,34 +175,39 @@ namespace MultiMC.Tasks
 					}
 
 					string existing = Path.Combine(pathInJar, Path.GetFileName(f));
+					int index;
 					if (jarFile[existing] != null &&
-						jarFile[existing].CreationTime.CompareTo(File.GetCreationTimeUtc(f)) > 0)
+//						jarFile[existing].CreationTime.CompareTo(File.GetCreationTimeUtc(f)) > 0
+					    Int32.TryParse(jarFile[existing].Comment, out index) &&
+					    index > (int)modFileIndices[f])
 					{
-						//Console.WriteLine("File conflict between {0} in jar ({2}) and {1} ({3}) " + 
-						//    "being added, " + "not overwriting.", existing, f, 
-						//    jarFile[existing].CreationTime.ToString(), 
-						//    File.GetCreationTimeUtc(f).ToString());
+						DebugUtils.Print("File conflict between {0} in jar ({2}) and {1} ({3}) " + 
+						    "being added, " + "not overwriting.", existing, f, 
+						    jarFile[existing].Comment, 
+						    (modFileIndices[f] != null ? modFileIndices[f].ToString() : "none"));
 					}
 					else
 					{
 						if (jarFile[existing] != null)
 						{
-							//Console.WriteLine("File conflict between {0} in jar ({2}) and {1} ({3}) " +
-							//    "being added, " + " overwriting.", existing, f,
-							//    jarFile[existing].CreationTime.ToString(),
-							//    File.GetCreationTimeUtc(f).ToString());
+							DebugUtils.Print("File conflict between {0} in jar ({2}) and {1} ({3}) " +
+							    "being added, " + " overwriting.", existing, f,
+							    jarFile[existing].Comment,
+							    (modFileIndices[f] != null ? modFileIndices[f].ToString() : "none"));
 						}
 
 						ZipEntry fEntry = jarFile.UpdateFile(f, pathInJar);
 						fEntry.SetEntryTimes(File.GetCreationTime(f),
 							fEntry.AccessedTime, fEntry.ModifiedTime);
+						if (modFileIndices[f] != null)
+							fEntry.Comment = modFileIndices[f].ToString();
 					}
 				}
 
 				// For directories
 				else if (Directory.Exists(f))
 				{
-					Console.WriteLine("Adding subdirectory " + f + " to " +
+					DebugUtils.Print("Adding subdirectory " + f + " to " +
 						Path.Combine(pathInJar, Path.GetFileName(f)));
 					AddToJar(f, jarFile, Path.Combine(pathInJar, Path.GetFileName(f)));
 				}
@@ -209,7 +217,7 @@ namespace MultiMC.Tasks
 				{
 					string tmpDir = Path.Combine(Target.RootDir, MODTEMP_DIR_NAME,
 						Path.GetFileNameWithoutExtension(f));
-					Console.WriteLine("Adding zip file {0}, extracting to {1}...", f, tmpDir);
+					DebugUtils.Print("Adding zip file {0}, extracting to {1}...", f, tmpDir);
 					//Console.WriteLine("Temp directory for {0}: {1}", f, tmpDir);
 
 					if (Directory.Exists(tmpDir))
@@ -226,14 +234,16 @@ namespace MultiMC.Tasks
 					{
 						entry.Extract(tmpDir);
 						string extractedFile = Path.Combine(tmpDir, entry.FileName);
-
+						
+						RecursiveSetIndex(extractedFile, (int)modFileIndices[f]);
+						
 						// If it's a file
-						if (File.Exists(extractedFile))
-							File.SetCreationTime(extractedFile, File.GetCreationTime(f));
+//						if (File.Exists(extractedFile))
+//							File.SetCreationTime(extractedFile, File.GetCreationTime(f));
 
 						// If it's a directory
-						else if (Directory.Exists(extractedFile))
-							Directory.SetCreationTime(extractedFile, File.GetCreationTime(f));
+//						else if (Directory.Exists(extractedFile))
+//							Directory.SetCreationTime(extractedFile, File.GetCreationTime(f));
 
 						//Console.WriteLine("{0} create time is {1}", extractedFile, 
 						//    File.GetCreationTime(f).ToString());
@@ -242,6 +252,21 @@ namespace MultiMC.Tasks
 					//Console.WriteLine("Adding to jar...");
 					AddToJar(tmpDir, jarFile, pathInJar);
 				}
+			}
+		}
+		
+		private void RecursiveSetIndex(string file, int index)
+		{
+			if (Directory.Exists(file))
+			{
+				foreach (string subfile in Directory.GetFileSystemEntries(file))
+				{
+					RecursiveSetIndex(subfile, index);
+				}
+			}
+			else if (File.Exists(file))
+			{
+				modFileIndices[file] = index;
 			}
 		}
 	}

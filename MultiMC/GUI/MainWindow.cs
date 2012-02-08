@@ -834,6 +834,13 @@ namespace MultiMC
 		{
 			EditModsDialog emd = new EditModsDialog(SelectedInst, this);
 			emd.ParentWindow = this.GdkWindow;
+			emd.Response += (object o, ResponseArgs args) => 
+			{
+				if (args.ResponseId == ResponseType.Ok)
+				{
+					RebuildMCJar(SelectedInst);
+				}
+			};
 			emd.Run();
 		}
 		

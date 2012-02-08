@@ -139,5 +139,43 @@ namespace MultiMC
 			
 			return "java";
 		}
+		
+		/// <summary>
+		/// Gets path1 relative to path2
+		/// </summary>
+		/// <returns>
+		/// The relative path.
+		/// </returns>
+		public static string GetRelativePath(string startPath, string fullDestPath)
+		{
+			List<string> pathParts = new List<string>(Path.GetFullPath(startPath).
+				Trim(Path.DirectorySeparatorChar).Split(Path.DirectorySeparatorChar));
+			string[] destParts = fullDestPath.Split(Path.DirectorySeparatorChar);	
+			
+			foreach (string part in destParts)
+			{
+				if (part.Equals(pathParts[0]))
+					pathParts.RemoveAt(0);
+				else
+					break;
+			}
+			
+			StringBuilder sb = new StringBuilder();
+			foreach (string part in pathParts)
+			{
+				sb.Append(part + Path.DirectorySeparatorChar);
+			}
+			sb.Length--;
+			return sb.ToString();
+		}
+		
+//		public static string MakeRelativePath(string path1, string path2)
+//		{
+//			path1 = path1.EndsWith("" + Path.PathSeparator) ? path1 : path1 + Path.PathSeparator;
+//			path2 = path2.EndsWith("" + Path.PathSeparator) ? path2 : path2 + Path.PathSeparator;
+//			Uri uri = new Uri(path1, UriKind.RelativeOrAbsolute, true).
+//				MakeRelativeUri(new Uri(path2, UriKind.RelativeOrAbsolute, true));
+//			return uri.LocalPath;
+//		}
 	}
 }

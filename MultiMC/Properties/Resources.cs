@@ -46,6 +46,7 @@ namespace MultiMC
 		
 		// Other Stuff
 		public const string InstanceXmlFile = "instance.xml";
+		public const string ModListFileName = "modlist";
 		public const string InstDir = "instances";
 		public const string ConfigFileName = "multimc.cfg";
 		public const string LastLoginFileName = "lastlogin";

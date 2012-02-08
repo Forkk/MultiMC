@@ -33,6 +33,17 @@ namespace MultiMC
 		{
 			Inst = inst;
 			
+			Button viewFolderButton = new Button("gtk-open");
+			viewFolderButton.Label = "_Mods Folder";
+			viewFolderButton.Clicked += (sender, e) => 
+			{
+				System.Diagnostics.Process.Start(Inst.InstModsDir);
+				Destroy();
+			};
+			ActionArea.Homogeneous = false;
+			ActionArea.PackEnd(viewFolderButton, false, true, 0);
+			viewFolderButton.Visible = true;
+			
 			this.Build();
 			
 			#region We have to make the treeview ourselves since monodevelop is absolute shit...
@@ -48,10 +59,10 @@ namespace MultiMC
 			this.ShowAll();
 			#endregion
 			
-			modList = new ListStore(typeof(string), typeof(string), typeof(bool), typeof(DateTime));
+			modList = new ListStore(typeof(string), typeof(int), typeof(bool));
 			modView.Model = modList;
+			modView.AppendColumn("Index", new CellRendererText(), "text", 1);
 			modView.AppendColumn("File", new CellRendererText(), "text", 0);
-			modView.AppendColumn("Install Date", new CellRendererText(), "text", 1);
 			
 			CellRendererToggle toggleRenderer = new CellRendererToggle();
 			toggleRenderer.Activatable = true;
@@ -65,9 +76,11 @@ namespace MultiMC
 			modView.AppendColumn("Delete?", toggleRenderer, "active", 2);
 			
 			modView.Columns[0].Alignment = 0.0f;
-			modView.Columns[0].Expand = true;
-			modView.Columns[1].Alignment = 1.0f;
+			modView.Columns[1].Alignment = 0.0f;
+			modView.Columns[1].Expand = true;
 			modView.Columns[2].Alignment = 1.0f;
+			
+			modView.Reorderable = true;
 			
 			LoadMods();
 		}
@@ -75,44 +88,58 @@ namespace MultiMC
 		protected void LoadMods()
 		{
 			modList.Clear();
-			LoadMods(Inst.InstModsDir);
-		}
-		
-		private void LoadMods(string searchdir)
-		{
-			try
+			foreach (string instMod in Inst.InstMods)
 			{
-				foreach (string f in Directory.GetFileSystemEntries(searchdir))
-				{
-					if (Directory.Exists(f))
-					{
-						LoadMods(f);
-					}
-					else if (File.Exists(f))
-					{
-						AddFile(f);
-					}
-				}
-			} catch (DirectoryNotFoundException)
-			{
-				return;
+				modList.AppendValues(instMod, Inst.InstMods[instMod] + 1, false);
 			}
+//			LoadMods(Inst.InstModsDir);
 		}
 		
-		protected void AddFile(string fname)
-		{
-			modList.AppendValues(fname, 
-			                     File.GetCreationTime(fname).ToShortDateString() + " " + 
-			                     File.GetCreationTime(fname).ToShortTimeString(), 
-			                     false,
-			                     File.GetCreationTime(fname));
-		}
+//		private void LoadMods(string searchdir)
+//		{
+//			try
+//			{
+//				foreach (string f in Directory.GetFileSystemEntries(searchdir))
+//				{
+//					if (Directory.Exists(f))
+//					{
+//						LoadMods(f);
+//					}
+//					else if (File.Exists(f))
+//					{
+//						AddFile(f);
+//					}
+//				}
+//			} catch (DirectoryNotFoundException)
+//			{
+//				return;
+//			}
+//		}
+		
+//		protected void AddFile(string fname)
+//		{
+//			modList.AppendValues(fname, 
+//			                     File.GetCreationTime(fname).ToShortDateString() + " " + 
+//			                     File.GetCreationTime(fname).ToShortTimeString(), 
+//			                     false,
+//			                     File.GetCreationTime(fname));
+//		}
 
 		protected void OnResponse(object o, Gtk.ResponseArgs args)
 		{
 			TreeIter iter;
 			if (args.ResponseId == ResponseType.Ok && modList.GetIterFirst(out iter))
 			{
+				int i = 0;
+				TreeIter itr;
+				modList.GetIterFirst(out itr);
+				
+				do
+				{
+					Inst.InstMods[modList.GetValue(itr, 0).ToString()] = i;
+					i++;
+				} while (modList.IterNext(ref itr));
+				
 				do
 				{
 					if ((bool)modList.GetValue(iter, 2))
@@ -121,7 +148,8 @@ namespace MultiMC
 					}
 				} while (modList.IterNext(ref iter));
 			}
-			
+			Inst.InstMods.Save();
+			Inst.InstMods.Update();
 			Destroy();
 		}
 		
@@ -129,6 +157,11 @@ namespace MultiMC
 		{
 			get;
 			protected set;
+		}
+
+		protected void OnButtonViewFolderClicked(object sender, System.EventArgs e)
+		{
+			System.Diagnostics.Process.Start(Inst.InstModsDir);
 		}
 	}
 }
