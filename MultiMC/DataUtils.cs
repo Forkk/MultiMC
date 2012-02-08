@@ -14,6 +14,8 @@
 //    limitations under the License.
 using System;
 using System.Text;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace MultiMC
 {
@@ -50,6 +52,16 @@ namespace MultiMC
 		{
 			return new UTF8Encoding().GetBytes(str);
 		}
+		
+		public static string ArrayToString(IEnumerable array, string separator = ", ")
+		{
+			StringBuilder builder = new StringBuilder();
+			foreach (object obj in array)
+				builder.Append(string.Format("{0}{1}", obj.ToString(), separator));
+			builder.Length--;
+			return builder.ToString();
+		}
 	}
+	
 }
 

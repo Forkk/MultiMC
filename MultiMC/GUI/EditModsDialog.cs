@@ -33,16 +33,14 @@ namespace MultiMC
 		{
 			Inst = inst;
 			
-			Button viewFolderButton = new Button("gtk-open");
-			viewFolderButton.Label = "_Mods Folder";
-			viewFolderButton.Clicked += (sender, e) => 
+			Button buttonRefresh = new Button("gtk-refresh");
+			buttonRefresh.Clicked += (sender, e) => 
 			{
-				System.Diagnostics.Process.Start(Inst.InstModsDir);
-				Destroy();
+				LoadMods();
 			};
 			ActionArea.Homogeneous = false;
-			ActionArea.PackEnd(viewFolderButton, false, true, 0);
-			viewFolderButton.Visible = true;
+			ActionArea.PackEnd(buttonRefresh, false, true, 0);
+			buttonRefresh.Visible = true;
 			
 			this.Build();
 			

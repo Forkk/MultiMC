@@ -150,7 +150,12 @@ namespace MultiMC
 		{
 			List<string> pathParts = new List<string>(Path.GetFullPath(startPath).
 				Trim(Path.DirectorySeparatorChar).Split(Path.DirectorySeparatorChar));
-			string[] destParts = fullDestPath.Split(Path.DirectorySeparatorChar);	
+			string[] destParts = fullDestPath.Trim(Path.DirectorySeparatorChar).
+				Split(Path.DirectorySeparatorChar);
+			
+			DebugUtils.Print("Path Parts: {0}\nDest Parts: {1}", 
+			                 DataUtils.ArrayToString(pathParts),
+			                 DataUtils.ArrayToString(destParts));
 			
 			foreach (string part in destParts)
 			{

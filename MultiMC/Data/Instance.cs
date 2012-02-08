@@ -289,15 +289,15 @@ namespace MultiMC.Data
 			instProc.Dispose();
 		}
 		
+		#endregion
+
+		#region Properties
+		
 		public InstanceMods InstMods
 		{
 			get;
 			private set;
 		}
-
-		#endregion
-
-		#region Properties
 
 		/// <summary>
 		/// The root element in the instance's XML document
@@ -706,15 +706,45 @@ namespace MultiMC.Data
 		{
 			return modList.GetEnumerator();
 		}
+		
+		public virtual void OnModFileChanged(string modFile, int index)
+		{
+			if (ModFileChanged != null)
+				ModFileChanged(this, new ModFileChangedEventArgs(modFile, index));
+		}
+		
+		public event EventHandler<ModFileChangedEventArgs> ModFileChanged;
 	}
 	
 	#region Event Args
+	
+	public class ModFileChangedEventArgs : EventArgs
+	{
+		public ModFileChangedEventArgs(string modFile, int index)
+		{
+			Index = index;
+			ModFile = modFile;
+		}
 		
+		public string ModFile
+		{
+			get;
+			protected set;
+		}
+		
+		public int Index
+		{
+			get;
+			protected set;
+		}
+	}
+
 	public class InstQuitEventArgs : EventArgs
 	{
 		public InstQuitEventArgs(int exitVal, DateTime quitTime)
 		{
-				
+			ExitCode = exitVal;
+			QuitTime = quitTime;
 		}
 			
 		public DateTime QuitTime
