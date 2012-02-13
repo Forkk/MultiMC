@@ -286,7 +286,9 @@ namespace MultiMC.Data
 		{
 			if (this.Running)
 				throw new InvalidOperationException("Cannot dispose an instance that is running!");
-			instProc.Dispose();
+			InstMods.Dispose();
+			if (instProc != null)
+				instProc.Dispose();
 		}
 		
 		#endregion
@@ -349,6 +351,16 @@ namespace MultiMC.Data
 			set
 			{
 				GetXmlElement("notes").InnerText = value;
+				AutoSave();
+			}
+		}
+		
+		public bool NeedsRebuild
+		{
+			get { return bool.Parse(GetXmlElement("NeedsRebuild", "false").InnerText); }
+			set
+			{
+				GetXmlElement("NeedsRebuild").InnerText = value.ToString();
 				AutoSave();
 			}
 		}
@@ -557,6 +569,7 @@ namespace MultiMC.Data
 	public class InstanceMods : IEnumerable<string>
 	{
 		List<string> modList;
+		FileSystemWatcher watcher;
 		
 		public InstanceMods(Instance inst)
 		{
@@ -566,7 +579,7 @@ namespace MultiMC.Data
 			if (!Directory.Exists(Inst.InstModsDir))
 				Directory.CreateDirectory(Inst.InstModsDir);
 			
-			FileSystemWatcher watcher = new FileSystemWatcher(Inst.InstModsDir);
+			watcher = new FileSystemWatcher(Inst.InstModsDir);
 			watcher.Changed += FileChanged;
 			watcher.Deleted += FileChanged;
 			watcher.Created += FileChanged;
@@ -576,6 +589,12 @@ namespace MultiMC.Data
 				NotifyFilters.FileName | NotifyFilters.DirectoryName;
 			
 			watcher.EnableRaisingEvents = true;
+		}
+		
+		public void Dispose()
+		{
+			watcher.EnableRaisingEvents = false;
+			watcher.Dispose();
 		}
 		
 		void FileChanged(object sender, FileSystemEventArgs e)
@@ -666,7 +685,7 @@ namespace MultiMC.Data
 				if (e.Message.ToLower().Contains("in use"))
 				{
 					Console.WriteLine("Failed to save mod list because " +
-						"something else was using the file.");
+					                  "something else was using the file.");
 				}
 			}
 		}
@@ -701,6 +720,7 @@ namespace MultiMC.Data
 				{
 					if (!modList.Contains(modFile))
 						modList.Add(modFile);
+					Inst.NeedsRebuild = true;
 				}
 			}
 		}
@@ -717,6 +737,7 @@ namespace MultiMC.Data
 		
 		public virtual void OnModFileChanged(ModFileChangeTypes type, string modFile)
 		{
+			Inst.NeedsRebuild = true;
 			if (ModFileChanged != null)
 				ModFileChanged(this, new ModFileChangedEventArgs(type, modFile));
 		}

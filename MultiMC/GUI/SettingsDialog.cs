@@ -30,14 +30,26 @@ namespace MultiMC
 		{
 			AppSettings settings = AppSettings.Main;
 			
+			// **General Section**
+			
+			// Console settings
 			checkbuttonShowConsole.Active = settings.ShowConsole;
 			checkbuttonAutoCloseConsole.Active = settings.AutoCloseConsole;
 			
+			// Update settings
 			checkbuttonAutoUpdate.Active = settings.AutoUpdate;
 			
+			// Hint settings
+			checkbuttonEnableHints.Active = settings.EnableHints;
+			
+			
+			// **Advanced Section**
+			
+			// Memory settings
 			spinbuttonInitialMemory.Value = settings.MinMemoryAlloc;
 			spinbuttonMaxMemory.Value = settings.MaxMemoryAlloc;
 			
+			// Java settings
 			entryJavaPath.Text = settings.JavaPath;
 		}
 
@@ -50,14 +62,26 @@ namespace MultiMC
 		{
 			AppSettings settings = AppSettings.Main;
 			
+			// **General Section**
+			
+			// Console settings
 			settings.ShowConsole = checkbuttonShowConsole.Active;
 			settings.AutoCloseConsole = checkbuttonAutoCloseConsole.Active;
 			
+			// Update settings
 			settings.AutoUpdate = checkbuttonAutoUpdate.Active;
 			
+			// Hint settings
+			settings.EnableHints = checkbuttonEnableHints.Active;
+			
+			
+			// **Advanced Section**
+			
+			// Memory settings
 			settings.MinMemoryAlloc = (int)spinbuttonInitialMemory.Value;
 			settings.MaxMemoryAlloc = (int)spinbuttonMaxMemory.Value;
 			
+			// Java settings
 			settings.JavaPath = entryJavaPath.Text;
 			
 			settings.Save();
@@ -74,6 +98,15 @@ namespace MultiMC
 				                            "Error",
 				                            "Failed to find Java path.");
 			entryJavaPath.Text = AppSettings.Main.JavaPath;
+		}
+
+		protected void OnButtonResetHintsClicked(object sender, System.EventArgs e)
+		{
+			HintList.Hints.ResetAllHints();
+			MessageUtils.ShowMessageBox(this, 
+			                            Gtk.MessageType.Info, 
+			                            "Hints Reset", 
+			                            "All hints have been successfully reset.");
 		}
 	}
 }

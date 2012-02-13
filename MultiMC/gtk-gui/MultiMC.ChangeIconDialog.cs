@@ -16,7 +16,7 @@ namespace MultiMC
 			this.WidthRequest = 600;
 			this.HeightRequest = 400;
 			this.Name = "MultiMC.ChangeIconDialog";
-			this.Title = global::Mono.Unix.Catalog.GetString ("Change Icon");
+			this.Title = "Change Icon";
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			// Internal child MultiMC.ChangeIconDialog.VBox
 			global::Gtk.VBox w1 = this.VBox;

@@ -47,58 +47,65 @@ namespace MultiMC.Tasks
 		protected override void TaskStart()
 		{
 			OnStart();
-			Console.WriteLine("updating");
-			State = EnumState.CHECKING_CACHE;
-			Progress = 5;
-			
-			// Get a list of URLs to download from
-			LoadJarURLs();
-			
-			// Create the bin directory if it doesn't exist
-			if (!Directory.Exists(Inst.BinDir))
-				Directory.CreateDirectory(Inst.BinDir);
-			
-			string binDir = Inst.BinDir;
-			if (this.latestVersion != null)
+			try
 			{
-				string versionFile = Path.Combine(binDir, "version");
-				bool cacheAvailable = false;
+				State = EnumState.CHECKING_CACHE;
+				Progress = 5;
 				
-				if (!forceUpdate && File.Exists(versionFile) && 
-				    (latestVersion.Equals("-1") ||
-				 latestVersion.Equals(File.ReadAllText(versionFile))))
-				{
-					cacheAvailable = true;
-					Progress = 90;
-				}
+				// Get a list of URLs to download from
+				LoadJarURLs();
 				
-				if ((forceUpdate) || (!cacheAvailable))
+				// Create the bin directory if it doesn't exist
+				if (!Directory.Exists(Inst.BinDir))
+					Directory.CreateDirectory(Inst.BinDir);
+				
+				string binDir = Inst.BinDir;
+				if (this.latestVersion != null)
 				{
-					shouldUpdate = true;
-					if (!forceUpdate && File.Exists(versionFile))
-						AskToUpdate();
-					if (this.shouldUpdate)
+					string versionFile = Path.Combine(binDir, "version");
+					bool cacheAvailable = false;
+				
+					if (!forceUpdate && File.Exists(versionFile) && 
+					    (latestVersion.Equals("-1") ||
+					 latestVersion.Equals(File.ReadAllText(versionFile))))
 					{
-						WriteVersionFile(versionFile, latestVersion);
-						
-						try
+						cacheAvailable = true;
+						Progress = 90;
+					}
+				
+					if ((forceUpdate) || (!cacheAvailable))
+					{
+						shouldUpdate = true;
+						if (!forceUpdate && File.Exists(versionFile))
+							AskToUpdate();
+						if (this.shouldUpdate)
 						{
-							DownloadJars();
+							WriteVersionFile(versionFile, latestVersion);
 							
-						} catch (WebException e)
-						{
-							OnErrorMessage(
+							try
+							{
+								DownloadJars();
+							} catch (WebException e)
+							{
+								OnErrorMessage(
 								string.Format("An error occurred when downloading packages.\n" +
 									"Details:\n{0}", e.ToString()));
+							}
+							ExtractNatives();
+							Progress = 100;
 						}
-						ExtractNatives();
-						Progress = 100;
 					}
 				}
+			} catch (WebException e)
+			{
+				OnErrorMessage(string.Format("An error occurred when trying to " +
+				                             "download Minecraft.\n" +
+				                             "Details:\n{0}", e.ToString()));
+				Cancel();
 			}
 			OnComplete();
 		}
-		
+
 		protected void LoadJarURLs()
 		{
 			State = EnumState.DETERMINING_PACKAGES;
@@ -186,11 +193,16 @@ namespace MultiMC.Tasks
 			{
 				if (skip[i])
 				{
-					Progress = (initialPercentage + fileSizes[i] * 45 / this.totalDownloadSize);
+					Progress = (initialPercentage + fileSizes[i] * 
+					            (100 - initialPercentage) / this.totalDownloadSize);
 				}
 				else
 				{
 					string currentFile = GetFileName(uriList[i]);
+					
+					if (currentFile == "minecraft.jar" && File.Exists("mcbackup.jar"))
+						File.Delete("mcbackup.jar");
+					
 					md5s.Remove(currentFile);
 					md5s.Save(Path.Combine(Inst.BinDir, "md5s"));
 					
@@ -241,8 +253,8 @@ namespace MultiMC.Tasks
 							
 //							Progress = fileSize / fileSizes[i];
 							
-							Progress = (initialPercentage + this.currentDownloadSize
-							            * 70 / this.totalDownloadSize);
+							Progress = (initialPercentage + this.currentDownloadSize *
+							            (100 - initialPercentage) / this.totalDownloadSize);
 						}
 						digest.TransformFinalBlock(new byte[] {}, 0, 0);
 						

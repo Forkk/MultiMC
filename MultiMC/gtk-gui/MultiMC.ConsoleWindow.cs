@@ -18,7 +18,7 @@ namespace MultiMC
 			this.WidthRequest = 600;
 			this.HeightRequest = 300;
 			this.Name = "MultiMC.ConsoleWindow";
-			this.Title = global::Mono.Unix.Catalog.GetString ("MultiMC Console");
+			this.Title = "MultiMC Console";
 			this.WindowPosition = ((global::Gtk.WindowPosition)(1));
 			// Container child MultiMC.ConsoleWindow.Gtk.Container+ContainerChild
 			this.ConsoleVBox = new global::Gtk.VBox ();
@@ -49,7 +49,7 @@ namespace MultiMC
 			this.HideButton.Name = "HideButton";
 			this.HideButton.UseUnderline = true;
 			this.HideButton.BorderWidth = ((uint)(2));
-			this.HideButton.Label = global::Mono.Unix.Catalog.GetString ("Hide");
+			this.HideButton.Label = "Hide";
 			this.ConsoleButtonBox.Add (this.HideButton);
 			global::Gtk.ButtonBox.ButtonBoxChild w3 = ((global::Gtk.ButtonBox.ButtonBoxChild)(this.ConsoleButtonBox [this.HideButton]));
 			w3.Expand = false;
@@ -62,7 +62,7 @@ namespace MultiMC
 			this.CloseButton.Name = "CloseButton";
 			this.CloseButton.UseUnderline = true;
 			this.CloseButton.BorderWidth = ((uint)(2));
-			this.CloseButton.Label = global::Mono.Unix.Catalog.GetString ("_Close");
+			this.CloseButton.Label = "_Close";
 			this.ConsoleButtonBox.Add (this.CloseButton);
 			global::Gtk.ButtonBox.ButtonBoxChild w4 = ((global::Gtk.ButtonBox.ButtonBoxChild)(this.ConsoleButtonBox [this.CloseButton]));
 			w4.Position = 1;

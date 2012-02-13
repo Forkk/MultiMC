@@ -157,6 +157,12 @@ namespace MultiMC
 			get { return bool.Parse(this["AutoUpdate", "true"]); }
 			set { this["AutoUpdate"] = value.ToString(); }
 		}
+		
+		public bool EnableHints
+		{
+			get { return bool.Parse(this["EnableHints", "true"]); }
+			set { this["EnableHints"] = value.ToString(); }
+		}
 	}
 }
 

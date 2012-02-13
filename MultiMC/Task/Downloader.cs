@@ -88,30 +88,30 @@ namespace MultiMC.Tasks
 			Status = Message;
 			Console.WriteLine("Starting download");
 			tmpFile = Path.GetTempFileName();
-
+			
 			Console.WriteLine("Creating target directory");
 			string tempDir = Directory.GetParent(tmpFile).FullName;
 			if (!string.IsNullOrEmpty(tempDir) && Directory.Exists(tempDir))
 				Directory.CreateDirectory(tempDir);
-
+			
 			Console.WriteLine("Creating web client");
 			webClient = new WebClient();
 			webClient.DownloadProgressChanged += 
 				new DownloadProgressChangedEventHandler(webClient_DownloadProgressChanged);
 			webClient.DownloadFileCompleted += 
 				new AsyncCompletedEventHandler(webClient_DownloadFileCompleted);
-
+			
 			webClient.DownloadFileAsync(new Uri(downloadUrl),
-				tmpFile);
-
+			                            tmpFile);
+			
 			lastProgressTime = DateTime.Now.Second;
-
+			
 			while (Running)
 			{
 				if (DateTime.Now.Second >= lastProgressTime + Timeout)
 				{
 					OnErrorMessage(string.Format("No progress for {0} seconds, download timed out.", 
-						DateTime.Now.Second - lastProgressTime));
+					                             DateTime.Now.Second - lastProgressTime));
 					Cancel();
 				}
 			}

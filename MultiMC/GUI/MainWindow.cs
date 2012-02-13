@@ -79,11 +79,6 @@ namespace MultiMC
 				}
 			};
 			
-			instIconView.ItemActivated += (object o, ItemActivatedArgs args) => 
-			{
-				StartInstance(SelectedInst);
-			};
-			
 			InitMenu();
 //			InitDND();
 			
@@ -99,6 +94,8 @@ namespace MultiMC
 			 * and checking for updates.
 			 */
 			RunStartupTasks();
+			
+			HintDialog.ShowHint(this, Hint.WelcomeHint);
 		}
 		
 		#region Startup Tasks
@@ -250,7 +247,7 @@ namespace MultiMC
 		/// <summary>
 		/// Rebuilds the given instance's minecraft.jar
 		/// </summary>
-		private void RebuildMCJar(Instance inst)
+		private Modder RebuildMCJar(Instance inst)
 		{
 			if (!File.Exists(SelectedInst.MCJar))
 			{
@@ -258,10 +255,12 @@ namespace MultiMC
 				                            "You must run the " +
 				                            "instance at least " +
 				                            "once before installing mods.");
-				return;
+				return null;
 			}
-			Modder modder = new Modder(SelectedInst);
+			Modder modder = new Modder(inst);
+			modder.Completed += (sender, e) => inst.NeedsRebuild = false;
 			StartTask(modder);
+			return modder;
 		}
 		
 		#endregion
@@ -451,7 +450,9 @@ namespace MultiMC
 						                info.LatestVersion,
 						                mainGameUrl,
 						                info.ForceUpdate);
-					updater.Completed += (sender, e) => Application.Invoke((sender2, e2) => 
+					
+					EventHandler startDelegate = new EventHandler(
+						(e, args) =>
 					{
 						Visible = false;
 						UIEnabled = true;
@@ -462,6 +463,22 @@ namespace MultiMC
 							Visible = true;
 						};
 					});
+					
+					updater.Completed += (sender, e) =>
+					{
+						if (inst.NeedsRebuild)
+						{
+							Application.Invoke(
+								(sender2, e2) =>
+							{
+								RebuildMCJar(inst).Completed += (sender3, e3) => 
+									Application.Invoke(sender3, e3, startDelegate);
+							});
+						}
+						else
+							Application.Invoke(sender, e, startDelegate);
+					};
+					
 					Application.Invoke((sender, e) => StartTask(updater));
 				}
 				else
@@ -807,27 +824,30 @@ namespace MultiMC
 		
 		void AddModsActivated(object sender, EventArgs e)
 		{
-			FileChooserDialog fileDlg = new FileChooserDialog("Add mods", 
-			                                                  this, 
-			                                                  FileChooserAction.Open, 
-			                                                  "Cancel", ResponseType.Cancel,
-			                                                  "Add", ResponseType.Accept);
-			fileDlg.Response += (object o, ResponseArgs args) => 
-			{
-				if (SelectedInst == null)
-					return;
-				
-				if (args.ResponseId == ResponseType.Accept)
-				{
-					if (!Directory.Exists(SelectedInst.InstModsDir))
-						Directory.CreateDirectory(SelectedInst.InstModsDir);
-					
-					CopyFiles(fileDlg.Filenames, SelectedInst.InstModsDir);
-					RebuildMCJar(SelectedInst);
-				}
-				fileDlg.Destroy();
-			};
-			fileDlg.Run();
+			HintDialog.ShowHint(this, Hint.AddModsHint);
+			if (SelectedInst != null)
+				Process.Start(SelectedInst.InstModsDir);
+//			FileChooserDialog fileDlg = new FileChooserDialog("Add mods", 
+//			                                                  this, 
+//			                                                  FileChooserAction.Open, 
+//			                                                  "Cancel", ResponseType.Cancel,
+//			                                                  "Add", ResponseType.Accept);
+//			fileDlg.Response += (object o, ResponseArgs args) => 
+//			{
+//				if (SelectedInst == null)
+//					return;
+//				
+//				if (args.ResponseId == ResponseType.Accept)
+//				{
+//					if (!Directory.Exists(SelectedInst.InstModsDir))
+//						Directory.CreateDirectory(SelectedInst.InstModsDir);
+//					
+//					CopyFiles(fileDlg.Filenames, SelectedInst.InstModsDir);
+//					RebuildMCJar(SelectedInst);
+//				}
+//				fileDlg.Destroy();
+//			};
+//			fileDlg.Run();
 		}
 		
 		void EditModsActivated(object sender, EventArgs e)
@@ -841,6 +861,7 @@ namespace MultiMC
 					RebuildMCJar(SelectedInst);
 				}
 			};
+			HintDialog.ShowHint(emd, Hint.EditModsHint);
 			emd.Run();
 		}
 		
@@ -851,7 +872,28 @@ namespace MultiMC
 		
 		void DeleteActivated(object sender, EventArgs e)
 		{
-			// TODO Implement delete
+			DeleteConfirmDialog delConf = new DeleteConfirmDialog(this);
+			delConf.Response += (o, args) => 
+			{
+				delConf.Destroy();
+				if (args.ResponseId == ResponseType.Ok &&
+				    delConf.Text == "DELETE")
+				{
+					SelectedInst.Dispose();
+					try
+					{
+						File.Delete(SelectedInst.RootDir);
+					} catch (UnauthorizedAccessException)
+					{
+						MessageUtils.ShowMessageBox(
+							this, 
+							MessageType.Error,
+							"Failed to delete instance",
+							"MultiMC failed to delete the instance because access was denied.");
+					}
+					Application.Invoke((sender2, e2) => LoadInstances());
+				}
+			};
 		}
 		
 		#endregion
@@ -1022,6 +1064,12 @@ namespace MultiMC
 					return null;
 				}
 			}
+		}
+
+		protected void OnInstIconViewItemActivated(object o, Gtk.ItemActivatedArgs args)
+		{
+			if (SelectedInst != null)
+				StartInstance(SelectedInst);
 		}
 	}
 }

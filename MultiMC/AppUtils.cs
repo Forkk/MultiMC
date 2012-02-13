@@ -13,22 +13,29 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
-#define BYPASS_SSL_CHECK
+//#define BYPASS_SSL_CHECK
 using System;
 using System.IO;
 using System.Net;
 using System.Net.Security;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 
 namespace MultiMC
 {
 	public class AppUtils
 	{
-		static AppUtils()
-		{
-			ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(CertCheck);
-		}
+		static bool initialized;
 		
+		private static void Init()
+		{
+			if (!initialized)
+			{
+				initialized = true;
+//				ServicePointManager.ServerCertificateValidationCallback = 
+//					new RemoteCertificateValidationCallback(CertCheck);
+			}
+		}
 		
 		/// <summary>
 		/// Gets the version of the program.
@@ -45,6 +52,7 @@ namespace MultiMC
 		
 		public static string ExecutePost(string url, string urlParams)
 		{
+			Init();
 			WebClient webClient = new WebClient();
 			return webClient.DownloadString(new Uri(url + "?" + urlParams));
 		}
@@ -54,29 +62,39 @@ namespace MultiMC
 		                              X509Chain chain, 
 		                              SslPolicyErrors error)
 		{
-#if !BYPASS_SSL_CHECK
 			if (cert == null)
 			{
 				Console.WriteLine("Warning: Certificate is null!");
 				return false;
 			}
-			
-			FileStream stream = Assembly.GetCallingAssembly().GetFile("PublicKey");
-			byte[] bytes = new byte[stream.Length];
-			stream.Read(bytes, 0, bytes.Length);
-			
-			if (bytes.Length < cert.GetPublicKey().Length)
-				return false;
-			
-			for (int i = 0; i < bytes.Length; i++)
+#if BYPASS_SSL_CHECK
+			else
+				return true;
+#else
+			using (Stream stream = 
+				Assembly.GetExecutingAssembly().GetManifestResourceStream("sslcert"))
 			{
-				if (bytes[i] != cert.GetPublicKey()[i])
+				if (stream == null)
 				{
+					Console.WriteLine("Warning: Public key resource is null!");
 					return false;
 				}
+				byte[] bytes = new byte[stream.Length];
+				stream.Read(bytes, 0, bytes.Length);
+			
+				if (bytes.Length < cert.GetPublicKey().Length)
+					return false;
+			
+				for (int i = 0; i < bytes.Length; i++)
+				{
+					if (bytes[i] != cert.GetPublicKey()[i])
+					{
+						return false;
+					}
+				}
+				return true;
 			}
 #endif
-			return true;
 		}
 	}
 }

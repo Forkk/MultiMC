@@ -25,7 +25,7 @@ namespace MultiMC
 			this.WidthRequest = 420;
 			this.HeightRequest = 160;
 			this.Name = "MultiMC.LoginDialog";
-			this.Title = global::Mono.Unix.Catalog.GetString ("Login");
+			this.Title = "Login";
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			this.DefaultHeight = 160;
 			// Internal child MultiMC.LoginDialog.VBox
@@ -46,7 +46,7 @@ namespace MultiMC
 			this.checkRememberPwd = new global::Gtk.CheckButton ();
 			this.checkRememberPwd.CanFocus = true;
 			this.checkRememberPwd.Name = "checkRememberPwd";
-			this.checkRememberPwd.Label = global::Mono.Unix.Catalog.GetString ("R_emember password");
+			this.checkRememberPwd.Label = "R_emember password";
 			this.checkRememberPwd.DrawIndicator = true;
 			this.checkRememberPwd.UseUnderline = true;
 			this.loginTable.Add (this.checkRememberPwd);
@@ -61,7 +61,7 @@ namespace MultiMC
 			this.checkRememberUsername = new global::Gtk.CheckButton ();
 			this.checkRememberUsername.CanFocus = true;
 			this.checkRememberUsername.Name = "checkRememberUsername";
-			this.checkRememberUsername.Label = global::Mono.Unix.Catalog.GetString ("_Remember username");
+			this.checkRememberUsername.Label = "_Remember username";
 			this.checkRememberUsername.DrawIndicator = true;
 			this.checkRememberUsername.UseUnderline = true;
 			this.loginTable.Add (this.checkRememberUsername);
@@ -77,7 +77,7 @@ namespace MultiMC
 			this.forceToggle.CanFocus = true;
 			this.forceToggle.Name = "forceToggle";
 			this.forceToggle.UseUnderline = true;
-			this.forceToggle.Label = global::Mono.Unix.Catalog.GetString ("_Force Update");
+			this.forceToggle.Label = "_Force Update";
 			this.loginTable.Add (this.forceToggle);
 			global::Gtk.Table.TableChild w4 = ((global::Gtk.Table.TableChild)(this.loginTable [this.forceToggle]));
 			w4.TopAttach = ((uint)(3));
@@ -88,7 +88,7 @@ namespace MultiMC
 			this.labelErrorMsg = new global::Gtk.Label ();
 			this.labelErrorMsg.Name = "labelErrorMsg";
 			this.labelErrorMsg.Xalign = 0F;
-			this.labelErrorMsg.LabelProp = global::Mono.Unix.Catalog.GetString ("Error");
+			this.labelErrorMsg.LabelProp = "Error";
 			this.loginTable.Add (this.labelErrorMsg);
 			global::Gtk.Table.TableChild w5 = ((global::Gtk.Table.TableChild)(this.loginTable [this.labelErrorMsg]));
 			w5.RightAttach = ((uint)(3));
@@ -98,7 +98,7 @@ namespace MultiMC
 			this.labelPassword = new global::Gtk.Label ();
 			this.labelPassword.Name = "labelPassword";
 			this.labelPassword.Xalign = 1F;
-			this.labelPassword.LabelProp = global::Mono.Unix.Catalog.GetString ("_Password: ");
+			this.labelPassword.LabelProp = "_Password: ";
 			this.labelPassword.UseUnderline = true;
 			this.loginTable.Add (this.labelPassword);
 			global::Gtk.Table.TableChild w6 = ((global::Gtk.Table.TableChild)(this.loginTable [this.labelPassword]));
@@ -110,7 +110,7 @@ namespace MultiMC
 			this.labelUser = new global::Gtk.Label ();
 			this.labelUser.Name = "labelUser";
 			this.labelUser.Xalign = 1F;
-			this.labelUser.LabelProp = global::Mono.Unix.Catalog.GetString ("_Username: ");
+			this.labelUser.LabelProp = "_Username: ";
 			this.labelUser.UseUnderline = true;
 			this.loginTable.Add (this.labelUser);
 			global::Gtk.Table.TableChild w7 = ((global::Gtk.Table.TableChild)(this.loginTable [this.labelUser]));

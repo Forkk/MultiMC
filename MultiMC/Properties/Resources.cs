@@ -101,7 +101,7 @@ namespace MultiMC
 			get
 			{
 				Version v = AppUtils.GetVersion();
-				return string.Format("{0}.{1}.{2}.{3}", v.Major, v.Minor, v.Build, v.Revision);
+				return string.Format("{0}.{1}", v.Major, v.Minor, v.Build, v.Revision);
 			}
 		}
 

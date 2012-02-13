@@ -47,6 +47,50 @@ namespace MultiMC
 		
 		public static void Main(string[] args)
 		{
+#if !DEBUG && FORCE_MONO
+			if (OSUtils.Windows && !OSUtils.IsOnMono())
+			{
+				Console.WriteLine("Switching to Mono...");
+				string pfdir = null;
+				if (Directory.Exists(@"C:\Program Files (x86)\"))
+					pfdir = @"C:\Program Files (x86)";
+				else
+					pfdir = @"C:\Program Files";
+				string monoPath = Path.Combine(pfdir, "Mono-2.10.8", "bin", "mono.exe");
+				if (!File.Exists(monoPath))
+				{
+					string monodir = null;
+					foreach (string dir in Directory.GetFileSystemEntries(pfdir))
+						if (Path.GetFileName(dir).ToLower().StartsWith("mono-"))
+							monodir = Path.Combine(pfdir, dir);
+					monoPath = Path.Combine(monodir, "bin", "mono.exe");
+				}
+				
+				if (!string.IsNullOrEmpty(monoPath))
+				{
+					try
+					{
+						ProcessStartInfo info = new ProcessStartInfo(monoPath, 
+						                                             Resources.ExecutableFileName);
+						info.UseShellExecute = false;
+						info.CreateNoWindow = true;
+						Process.Start(info);
+					} catch (Exception e)
+					{
+						File.WriteAllText("LaunchError.txt", 
+						                  "MultiMC failed to start. Please report this problem." +
+						                  "\nPath: " +
+						                  monoPath + "\n" + e.ToString());
+					}
+					Environment.Exit(0);
+				}
+				else
+				{
+					Console.WriteLine("Failed to switch to mono.");
+				}
+			}
+#endif
+			
 			if (OSUtils.Linux)
 			{
 				if (Environment.CurrentDirectory.Equals(Environment.GetEnvironmentVariable("HOME")))
@@ -86,27 +130,16 @@ namespace MultiMC
 				}
 			}
 			
-//			AppDomain.CurrentDomain.UnhandledException += (sender, ueArgs) => 
-//			{
-//				if ((ueArgs.ExceptionObject as Exception) != null)
-//					FatalException(ueArgs.ExceptionObject as Exception);
-//				else
-//				{
-//					Console.WriteLine("Fatal error: " + ueArgs.ToString());
-//					Environment.Exit(1);
-//				}
-//			};
-//			
-//			GLib.ExceptionManager.UnhandledException += (GLib.UnhandledExceptionArgs ueArgs) => 
-//			{
-//				if ((ueArgs.ExceptionObject as Exception) != null)
-//					FatalException(ueArgs.ExceptionObject as Exception);
-//				else
-//				{
-//					Console.WriteLine("Fatal error: " + ueArgs.ToString());
-//					Environment.Exit(1);
-//				}
-//			};
+			AppDomain.CurrentDomain.UnhandledException += (object sender, 
+			                                               UnhandledExceptionEventArgs ueArgs) => 
+			{
+				OnException(ueArgs.ExceptionObject as Exception);
+			};
+			
+			GLib.ExceptionManager.UnhandledException += (GLib.UnhandledExceptionArgs ueArgs) => 
+			{
+				OnException(ueArgs.ExceptionObject as Exception);
+			};
 			
 			if (File.Exists(Resources.NewVersionFileName))
 				File.Delete(Resources.NewVersionFileName);
@@ -114,7 +147,13 @@ namespace MultiMC
 			MainWindow win = new MainWindow();
 			win.Show();
 			
-			Application.Run();
+			try
+			{
+				Application.Run();
+			} catch (Exception e)
+			{
+				OnException(e);
+			}
 			
 			if (InstallUpdates)
 			{
@@ -166,6 +205,32 @@ namespace MultiMC
 				e.Message,
 				e.ToString());
 			FatalError(errorMessage, "Unknown Error");
+		}
+		
+		public static void OnException(Exception e)
+		{
+			// We should immediately close for these exceptions
+			if (e is OutOfMemoryException || 
+			    e is StackOverflowException ||
+				e is AccessViolationException)
+			{
+				Console.WriteLine("SEVERE: " + e.GetType().ToString() + "! Aborting.");
+				File.WriteAllText("error.txt", e.ToString());
+				Environment.Exit(-2);
+			}
+			
+			Console.WriteLine("Caught exception:\n" + e.ToString());
+			
+			if (e is System.Reflection.TargetInvocationException)
+				e = e.InnerException;
+			
+			ExceptionDialog errDlg = new ExceptionDialog(e);
+			
+			errDlg.Response += (o, args) => 
+			{
+				if (args.ResponseId == ResponseType.Yes)
+					Environment.Exit(-1);
+			};
 		}
 		
 		/// <summary>
@@ -222,6 +287,7 @@ namespace MultiMC
 					else
 					{
 						Console.WriteLine("File: " + Resources.NewVersionFileName);
+						File.Delete(target);
 						File.Copy(Resources.NewVersionFileName, target);
 					}
 				}

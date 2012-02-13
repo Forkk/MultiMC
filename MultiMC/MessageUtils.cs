@@ -19,22 +19,41 @@ namespace MultiMC
 {
 	public class MessageUtils
 	{
+		// Message box
+		public static ResponseType ShowMessageBox(Window parent,
+		                                          MessageType mtype, 
+		                                          ButtonsType buttons,
+		                                          string title, 
+		                                          string message, 
+		                                          params string[] args)
+		{
+			MessageDialog msgDlg = 
+				new MessageDialog(parent,
+				                  DialogFlags.Modal,
+				                  mtype,
+				                  buttons,
+				                  message,
+				                  args);
+			msgDlg.Title = title;
+			msgDlg.UseMarkup = false;
+			
+			ResponseType response = ResponseType.None;
+			msgDlg.Response += (object o, ResponseArgs args2) =>
+			{
+				msgDlg.Destroy();
+				response = args2.ResponseId;
+			};
+			msgDlg.Run();
+			return response;
+		}
+		
 		public static void ShowMessageBox(Window parent,
 		                                  MessageType mtype, 
 		                                  string title, 
 		                                  string message, 
 		                                  params string[] args)
 		{
-			MessageDialog msgDlg = 
-				new MessageDialog(parent,
-				                  DialogFlags.Modal,
-				                  mtype,
-				                  ButtonsType.Ok,
-				                  message,
-				                  args);
-			msgDlg.Title = title;
-			msgDlg.Response += (o, args2) => msgDlg.Destroy();
-			msgDlg.Run();
+			ShowMessageBox(parent, mtype, ButtonsType.Ok, title, message, args);
 		}
 		
 		public static void ShowMessageBox(MessageType mtype, 

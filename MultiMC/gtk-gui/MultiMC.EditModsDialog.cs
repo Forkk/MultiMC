@@ -14,7 +14,7 @@ namespace MultiMC
 			this.WidthRequest = 600;
 			this.HeightRequest = 400;
 			this.Name = "MultiMC.EditModsDialog";
-			this.Title = global::Mono.Unix.Catalog.GetString ("Edit Mods");
+			this.Title = "Edit Mods";
 			this.Icon = global::Gdk.Pixbuf.LoadFromResource ("MainIcon");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			this.Modal = true;

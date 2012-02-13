@@ -31,8 +31,8 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
     <ConsolePause>false</ConsolePause>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -45,7 +45,6 @@ It also allows you to install mods by dragging and dropping their files.</Descri
       <HintPath>Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
     <Reference Include="System.Net" />
-    <Reference Include="Mono.Posix" />
     <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <Private>False</Private>
     </Reference>
@@ -94,10 +93,13 @@ It also allows you to install mods by dragging and dropping their files.</Descri
       <LogicalName>MainIcon</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="minecraft.key">
-      <LogicalName>PublicKey</LogicalName>
+      <LogicalName>sslcert</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="Java Launcher\MultiMCLauncher.class">
       <LogicalName>MultiMC.JavaLauncher</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Hints.xml">
+      <LogicalName>MultiMC.Properties.HintStrings</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +143,13 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <Compile Include="ProblemDetection\Problems\ModLoaderProblems.cs" />
     <Compile Include="DataUtils.cs" />
     <Compile Include="DebugUtils.cs" />
+    <Compile Include="Properties\HintList.cs" />
+    <Compile Include="GUI\ExceptionDialog.cs" />
+    <Compile Include="gtk-gui\MultiMC.ExceptionDialog.cs" />
+    <Compile Include="GUI\DeleteConfirmDialog.cs" />
+    <Compile Include="gtk-gui\MultiMC.DeleteConfirmDialog.cs" />
+    <Compile Include="GUI\HintDialog.cs" />
+    <Compile Include="gtk-gui\MultiMC.HintDialog.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -156,4 +165,11 @@ It also allows you to install mods by dragging and dropping their files.</Descri
   <ItemGroup>
     <None Include="Java Launcher\MultiMCLauncher.java" />
   </ItemGroup>
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <GtkDesignInfo generateGettext="false" />
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
 </Project>

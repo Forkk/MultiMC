@@ -16,7 +16,7 @@ namespace MultiMC
 			global::Stetic.Gui.Initialize (this);
 			// Widget MultiMC.NewInstanceDialog
 			this.Name = "MultiMC.NewInstanceDialog";
-			this.Title = global::Mono.Unix.Catalog.GetString ("New instance");
+			this.Title = "New instance";
 			this.Icon = global::Stetic.IconLoader.LoadIcon (this, "gtk-add", global::Gtk.IconSize.Menu);
 			this.TypeHint = ((global::Gdk.WindowTypeHint)(1));
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
@@ -39,7 +39,7 @@ namespace MultiMC
 			// Container child hboxTextArea.Gtk.Box+BoxChild
 			this.labelNewInstName = new global::Gtk.Label ();
 			this.labelNewInstName.Name = "labelNewInstName";
-			this.labelNewInstName.LabelProp = global::Mono.Unix.Catalog.GetString ("_New instance name:");
+			this.labelNewInstName.LabelProp = "_New instance name:";
 			this.labelNewInstName.UseUnderline = true;
 			this.hboxTextArea.Add (this.labelNewInstName);
 			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.hboxTextArea [this.labelNewInstName]));
