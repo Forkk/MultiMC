@@ -86,7 +86,7 @@ namespace MultiMC
 		{
 			get
 			{
-				return OSUtils.Linux ? "update" : "update.exe";
+				return OSUtils.Linux ? "MultiMCUpdate" : "MultiMCUpdate.exe";
 			}
 		}
 		
