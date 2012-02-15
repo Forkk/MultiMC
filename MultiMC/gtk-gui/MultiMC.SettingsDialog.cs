@@ -26,6 +26,7 @@ namespace MultiMC
 		private global::Gtk.Alignment GtkAlignment4;
 		private global::Gtk.VBox vboxUpdates;
 		private global::Gtk.CheckButton checkbuttonAutoUpdate;
+		private global::Gtk.ToggleButton toggleForceUpdate;
 		private global::Gtk.Label labelUpdateSettings;
 		private global::Gtk.Frame frameHints;
 		private global::Gtk.Alignment GtkAlignment7;
@@ -234,6 +235,17 @@ namespace MultiMC
 			w16.Position = 0;
 			w16.Expand = false;
 			w16.Fill = false;
+			// Container child vboxUpdates.Gtk.Box+BoxChild
+			this.toggleForceUpdate = new global::Gtk.ToggleButton ();
+			this.toggleForceUpdate.CanFocus = true;
+			this.toggleForceUpdate.Name = "toggleForceUpdate";
+			this.toggleForceUpdate.UseUnderline = true;
+			this.toggleForceUpdate.Label = "Force-update MultiMC";
+			this.vboxUpdates.Add (this.toggleForceUpdate);
+			global::Gtk.Box.BoxChild w17 = ((global::Gtk.Box.BoxChild)(this.vboxUpdates [this.toggleForceUpdate]));
+			w17.Position = 1;
+			w17.Expand = false;
+			w17.Fill = false;
 			this.GtkAlignment4.Add (this.vboxUpdates);
 			this.frameUpdateSettings.Add (this.GtkAlignment4);
 			this.labelUpdateSettings = new global::Gtk.Label ();
@@ -242,10 +254,10 @@ namespace MultiMC
 			this.labelUpdateSettings.UseMarkup = true;
 			this.frameUpdateSettings.LabelWidget = this.labelUpdateSettings;
 			this.vboxGeneral.Add (this.frameUpdateSettings);
-			global::Gtk.Box.BoxChild w19 = ((global::Gtk.Box.BoxChild)(this.vboxGeneral [this.frameUpdateSettings]));
-			w19.Position = 2;
-			w19.Expand = false;
-			w19.Fill = false;
+			global::Gtk.Box.BoxChild w20 = ((global::Gtk.Box.BoxChild)(this.vboxGeneral [this.frameUpdateSettings]));
+			w20.Position = 2;
+			w20.Expand = false;
+			w20.Fill = false;
 			// Container child vboxGeneral.Gtk.Box+BoxChild
 			this.frameHints = new global::Gtk.Frame ();
 			this.frameHints.Name = "frameHints";
@@ -269,8 +281,8 @@ namespace MultiMC
 			this.textviewHintInfo.CursorVisible = false;
 			this.textviewHintInfo.WrapMode = ((global::Gtk.WrapMode)(2));
 			this.hintVBox.Add (this.textviewHintInfo);
-			global::Gtk.Box.BoxChild w20 = ((global::Gtk.Box.BoxChild)(this.hintVBox [this.textviewHintInfo]));
-			w20.Position = 0;
+			global::Gtk.Box.BoxChild w21 = ((global::Gtk.Box.BoxChild)(this.hintVBox [this.textviewHintInfo]));
+			w21.Position = 0;
 			// Container child hintVBox.Gtk.Box+BoxChild
 			this.hboxHintButtons = new global::Gtk.HBox ();
 			this.hboxHintButtons.Name = "hboxHintButtons";
@@ -282,10 +294,10 @@ namespace MultiMC
 			this.buttonResetHints.UseUnderline = true;
 			this.buttonResetHints.Label = "Reset all Hints";
 			this.hboxHintButtons.Add (this.buttonResetHints);
-			global::Gtk.Box.BoxChild w21 = ((global::Gtk.Box.BoxChild)(this.hboxHintButtons [this.buttonResetHints]));
-			w21.Position = 0;
-			w21.Expand = false;
-			w21.Fill = false;
+			global::Gtk.Box.BoxChild w22 = ((global::Gtk.Box.BoxChild)(this.hboxHintButtons [this.buttonResetHints]));
+			w22.Position = 0;
+			w22.Expand = false;
+			w22.Fill = false;
 			// Container child hboxHintButtons.Gtk.Box+BoxChild
 			this.checkbuttonEnableHints = new global::Gtk.CheckButton ();
 			this.checkbuttonEnableHints.CanFocus = true;
@@ -294,13 +306,13 @@ namespace MultiMC
 			this.checkbuttonEnableHints.DrawIndicator = true;
 			this.checkbuttonEnableHints.UseUnderline = true;
 			this.hboxHintButtons.Add (this.checkbuttonEnableHints);
-			global::Gtk.Box.BoxChild w22 = ((global::Gtk.Box.BoxChild)(this.hboxHintButtons [this.checkbuttonEnableHints]));
-			w22.Position = 1;
-			this.hintVBox.Add (this.hboxHintButtons);
-			global::Gtk.Box.BoxChild w23 = ((global::Gtk.Box.BoxChild)(this.hintVBox [this.hboxHintButtons]));
+			global::Gtk.Box.BoxChild w23 = ((global::Gtk.Box.BoxChild)(this.hboxHintButtons [this.checkbuttonEnableHints]));
 			w23.Position = 1;
-			w23.Expand = false;
-			w23.Fill = false;
+			this.hintVBox.Add (this.hboxHintButtons);
+			global::Gtk.Box.BoxChild w24 = ((global::Gtk.Box.BoxChild)(this.hintVBox [this.hboxHintButtons]));
+			w24.Position = 1;
+			w24.Expand = false;
+			w24.Fill = false;
 			this.GtkAlignment7.Add (this.hintVBox);
 			this.frameHints.Add (this.GtkAlignment7);
 			this.labelHintSettings = new global::Gtk.Label ();
@@ -309,9 +321,9 @@ namespace MultiMC
 			this.labelHintSettings.UseMarkup = true;
 			this.frameHints.LabelWidget = this.labelHintSettings;
 			this.vboxGeneral.Add (this.frameHints);
-			global::Gtk.Box.BoxChild w26 = ((global::Gtk.Box.BoxChild)(this.vboxGeneral [this.frameHints]));
-			w26.Position = 3;
-			w26.Expand = false;
+			global::Gtk.Box.BoxChild w27 = ((global::Gtk.Box.BoxChild)(this.vboxGeneral [this.frameHints]));
+			w27.Position = 3;
+			w27.Expand = false;
 			this.notebook.Add (this.vboxGeneral);
 			// Notebook tab
 			this.labelGeneral = new global::Gtk.Label ();
@@ -342,19 +354,19 @@ namespace MultiMC
 			this.labelInitialMemory.Name = "labelInitialMemory";
 			this.labelInitialMemory.LabelProp = "Minimum Memory Allocation";
 			this.tableMemory.Add (this.labelInitialMemory);
-			global::Gtk.Table.TableChild w28 = ((global::Gtk.Table.TableChild)(this.tableMemory [this.labelInitialMemory]));
-			w28.XOptions = ((global::Gtk.AttachOptions)(4));
-			w28.YOptions = ((global::Gtk.AttachOptions)(4));
+			global::Gtk.Table.TableChild w29 = ((global::Gtk.Table.TableChild)(this.tableMemory [this.labelInitialMemory]));
+			w29.XOptions = ((global::Gtk.AttachOptions)(4));
+			w29.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child tableMemory.Gtk.Table+TableChild
 			this.labelMaxMemory = new global::Gtk.Label ();
 			this.labelMaxMemory.Name = "labelMaxMemory";
 			this.labelMaxMemory.LabelProp = "Mamimum Memory Allocation";
 			this.tableMemory.Add (this.labelMaxMemory);
-			global::Gtk.Table.TableChild w29 = ((global::Gtk.Table.TableChild)(this.tableMemory [this.labelMaxMemory]));
-			w29.TopAttach = ((uint)(1));
-			w29.BottomAttach = ((uint)(2));
-			w29.XOptions = ((global::Gtk.AttachOptions)(4));
-			w29.YOptions = ((global::Gtk.AttachOptions)(4));
+			global::Gtk.Table.TableChild w30 = ((global::Gtk.Table.TableChild)(this.tableMemory [this.labelMaxMemory]));
+			w30.TopAttach = ((uint)(1));
+			w30.BottomAttach = ((uint)(2));
+			w30.XOptions = ((global::Gtk.AttachOptions)(4));
+			w30.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child tableMemory.Gtk.Table+TableChild
 			this.spinbuttonInitialMemory = new global::Gtk.SpinButton (512D, 65536D, 512D);
 			this.spinbuttonInitialMemory.CanFocus = true;
@@ -364,11 +376,11 @@ namespace MultiMC
 			this.spinbuttonInitialMemory.Numeric = true;
 			this.spinbuttonInitialMemory.Value = 512D;
 			this.tableMemory.Add (this.spinbuttonInitialMemory);
-			global::Gtk.Table.TableChild w30 = ((global::Gtk.Table.TableChild)(this.tableMemory [this.spinbuttonInitialMemory]));
-			w30.LeftAttach = ((uint)(1));
-			w30.RightAttach = ((uint)(2));
-			w30.XOptions = ((global::Gtk.AttachOptions)(4));
-			w30.YOptions = ((global::Gtk.AttachOptions)(4));
+			global::Gtk.Table.TableChild w31 = ((global::Gtk.Table.TableChild)(this.tableMemory [this.spinbuttonInitialMemory]));
+			w31.LeftAttach = ((uint)(1));
+			w31.RightAttach = ((uint)(2));
+			w31.XOptions = ((global::Gtk.AttachOptions)(4));
+			w31.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child tableMemory.Gtk.Table+TableChild
 			this.spinbuttonMaxMemory = new global::Gtk.SpinButton (1024D, 65536D, 512D);
 			this.spinbuttonMaxMemory.CanFocus = true;
@@ -378,13 +390,13 @@ namespace MultiMC
 			this.spinbuttonMaxMemory.Numeric = true;
 			this.spinbuttonMaxMemory.Value = 1024D;
 			this.tableMemory.Add (this.spinbuttonMaxMemory);
-			global::Gtk.Table.TableChild w31 = ((global::Gtk.Table.TableChild)(this.tableMemory [this.spinbuttonMaxMemory]));
-			w31.TopAttach = ((uint)(1));
-			w31.BottomAttach = ((uint)(2));
-			w31.LeftAttach = ((uint)(1));
-			w31.RightAttach = ((uint)(2));
-			w31.XOptions = ((global::Gtk.AttachOptions)(4));
-			w31.YOptions = ((global::Gtk.AttachOptions)(4));
+			global::Gtk.Table.TableChild w32 = ((global::Gtk.Table.TableChild)(this.tableMemory [this.spinbuttonMaxMemory]));
+			w32.TopAttach = ((uint)(1));
+			w32.BottomAttach = ((uint)(2));
+			w32.LeftAttach = ((uint)(1));
+			w32.RightAttach = ((uint)(2));
+			w32.XOptions = ((global::Gtk.AttachOptions)(4));
+			w32.YOptions = ((global::Gtk.AttachOptions)(4));
 			this.GtkAlignment5.Add (this.tableMemory);
 			this.frameMemory.Add (this.GtkAlignment5);
 			this.labelMemorySettings = new global::Gtk.Label ();
@@ -393,10 +405,10 @@ namespace MultiMC
 			this.labelMemorySettings.UseMarkup = true;
 			this.frameMemory.LabelWidget = this.labelMemorySettings;
 			this.vboxAdvanced.Add (this.frameMemory);
-			global::Gtk.Box.BoxChild w34 = ((global::Gtk.Box.BoxChild)(this.vboxAdvanced [this.frameMemory]));
-			w34.Position = 0;
-			w34.Expand = false;
-			w34.Fill = false;
+			global::Gtk.Box.BoxChild w35 = ((global::Gtk.Box.BoxChild)(this.vboxAdvanced [this.frameMemory]));
+			w35.Position = 0;
+			w35.Expand = false;
+			w35.Fill = false;
 			// Container child vboxAdvanced.Gtk.Box+BoxChild
 			this.frameJava = new global::Gtk.Frame ();
 			this.frameJava.Name = "frameJava";
@@ -419,10 +431,10 @@ namespace MultiMC
 			this.labelJavaPath.Name = "labelJavaPath";
 			this.labelJavaPath.LabelProp = "Java Path";
 			this.hboxJavaPath.Add (this.labelJavaPath);
-			global::Gtk.Box.BoxChild w35 = ((global::Gtk.Box.BoxChild)(this.hboxJavaPath [this.labelJavaPath]));
-			w35.Position = 0;
-			w35.Expand = false;
-			w35.Fill = false;
+			global::Gtk.Box.BoxChild w36 = ((global::Gtk.Box.BoxChild)(this.hboxJavaPath [this.labelJavaPath]));
+			w36.Position = 0;
+			w36.Expand = false;
+			w36.Fill = false;
 			// Container child hboxJavaPath.Gtk.Box+BoxChild
 			this.entryJavaPath = new global::Gtk.Entry ();
 			this.entryJavaPath.CanFocus = true;
@@ -430,8 +442,8 @@ namespace MultiMC
 			this.entryJavaPath.IsEditable = true;
 			this.entryJavaPath.InvisibleChar = '●';
 			this.hboxJavaPath.Add (this.entryJavaPath);
-			global::Gtk.Box.BoxChild w36 = ((global::Gtk.Box.BoxChild)(this.hboxJavaPath [this.entryJavaPath]));
-			w36.Position = 1;
+			global::Gtk.Box.BoxChild w37 = ((global::Gtk.Box.BoxChild)(this.hboxJavaPath [this.entryJavaPath]));
+			w37.Position = 1;
 			// Container child hboxJavaPath.Gtk.Box+BoxChild
 			this.btnAutoJavaPath = new global::Gtk.Button ();
 			this.btnAutoJavaPath.CanFocus = true;
@@ -439,15 +451,15 @@ namespace MultiMC
 			this.btnAutoJavaPath.UseUnderline = true;
 			this.btnAutoJavaPath.Label = "Auto-detect";
 			this.hboxJavaPath.Add (this.btnAutoJavaPath);
-			global::Gtk.Box.BoxChild w37 = ((global::Gtk.Box.BoxChild)(this.hboxJavaPath [this.btnAutoJavaPath]));
-			w37.Position = 2;
-			w37.Expand = false;
-			w37.Fill = false;
-			this.vboxJava.Add (this.hboxJavaPath);
-			global::Gtk.Box.BoxChild w38 = ((global::Gtk.Box.BoxChild)(this.vboxJava [this.hboxJavaPath]));
-			w38.Position = 0;
+			global::Gtk.Box.BoxChild w38 = ((global::Gtk.Box.BoxChild)(this.hboxJavaPath [this.btnAutoJavaPath]));
+			w38.Position = 2;
 			w38.Expand = false;
 			w38.Fill = false;
+			this.vboxJava.Add (this.hboxJavaPath);
+			global::Gtk.Box.BoxChild w39 = ((global::Gtk.Box.BoxChild)(this.vboxJava [this.hboxJavaPath]));
+			w39.Position = 0;
+			w39.Expand = false;
+			w39.Fill = false;
 			this.GtkAlignment6.Add (this.vboxJava);
 			this.frameJava.Add (this.GtkAlignment6);
 			this.labelJava = new global::Gtk.Label ();
@@ -456,13 +468,13 @@ namespace MultiMC
 			this.labelJava.UseMarkup = true;
 			this.frameJava.LabelWidget = this.labelJava;
 			this.vboxAdvanced.Add (this.frameJava);
-			global::Gtk.Box.BoxChild w41 = ((global::Gtk.Box.BoxChild)(this.vboxAdvanced [this.frameJava]));
-			w41.Position = 1;
-			w41.Expand = false;
-			w41.Fill = false;
-			this.notebook.Add (this.vboxAdvanced);
-			global::Gtk.Notebook.NotebookChild w42 = ((global::Gtk.Notebook.NotebookChild)(this.notebook [this.vboxAdvanced]));
+			global::Gtk.Box.BoxChild w42 = ((global::Gtk.Box.BoxChild)(this.vboxAdvanced [this.frameJava]));
 			w42.Position = 1;
+			w42.Expand = false;
+			w42.Fill = false;
+			this.notebook.Add (this.vboxAdvanced);
+			global::Gtk.Notebook.NotebookChild w43 = ((global::Gtk.Notebook.NotebookChild)(this.notebook [this.vboxAdvanced]));
+			w43.Position = 1;
 			// Notebook tab
 			this.labelAdvanced = new global::Gtk.Label ();
 			this.labelAdvanced.Name = "labelAdvanced";
@@ -471,14 +483,14 @@ namespace MultiMC
 			this.notebook.SetTabLabel (this.vboxAdvanced, this.labelAdvanced);
 			this.labelAdvanced.ShowAll ();
 			w1.Add (this.notebook);
-			global::Gtk.Box.BoxChild w43 = ((global::Gtk.Box.BoxChild)(w1 [this.notebook]));
-			w43.Position = 0;
+			global::Gtk.Box.BoxChild w44 = ((global::Gtk.Box.BoxChild)(w1 [this.notebook]));
+			w44.Position = 0;
 			// Internal child MultiMC.SettingsDialog.ActionArea
-			global::Gtk.HButtonBox w44 = this.ActionArea;
-			w44.Name = "dialog1_ActionArea";
-			w44.Spacing = 10;
-			w44.BorderWidth = ((uint)(5));
-			w44.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
+			global::Gtk.HButtonBox w45 = this.ActionArea;
+			w45.Name = "dialog1_ActionArea";
+			w45.Spacing = 10;
+			w45.BorderWidth = ((uint)(5));
+			w45.LayoutStyle = ((global::Gtk.ButtonBoxStyle)(4));
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonCancel = new global::Gtk.Button ();
 			this.buttonCancel.CanDefault = true;
@@ -488,9 +500,9 @@ namespace MultiMC
 			this.buttonCancel.UseUnderline = true;
 			this.buttonCancel.Label = "gtk-cancel";
 			this.AddActionWidget (this.buttonCancel, -6);
-			global::Gtk.ButtonBox.ButtonBoxChild w45 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w44 [this.buttonCancel]));
-			w45.Expand = false;
-			w45.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w46 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w45 [this.buttonCancel]));
+			w46.Expand = false;
+			w46.Fill = false;
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
 			this.buttonOk = new global::Gtk.Button ();
 			this.buttonOk.CanDefault = true;
@@ -500,10 +512,10 @@ namespace MultiMC
 			this.buttonOk.UseUnderline = true;
 			this.buttonOk.Label = "gtk-ok";
 			this.AddActionWidget (this.buttonOk, -5);
-			global::Gtk.ButtonBox.ButtonBoxChild w46 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w44 [this.buttonOk]));
-			w46.Position = 1;
-			w46.Expand = false;
-			w46.Fill = false;
+			global::Gtk.ButtonBox.ButtonBoxChild w47 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w45 [this.buttonOk]));
+			w47.Position = 1;
+			w47.Expand = false;
+			w47.Fill = false;
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}

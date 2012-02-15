@@ -170,7 +170,9 @@ namespace MultiMC
 		{
 			SettingsDialog settingsDlg = new SettingsDialog(this);
 			settingsDlg.ParentWindow = this.GdkWindow;
-			settingsDlg.Show();
+			settingsDlg.Run();
+			if (settingsDlg.ForceUpdate)
+				DownloadNewVersion();
 		}
 		
 		protected void OnRefreshClicked(object sender, System.EventArgs e)
@@ -320,14 +322,20 @@ namespace MultiMC
 			Application.Invoke(
 				(sender1, e1) => 
 			{
+				string updatemsg = "Version {0} has been downloaded. " +
+					"Would you like to install it now?";
+				string updatestr = (updateVersion != null ? updateVersion.ToString() : "");
+				if (string.IsNullOrEmpty(updatestr))
+				{
+					updatestr = "";
+					updatemsg = "MultiMC has downloaded updates, would you like to install them?";
+				}
 				MessageDialog updateDlg = new MessageDialog(this,
 				                                            DialogFlags.Modal,
 				                                            MessageType.Question,
 				                                            ButtonsType.YesNo,
-				                                            "Version {0} has been " +
-				                                            "downloaded. Would you " +
-				                                            "like to install it now?",
-				                                            updateVersion);
+				                                            updatemsg,
+				                                            updatestr);
 				updateDlg.Response += (o, args) => 
 				{
 					if (args.ResponseId == ResponseType.Yes)

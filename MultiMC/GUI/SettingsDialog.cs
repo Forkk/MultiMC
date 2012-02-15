@@ -88,6 +88,11 @@ namespace MultiMC
 			
 			Destroy();
 		}
+		
+		public bool ForceUpdate
+		{
+			get { return toggleForceUpdate.Active; }
+		}
 
 		protected void OnBtnAutoJavaPathClicked(object sender, System.EventArgs e)
 		{
