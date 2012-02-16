@@ -66,19 +66,17 @@ namespace MultiMC
 			using (CellRendererText cr = new CellRendererText())
 				modView.AppendColumn("File", cr, "text", 0);
 
-			using (CellRendererToggle toggleRenderer = new CellRendererToggle())
+			CellRendererToggle toggleRenderer = new CellRendererToggle();
+			toggleRenderer.Activatable = true;
+			toggleRenderer.Sensitive = true;
+			toggleRenderer.Toggled += (object o, ToggledArgs args) =>
 			{
-				toggleRenderer.Activatable = true;
-				toggleRenderer.Sensitive = true;
-				toggleRenderer.Toggled += (object o, ToggledArgs args) =>
-				{
-					TreeIter iter;
-					using (TreePath tp = new TreePath(args.Path))
-						if (modList.GetIter(out iter, tp))
-							modList.SetValue(iter, 2, !(bool) modList.GetValue(iter, 2));
-				};
-				modView.AppendColumn("Delete?", toggleRenderer, "active", 2);
-			}
+				TreeIter iter;
+				using (TreePath tp = new TreePath(args.Path))
+					if (modList.GetIter(out iter, tp))
+						modList.SetValue(iter, 2, !(bool) modList.GetValue(iter, 2));
+			};
+			modView.AppendColumn("Delete?", toggleRenderer, "active", 2);
 			
 			modView.Columns[0].Alignment = 0.0f;
 			modView.Columns[1].Alignment = 0.0f;

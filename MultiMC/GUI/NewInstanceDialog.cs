@@ -25,6 +25,8 @@ namespace MultiMC
 			: base("", parent, Gtk.DialogFlags.Modal)
 		{
 			this.Build();
+			Default = buttonOk;
+			instNameEntry.ActivatesDefault = true;
 		}
 
 		protected void OnCancelClicked(object sender, System.EventArgs e)

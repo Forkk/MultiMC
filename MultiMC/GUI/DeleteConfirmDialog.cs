@@ -24,6 +24,8 @@ namespace MultiMC
 			: base("Really?", parent, DialogFlags.Modal)
 		{
 			this.Build();
+			Default = buttonOk;
+			entryConfirm.ActivatesDefault = true;
 		}
 		
 		public string Text
