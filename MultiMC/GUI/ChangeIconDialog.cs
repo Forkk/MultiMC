@@ -71,7 +71,8 @@ namespace MultiMC
 			get
 			{
 				TreeIter iter;
-				if (iconList.GetIter(out iter, iconView.SelectedItems[0]))
+				if (iconView.SelectedItems.Length > 0 && 
+					iconList.GetIter(out iter, iconView.SelectedItems[0]))
 				{
 					return iconList.GetValue(iter, 0).ToString();
 				}

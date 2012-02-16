@@ -21,29 +21,27 @@ namespace MultiMC
 {
 	public partial class EditNotesDialog : Gtk.Dialog
 	{
-		public EditNotesDialog(Instance inst, Window parent = null)
+		public EditNotesDialog(Window parent = null)
 			: base("", parent, DialogFlags.Modal)
 		{
 			this.Build();
-			this.Inst = inst;
-			notesTextView.Buffer.Text = inst.Notes;
 		}
-		
-		public Instance Inst
+
+		public string Notes
 		{
-			get;
-			protected set;
+			get { return notesTextView.Buffer.Text; }
+			set { notesTextView.Buffer.Text = value; }
 		}
 
 		protected void OnButtonOkActivated(object sender, System.EventArgs e)
 		{
-			Inst.Notes = notesTextView.Buffer.Text;
-			Destroy();
+			//Inst.Notes = notesTextView.Buffer.Text;
+			//Destroy();
 		}
 
 		protected void OnButtonCancelActivated(object sender, System.EventArgs e)
 		{
-			Destroy();
+			//Destroy();
 		}
 	}
 }

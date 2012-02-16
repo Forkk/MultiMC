@@ -143,16 +143,12 @@ namespace MultiMC
 			
 			if (File.Exists(Resources.NewVersionFileName))
 				File.Delete(Resources.NewVersionFileName);
-			
+
 			using (MainWindow win = new MainWindow())
+			{
 				win.Show();
-			
-			try
-			{
+
 				Application.Run();
-			} catch (Exception e)
-			{
-				OnException(e);
 			}
 			
 			if (InstallUpdates)
@@ -162,7 +158,7 @@ namespace MultiMC
 				                                Resources.NewVersionFileName, currentFile));
 				if (OSUtils.Linux)
 				{
-					Process.Start("chmod",
+					Process.Start("sudo chmod",
 					              string.Format("+x \"{0}\"", Resources.NewVersionFileName));
 					ProcessStartInfo info = 
 						new ProcessStartInfo(Resources.NewVersionFileName,

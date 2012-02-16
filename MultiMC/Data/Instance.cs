@@ -12,7 +12,7 @@ using MultiMC.Data;
 
 namespace MultiMC.Data
 {
-	public sealed class Instance
+	public sealed class Instance : IDisposable
 	{
 		#region Fields
 
@@ -211,36 +211,33 @@ namespace MultiMC.Data
 			
 			Console.WriteLine("Launching instance '" + Name + "' with '" + launcher + "'");
 
-			using (Process mcProc = new Process())
-			{
-				ProcessStartInfo mcProcStart = new ProcessStartInfo();
+			instProc = new Process();
+			ProcessStartInfo mcProcStart = new ProcessStartInfo();
 
-				//mcProcStart.FileName = "cmd";
-				mcProcStart.FileName = javaPath;
-				mcProcStart.Arguments = string.Format(
-					"-Xmx{4}m -Xms{5}m " +
-					"{0} \"{1}\" \"{2}\" {3}",
-					"MultiMCLauncher", Path.GetFullPath(MinecraftDir), username, sessionID,
-					xmx, xms);
+			//mcProcStart.FileName = "cmd";
+			mcProcStart.FileName = javaPath;
+			mcProcStart.Arguments = string.Format(
+				"-Xmx{4}m -Xms{5}m " +
+				"{0} \"{1}\" \"{2}\" {3}",
+				"MultiMCLauncher", Path.GetFullPath(MinecraftDir), username, sessionID,
+				xmx, xms);
 
-				mcProc.EnableRaisingEvents = true;
-				mcProcStart.CreateNoWindow = true;
-				mcProcStart.UseShellExecute = false;
-				mcProcStart.RedirectStandardOutput = true;
-				mcProcStart.RedirectStandardError = true;
+			instProc.EnableRaisingEvents = true;
+			mcProcStart.CreateNoWindow = true;
+			mcProcStart.UseShellExecute = false;
+			mcProcStart.RedirectStandardOutput = true;
+			mcProcStart.RedirectStandardError = true;
 
-				mcProc.Exited += new EventHandler(ProcExited);
+			instProc.Exited += new EventHandler(ProcExited);
+			instProc.Disposed += (o, args) => ProcessDisposed = true;
 
-				mcProc.StartInfo = mcProcStart;
-				mcProc.Start();
+			instProc.StartInfo = mcProcStart;
+			instProc.Start();
 
-				instProc = mcProc;
+			if (InstLaunch != null)
+				InstLaunch(this, EventArgs.Empty);
 
-				if (InstLaunch != null)
-					InstLaunch(this, EventArgs.Empty);
-
-				return mcProc;
-			}
+			return instProc;
 		}
 
 		void ProcExited(object sender, EventArgs e)
@@ -474,7 +471,7 @@ namespace MultiMC.Data
 		
 		public bool Running
 		{
-			get { return (instProc != null && !instProc.HasExited); }
+			get { return !(instProc == null || ProcessDisposed || instProc.HasExited); }
 		}
 		
 		public bool CanPlayOffline
@@ -490,6 +487,12 @@ namespace MultiMC.Data
 				}
 				return false;
 			}
+		}
+
+		public bool ProcessDisposed
+		{
+			get;
+			private set;
 		}
 
 		#endregion

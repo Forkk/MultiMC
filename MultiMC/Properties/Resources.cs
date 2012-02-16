@@ -133,8 +133,11 @@ namespace MultiMC
 			{
 				foreach (string f in Directory.GetFiles("icons"))
 				{
-					//if (IsVa)
+					if (IsValidIcon(f))
+					{
+						Console.WriteLine("Loaded custom icon file: {0}", f);
 						pixBufDict.Add(Path.GetFileNameWithoutExtension(f), new Pixbuf(f));
+					}
 				}
 			}
 			

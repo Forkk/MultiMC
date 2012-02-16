@@ -209,4 +209,7 @@ It also allows you to install mods by dragging and dropping their files.</Descri
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetPath) C:\Users\Andrew\Dropbox\Public\MultiMCPR\MultiMCDebug.exe</PostBuildEvent>
+  </PropertyGroup>
 </Project>

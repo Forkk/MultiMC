@@ -154,15 +154,22 @@ namespace MultiMC
 		{
 			using (NewInstanceDialog newDlg = new NewInstanceDialog(this))
 			{
-				//newDlg.ParentWindow = this.GdkWindow;
-				newDlg.Show();
-				newDlg.OKClicked += (sender1, e1) =>
-				{
-					Console.WriteLine("Adding inst " + newDlg.InstDir);
-					Instance inst = new Instance(newDlg.InstName, newDlg.InstDir, true);
-					instList.AppendValues(inst.Name, inst);
-					LoadInstances();
-				};
+				newDlg.ParentWindow = this.GdkWindow;
+				newDlg.Response += (sender1, e1) =>
+					{
+						if (e1.ResponseId == ResponseType.Ok)
+						{
+							Console.WriteLine("Adding inst " + newDlg.InstDir);
+							using (Instance inst = new Instance(newDlg.InstName, newDlg.InstDir, true))
+							{
+								instList.AppendValues(inst.Name, inst);
+								LoadInstances();
+							}
+						}
+
+						newDlg.Destroy();
+					};
+				newDlg.Run();
 			}
 		}
 
@@ -219,12 +226,10 @@ namespace MultiMC
 			int index = currentTasks.IndexOf(newTask);
 			newTask.TaskID = index;
 
-			using (ProgressBar taskProgBar = new ProgressBar())
-			{
-				taskProgBar.HeightRequest = 20;
-				progBars[newTask.TaskID] = taskProgBar;
-				progBarBox.PackEnd(taskProgBar, true, true, 0);
-			}
+			ProgressBar taskProgBar = new ProgressBar();
+			taskProgBar.HeightRequest = 20;
+			progBars[newTask.TaskID] = taskProgBar;
+			progBarBox.PackEnd(taskProgBar, true, true, 0);
 		}
 
 		private void StartTask(Task task)
@@ -395,9 +400,10 @@ namespace MultiMC
 		{
 			Gtk.Application.Invoke(
 				(sender1, e1) =>
-				{
-					progBarBox.Remove(progBars[(sender as Task).TaskID]);
-				});
+			{
+				progBarBox.Remove(progBars[(sender as Task).TaskID]);
+				progBars[(sender as Task).TaskID].Dispose();
+			});
 		}
 
 		void taskProgressChange(object sender, Task.ProgressChangeEventArgs e)
@@ -465,13 +471,14 @@ namespace MultiMC
 								Visible = false;
 								UIEnabled = true;
 								inst.Launch(info.Username, info.SessionID);
-								using (ConsoleWindow cwin = new ConsoleWindow(inst))
+								ConsoleWindow cwin = new ConsoleWindow(inst);
+								cwin.ConsoleClosed += (sender3, e3) =>
 								{
-									cwin.ConsoleClosed += (sender3, e3) =>
-									{
-										Visible = true;
-									};
-								}
+									Visible = true;
+									cwin.Dispose();
+								};
+
+								cwin.Show();
 							});
 
 						updater.Completed += (sender, e) =>
@@ -676,41 +683,57 @@ namespace MultiMC
 
 		private void ReadUserInfo(out string username, out string password)
 		{
-			if (!File.Exists(Resources.LastLoginFileName))
+			try
 			{
-				username = password = "";
-				return;
-			}
-
-			using (SHA384 sha = SHA384.Create())
-			{
-				byte[] hash = sha.ComputeHash(
-					System.Text.ASCIIEncoding.ASCII.GetBytes(Resources.LastLoginKey));
-
-				byte[] key = new byte[32];
-				byte[] IV = new byte[16];
-
-				Array.Copy(hash, key, key.Length);
-				Array.ConstrainedCopy(hash, key.Length, IV, 0, IV.Length);
-
-				using (Rijndael rijAlg = Rijndael.Create())
+				if (!File.Exists(Resources.LastLoginFileName))
 				{
-					rijAlg.Key = key;
-					rijAlg.IV = IV;
+					username = password = "";
+					return;
+				}
 
-					ICryptoTransform decryptor = rijAlg.CreateDecryptor(key, IV);
+				using (SHA384 sha = SHA384.Create())
+				{
+					byte[] hash = sha.ComputeHash(
+						System.Text.ASCIIEncoding.ASCII.GetBytes(Resources.LastLoginKey));
 
-					using (FileStream fsDecrypt = File.OpenRead(Resources.LastLoginFileName))
+					byte[] key = new byte[32];
+					byte[] IV = new byte[16];
+
+					Array.Copy(hash, key, key.Length);
+					Array.ConstrainedCopy(hash, key.Length, IV, 0, IV.Length);
+
+					using (Rijndael rijAlg = Rijndael.Create())
 					{
-						CryptoStream csDecrypt =
-							new CryptoStream(fsDecrypt, decryptor, CryptoStreamMode.Read);
-						StreamReader srDecrypt = new StreamReader(csDecrypt);
-						string str = srDecrypt.ReadToEnd();
-						string[] data = str.Split(':');
-						username = data[0];
-						password = data[1];
+						rijAlg.Key = key;
+						rijAlg.IV = IV;
+
+						ICryptoTransform decryptor = rijAlg.CreateDecryptor(key, IV);
+
+						using (FileStream fsDecrypt = File.OpenRead(Resources.LastLoginFileName))
+						{
+							CryptoStream csDecrypt =
+								new CryptoStream(fsDecrypt, decryptor, CryptoStreamMode.Read);
+							StreamReader srDecrypt = new StreamReader(csDecrypt);
+							string str = srDecrypt.ReadToEnd();
+							string[] data = str.Split(':');
+							if (data.Length >= 1)
+								username = data[0];
+							else
+								username = "";
+
+							if (data.Length >= 2)
+								password = data[1];
+							else
+								password = "";
+						}
 					}
 				}
+			}
+			catch (IndexOutOfRangeException)
+			{
+				username = "";
+				password = "";
+				File.Delete(Resources.LastLoginFileName);
 			}
 		}
 
@@ -737,10 +760,14 @@ namespace MultiMC
 					using (FileStream fsEncrypt = File.Open(Resources.LastLoginFileName,
 															FileMode.Create))
 					{
-						CryptoStream csEncrypt =
-						new CryptoStream(fsEncrypt, encryptor, CryptoStreamMode.Write);
-						StreamWriter swEncrypt = new StreamWriter(csEncrypt);
-							swEncrypt.Write(string.Format("{0}:{1}", username, password));
+						using (CryptoStream csEncrypt =
+							new CryptoStream(fsEncrypt, encryptor, CryptoStreamMode.Write))
+						{
+							using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+							{
+								swEncrypt.Write(string.Format("{0}:{1}", username, password));
+							}
+						}
 					}
 				}
 			}
@@ -764,20 +791,17 @@ namespace MultiMC
 		{
 			instMenu = new Menu();
 
-			using (SeparatorMenuItem sep = new SeparatorMenuItem())
-			{
-				instMenu.Add(imPlay = new MenuItem("Play"));
-				instMenu.Add(sep);
-				instMenu.Add(imIcon = new MenuItem("Change Icon"));
-				instMenu.Add(imNotes = new MenuItem("Notes"));
-				instMenu.Add(sep);
-				instMenu.Add(imAddMods = new MenuItem("Add Mods"));
-				instMenu.Add(imEditMods = new MenuItem("Edit Mods"));
-				instMenu.Add(imRebuild = new MenuItem("Rebuild"));
-				instMenu.Add(imViewFolder = new MenuItem("View Folder"));
-				instMenu.Add(sep);
-				instMenu.Add(imDelete = new MenuItem("Delete"));
-			}
+			instMenu.Add(imPlay = new MenuItem("Play"));
+			instMenu.Add(new SeparatorMenuItem());
+			instMenu.Add(imIcon = new MenuItem("Change Icon"));
+			instMenu.Add(imNotes = new MenuItem("Notes"));
+			instMenu.Add(new SeparatorMenuItem());
+			instMenu.Add(imAddMods = new MenuItem("Add Mods"));
+			instMenu.Add(imEditMods = new MenuItem("Edit Mods"));
+			instMenu.Add(imRebuild = new MenuItem("Rebuild"));
+			instMenu.Add(imViewFolder = new MenuItem("View Folder"));
+			instMenu.Add(new SeparatorMenuItem());
+			instMenu.Add(imDelete = new MenuItem("Delete"));
 
 			instMenu.ShowAll();
 
@@ -828,9 +852,16 @@ namespace MultiMC
 
 		void EditNotesActivated(object sender, EventArgs e)
 		{
-			using (EditNotesDialog end = new EditNotesDialog(SelectedInst, this))
+			using (EditNotesDialog end = new EditNotesDialog(this))
 			{
-				//end.ParentWindow = this.GdkWindow;
+				end.ParentWindow = this.GdkWindow;
+				end.Notes = SelectedInst.Notes;
+				end.Response += (o, args) =>
+				{
+					if (args.ResponseId == ResponseType.Ok)
+						SelectedInst.Notes = end.Notes;
+					end.Destroy();
+				};
 				end.Run();
 			}
 		}
@@ -840,27 +871,6 @@ namespace MultiMC
 			HintDialog.ShowHint(this, Hint.AddModsHint);
 			if (SelectedInst != null)
 				Process.Start(SelectedInst.InstModsDir);
-			//			FileChooserDialog fileDlg = new FileChooserDialog("Add mods", 
-			//			                                                  this, 
-			//			                                                  FileChooserAction.Open, 
-			//			                                                  "Cancel", ResponseType.Cancel,
-			//			                                                  "Add", ResponseType.Accept);
-			//			fileDlg.Response += (object o, ResponseArgs args) => 
-			//			{
-			//				if (SelectedInst == null)
-			//					return;
-			//				
-			//				if (args.ResponseId == ResponseType.Accept)
-			//				{
-			//					if (!Directory.Exists(SelectedInst.InstModsDir))
-			//						Directory.CreateDirectory(SelectedInst.InstModsDir);
-			//					
-			//					CopyFiles(fileDlg.Filenames, SelectedInst.InstModsDir);
-			//					RebuildMCJar(SelectedInst);
-			//				}
-			//				fileDlg.Destroy();
-			//			};
-			//			fileDlg.Run();
 		}
 
 		void EditModsActivated(object sender, EventArgs e)
@@ -874,6 +884,7 @@ namespace MultiMC
 					{
 						RebuildMCJar(SelectedInst);
 					}
+					emd.Destroy();
 				};
 				HintDialog.ShowHint(emd, Hint.EditModsHint);
 				emd.Run();

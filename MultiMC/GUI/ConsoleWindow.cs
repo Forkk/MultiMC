@@ -142,9 +142,12 @@ namespace MultiMC
 			statusIcon.PopupMenu += (object o, PopupMenuArgs args) =>
 				statusIcon.PresentMenu(trayMenu, (uint) args.Args[0], (uint) args.Args[1]);
 
-			Message("Instance started with command: " +
-					inst.InstProcess.StartInfo.FileName +
-					" " + inst.InstProcess.StartInfo.Arguments.ToString());
+			if (inst.InstProcess != null && inst.InstProcess.StartInfo != null)
+				Message("Instance started with command: " +
+						inst.InstProcess.StartInfo.FileName +
+						" " + inst.InstProcess.StartInfo.Arguments.ToString());
+			else
+				Message("Instance started");
 		}
 		
 		void AttachOutputListeners()
@@ -258,6 +261,8 @@ namespace MultiMC
 		{
 			if (!Inst.Running)
 				CloseConsole();
+			else
+				DebugUtils.Print("Can't close console because instance is still running!");
 		}
 
 		protected void OnHideButtonClicked(object sender, System.EventArgs e)
