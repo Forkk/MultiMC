@@ -908,7 +908,15 @@ namespace MultiMC
 					SelectedInst.Dispose();
 					try
 					{
-						File.Delete(SelectedInst.RootDir);
+						Directory.Delete(SelectedInst.RootDir, true);
+					}
+					catch (IOException err)
+					{
+						MessageUtils.ShowMessageBox(
+							this,
+							MessageType.Error,
+							"Failed to delete instance",
+							"MultiMC failed to delete the instance: " + err.ToString());
 					}
 					catch (UnauthorizedAccessException)
 					{
