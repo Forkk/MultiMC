@@ -290,7 +290,6 @@ namespace MultiMC.Data
 			InstMods.Dispose();
 			if (instProc != null)
 				instProc.Dispose();
-			GC.SuppressFinalize(this);
 		}
 
 		#endregion
@@ -362,6 +361,7 @@ namespace MultiMC.Data
 			get { return bool.Parse(GetXmlElement("NeedsRebuild", "false").InnerText); }
 			set
 			{
+				DebugUtils.Print("Rebuild set to {0}", value.ToString());
 				GetXmlElement("NeedsRebuild").InnerText = value.ToString();
 				AutoSave();
 			}
@@ -603,8 +603,6 @@ namespace MultiMC.Data
 		{
 			watcher.EnableRaisingEvents = false;
 			watcher.Dispose();
-			
-			GC.SuppressFinalize(this);
 		}
 		
 		void FileChanged(object sender, FileSystemEventArgs e)
@@ -614,13 +612,11 @@ namespace MultiMC.Data
 			switch (e.ChangeType)
 			{
 			case WatcherChangeTypes.Created:
-				modList.Add(filePath);
-				OnModFileChanged(ModFileChangeTypes.ADDED, filePath);
+				RecursiveAdd(filePath);
 				Save();
 				break;
 			case WatcherChangeTypes.Deleted:
-				modList.Remove(filePath);
-				OnModFileChanged(ModFileChangeTypes.REMOVED, filePath);
+				Remove(filePath);
 				Save();
 				break;
 			default:
@@ -635,7 +631,6 @@ namespace MultiMC.Data
 			string path = 
 				OSUtils.GetRelativePath(e.FullPath, Path.GetFullPath(
 					Path.GetFullPath(Environment.CurrentDirectory)));
-			OnModFileChanged(ModFileChangeTypes.RENAMED, oldPath);
 			int index = this[oldPath];
 			this[index] = path;
 			Save();
@@ -661,7 +656,7 @@ namespace MultiMC.Data
 				if (!modList.Contains(s))
 					throw new KeyNotFoundException("Can't change index of something " +
 					                               "that isn't in the list!");
-				modList.Remove(s);
+				Remove(s);
 				modList.Insert(value, s);
 			}
 		}
@@ -673,7 +668,7 @@ namespace MultiMC.Data
 			{
 				foreach (string modFile in File.ReadAllLines(Inst.ModListFile))
 				{
-					modList.Add(Path.Combine(Inst.InstModsDir, modFile));
+					Add(Path.Combine(Inst.InstModsDir, modFile), false);
 				}
 			}
 		}
@@ -709,7 +704,7 @@ namespace MultiMC.Data
 				{
 					if (!File.Exists(modList[i]))
 					{
-						modList.Remove(modList[i]);
+						Remove(modList[i]);
 						i--;
 					}
 				}
@@ -718,22 +713,49 @@ namespace MultiMC.Data
 			Save();
 		}
 		
-		private void RecursiveAdd(string dir)
+		private void RecursiveAdd(string dir, bool triggerEvents = true)
 		{
 			foreach (string modFile in Directory.GetFileSystemEntries(dir))
 			{
 				if (Directory.Exists(modFile))
 				{
-					RecursiveAdd(Path.Combine(dir, Path.GetFileName(modFile)));
+					RecursiveAdd(Path.Combine(dir, Path.GetFileName(modFile)), triggerEvents);
 				}
 				else if (File.Exists(modFile))
 				{
 					if (!modList.Contains(modFile))
-						modList.Add(modFile);
-					Inst.NeedsRebuild = true;
+						Add(modFile, triggerEvents);
 				}
 			}
 		}
+
+		#region Add and Remove
+
+		private void Add(string modFile, bool triggerEvent = true)
+		{
+			if (!modList.Contains(modFile))
+				modList.Add(modFile);
+			if (triggerEvent) 
+				OnModFileChanged(ModFileChangeTypes.ADDED, modFile);
+		}
+
+		private void Insert(int index, string modFile, bool triggerEvent = true)
+		{
+			if (!modList.Contains(modFile))
+				modList.Insert(index, modFile);
+			if (triggerEvent)
+				OnModFileChanged(ModFileChangeTypes.ADDED, modFile);
+		}
+
+		private void Remove(string modFile, bool triggerEvent = true)
+		{
+			if (modList.Contains(modFile))
+				modList.Remove(modFile);
+			if (triggerEvent)
+				OnModFileChanged(ModFileChangeTypes.REMOVED, modFile);
+		}
+
+		#endregion
 		
 		public IEnumerator<string> GetEnumerator()
 		{
@@ -747,6 +769,7 @@ namespace MultiMC.Data
 		
 		public void OnModFileChanged(ModFileChangeTypes type, string modFile)
 		{
+			DebugUtils.Print("File {0} was changed ({1})", modFile, type.ToString());
 			Inst.NeedsRebuild = true;
 			if (ModFileChanged != null)
 				ModFileChanged(this, new ModFileChangedEventArgs(type, modFile));
