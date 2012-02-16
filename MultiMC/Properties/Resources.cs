@@ -101,7 +101,7 @@ namespace MultiMC
 			get
 			{
 				Version v = AppUtils.GetVersion();
-				return string.Format("{0}.{1}", v.Major, v.Minor, v.Build, v.Revision);
+				return string.Format("{0}.{1}", v.Major, v.Minor);
 			}
 		}
 
@@ -133,7 +133,8 @@ namespace MultiMC
 			{
 				foreach (string f in Directory.GetFiles("icons"))
 				{
-					pixBufDict.Add(Path.GetFileNameWithoutExtension(f), new Pixbuf(f));
+					//if (IsVa)
+						pixBufDict.Add(Path.GetFileNameWithoutExtension(f), new Pixbuf(f));
 				}
 			}
 			
@@ -146,6 +147,25 @@ namespace MultiMC
 			}
 			
 			return pixBufDict;
+		}
+		
+		public static bool IsValidIcon(string file)
+		{
+			bool exists = File.Exists(file);
+			
+			bool supported = false;
+			foreach (PixbufFormat format in Pixbuf.Formats)
+			{
+				foreach (string extension in format.Extensions)
+				{
+					if (extension == Path.GetExtension(file))
+					{
+						supported = true;
+					}
+				}
+			}
+			
+			return exists && supported;
 		}
 	}
 }

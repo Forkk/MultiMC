@@ -12,7 +12,7 @@ using MultiMC.Data;
 
 namespace MultiMC.Data
 {
-	public class Instance
+	public sealed class Instance
 	{
 		#region Fields
 
@@ -188,18 +188,20 @@ namespace MultiMC.Data
 		{
 //			if (!File.Exists("MultiMCLauncher.class"))
 //			{
-			FileStream output = File.Open("MultiMCLauncher.class", FileMode.Create);
-			Stream input = System.Reflection.Assembly.
-					GetCallingAssembly().GetManifestResourceStream("MultiMC.JavaLauncher");
-				
-			byte[] buffer = new byte[1024 * 2];
-			int count = 0;
-			while ((count = input.Read(buffer, 0, buffer.Length)) > 0)
+			using (FileStream output = File.Open("MultiMCLauncher.class", FileMode.Create))
 			{
-				output.Write(buffer, 0, count);
+				using (Stream input = System.Reflection.Assembly.
+						GetCallingAssembly().GetManifestResourceStream("MultiMC.JavaLauncher"))
+				{
+
+					byte[] buffer = new byte[1024 * 2];
+					int count = 0;
+					while ((count = input.Read(buffer, 0, buffer.Length)) > 0)
+					{
+						output.Write(buffer, 0, count);
+					}
+				}
 			}
-			input.Close();
-			output.Close();
 //			}
 			
 			int xms = AppSettings.Main.MinMemoryAlloc;
@@ -208,35 +210,37 @@ namespace MultiMC.Data
 			string javaPath = AppSettings.Main.JavaPath;
 			
 			Console.WriteLine("Launching instance '" + Name + "' with '" + launcher + "'");
-			
-			Process mcProc = new Process();
-			ProcessStartInfo mcProcStart = new ProcessStartInfo();
-			
-			//mcProcStart.FileName = "cmd";
-			mcProcStart.FileName = javaPath;
-			mcProcStart.Arguments = string.Format(
-				"-Xmx{4}m -Xms{5}m " +
-				"{0} \"{1}\" \"{2}\" {3}",
-				"MultiMCLauncher", Path.GetFullPath(MinecraftDir), username, sessionID,
-				xmx, xms);
 
-			mcProc.EnableRaisingEvents = true;
-			mcProcStart.CreateNoWindow = true;
-			mcProcStart.UseShellExecute = false;
-			mcProcStart.RedirectStandardOutput = true;
-			mcProcStart.RedirectStandardError = true;
+			using (Process mcProc = new Process())
+			{
+				ProcessStartInfo mcProcStart = new ProcessStartInfo();
 
-			mcProc.Exited += new EventHandler(ProcExited);
+				//mcProcStart.FileName = "cmd";
+				mcProcStart.FileName = javaPath;
+				mcProcStart.Arguments = string.Format(
+					"-Xmx{4}m -Xms{5}m " +
+					"{0} \"{1}\" \"{2}\" {3}",
+					"MultiMCLauncher", Path.GetFullPath(MinecraftDir), username, sessionID,
+					xmx, xms);
 
-			mcProc.StartInfo = mcProcStart;
-			mcProc.Start();
+				mcProc.EnableRaisingEvents = true;
+				mcProcStart.CreateNoWindow = true;
+				mcProcStart.UseShellExecute = false;
+				mcProcStart.RedirectStandardOutput = true;
+				mcProcStart.RedirectStandardError = true;
 
-			instProc = mcProc;
-			
-			if (InstLaunch != null)
-				InstLaunch(this, EventArgs.Empty);
-			
-			return mcProc;
+				mcProc.Exited += new EventHandler(ProcExited);
+
+				mcProc.StartInfo = mcProcStart;
+				mcProc.Start();
+
+				instProc = mcProc;
+
+				if (InstLaunch != null)
+					InstLaunch(this, EventArgs.Empty);
+
+				return mcProc;
+			}
 		}
 
 		void ProcExited(object sender, EventArgs e)
@@ -289,8 +293,9 @@ namespace MultiMC.Data
 			InstMods.Dispose();
 			if (instProc != null)
 				instProc.Dispose();
+			GC.SuppressFinalize(this);
 		}
-		
+
 		#endregion
 
 		#region Properties
@@ -566,7 +571,7 @@ namespace MultiMC.Data
 		#endregion
 	}
 	
-	public class InstanceMods : IEnumerable<string>
+	public sealed class InstanceMods : IEnumerable<string>, IDisposable
 	{
 		List<string> modList;
 		FileSystemWatcher watcher;
@@ -595,6 +600,8 @@ namespace MultiMC.Data
 		{
 			watcher.EnableRaisingEvents = false;
 			watcher.Dispose();
+			
+			GC.SuppressFinalize(this);
 		}
 		
 		void FileChanged(object sender, FileSystemEventArgs e)
@@ -735,7 +742,7 @@ namespace MultiMC.Data
 			return modList.GetEnumerator();
 		}
 		
-		public virtual void OnModFileChanged(ModFileChangeTypes type, string modFile)
+		public void OnModFileChanged(ModFileChangeTypes type, string modFile)
 		{
 			Inst.NeedsRebuild = true;
 			if (ModFileChanged != null)
@@ -802,6 +809,7 @@ namespace MultiMC.Data
 	/// <summary>
 	/// Thrown when trying to load an instance that is not valid
 	/// </summary>
+	[Serializable]
 	class InvalidInstanceException : Exception
 	{
 		public InvalidInstanceException(string msg)

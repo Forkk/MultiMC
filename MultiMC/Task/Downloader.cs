@@ -26,7 +26,7 @@ namespace MultiMC.Tasks
 	/// <summary>
 	/// A wrapper around the file downloader class that interfaces it to the BackgroundTask class
 	/// </summary>
-	class Downloader : Task
+	class Downloader : Task, IDisposable
 	{
 		#region Properties
 
@@ -35,6 +35,7 @@ namespace MultiMC.Tasks
 			get { return Status; }
 			set { Status = value; }
 		}
+		string msg;
 
 		//public override bool Running
 		//{
@@ -78,14 +79,14 @@ namespace MultiMC.Tasks
 		{
 			this.targFile = targetFile;
 			this.downloadUrl = downloadUrl;
-			Message = message;
+			msg = message;
 			Timeout = timeout;
 		}
 
 		protected override void TaskStart()
 		{
 			OnStart();
-			Status = Message;
+			Message = msg;
 			Console.WriteLine("Starting download");
 			tmpFile = Path.GetTempFileName();
 			
@@ -155,6 +156,11 @@ namespace MultiMC.Tasks
 			if (e.Error != null)
 				OnException(e.Error);
 			OnComplete();
+		}
+
+		public void Dispose()
+		{
+			webClient.Dispose();
 		}
 	}
 }

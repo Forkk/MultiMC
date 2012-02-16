@@ -32,74 +32,77 @@ namespace MultiMC
 	{
 		private ListStore instList;
 		private Box progBarBox;
-		
-		public MainWindow() : 
-				base(Gtk.WindowType.Toplevel)
+
+		public MainWindow() :
+			base(Gtk.WindowType.Toplevel)
 		{
 			this.Build();
-			
+
 			string osString = "Unknown OS";
-			
+
 			if (OSUtils.Windows)
 				osString = "Windows";
 			else if (OSUtils.Linux)
 				osString = "Linux";
 			else if (OSUtils.MacOSX)
 				osString = "Mac OS X";
-			
+
 			if (!Directory.Exists(Resources.InstDir))
 				Directory.CreateDirectory(Resources.InstDir);
-			
+
 			if (!File.Exists(AppSettings.Main.JavaPath))
 				AppSettings.Main.JavaPath = OSUtils.FindJava();
-			
+
 			Title = string.Format("MultiMC BETA {0} for {1}",
-			                      Resources.VersionString,
-			                      osString);
+								  Resources.VersionString,
+								  osString);
 			Icon = Pixbuf.LoadFromResource("MainIcon");
-			
+
 			instList = new ListStore(typeof(string), typeof(Instance), typeof(Gdk.Pixbuf));
-			
+
 			instIconView.Model = instList;
 			instIconView.TextColumn = 0;
 			instIconView.PixbufColumn = 2;
 			instIconView.Cells[0] = new CellRendererText();
-			
+
 			CellRendererText textCell = (instIconView.Cells[0] as CellRendererText);
 			textCell.Editable = true;
 			textCell.Width = 64;
 			textCell.Alignment = Pango.Alignment.Center;
 			textCell.Edited += (object o, EditedArgs args) =>
 			{
-				instIconView.SelectPath(new TreePath(args.Path));
-				if (Instance.NameIsValid(args.NewText))
+				using (TreePath tp = new TreePath(args.Path))
 				{
-					SelectedInst.Name = args.NewText;
-					LoadInstances();
+					instIconView.SelectPath(tp);
+					if (Instance.NameIsValid(args.NewText))
+					{
+						SelectedInst.Name = args.NewText;
+						LoadInstances();
+					}
 				}
 			};
-			
+
 			InitMenu();
-//			InitDND();
-			
+			//			InitDND();
+
 			progBarBox = new VBox();
 			windowbox.PackEnd(progBarBox, false, true, 0);
-			
+
 			progBarBox.ShowAll();
-			
+
 			LoadInstances();
-			
+
 			/* 
 			 * Run startup tasks such as downloading DotNetZip 
 			 * and checking for updates.
 			 */
 			RunStartupTasks();
-			
+
 			HintDialog.ShowHint(this, Hint.WelcomeHint);
 		}
-		
+
 		#region Startup Tasks
-		
+
 		/// <summary>
 		/// Checks for necessary files (such as the minecraft launcher 
 		/// and DotNetZip's DLL and downloads them if they don't exist.
@@ -108,14 +111,14 @@ namespace MultiMC
 		{
 			// Get DotNetZip
 			CheckDownloadFile("Ionic.Zip.Reduced.dll",
-			                  Resources.DotNetZipURL,
-			                  "Downloading DotNetZip...");
-			
-			
+							  Resources.DotNetZipURL,
+							  "Downloading DotNetZip...");
+
+
 			if (AppSettings.Main.AutoUpdate)
 				DoUpdateCheck();
 		}
-		
+
 		/// <summary>
 		/// If the given file doesn't exist, starts a downloader and returns it
 		/// Otherwise, returns null
@@ -128,35 +131,39 @@ namespace MultiMC
 			if (!File.Exists(dest))
 			{
 				Console.WriteLine("Downloading {0}.", dest);
-				Downloader downloader = new Downloader(dest, url, message);
-				StartTask(downloader);
-				return downloader;
+				using (Downloader downloader = new Downloader(dest, url, message))
+				{
+					StartTask(downloader);
+					return downloader;
+				}
 			}
 			else
 				return null;
 		}
-		
+
 		#endregion
-		
+
 		#region Buttons
-		
+
 		protected void OnDeleteEvent(object o, Gtk.DeleteEventArgs args)
 		{
 			Application.Quit();
 		}
-		
+
 		protected void OnNewClicked(object sender, System.EventArgs e)
 		{
-			NewInstanceDialog newDlg = new NewInstanceDialog(this);
-			newDlg.ParentWindow = this.GdkWindow;
-			newDlg.Show();
-			newDlg.OKClicked += (sender1, e1) => 
+			using (NewInstanceDialog newDlg = new NewInstanceDialog(this))
 			{
-				Console.WriteLine("Adding inst " + newDlg.InstDir);
-				Instance inst = new Instance(newDlg.InstName, newDlg.InstDir, true);
-				instList.AppendValues(inst.Name, inst);
-				LoadInstances();
-			};
+				//newDlg.ParentWindow = this.GdkWindow;
+				newDlg.Show();
+				newDlg.OKClicked += (sender1, e1) =>
+				{
+					Console.WriteLine("Adding inst " + newDlg.InstDir);
+					Instance inst = new Instance(newDlg.InstName, newDlg.InstDir, true);
+					instList.AppendValues(inst.Name, inst);
+					LoadInstances();
+				};
+			}
 		}
 
 		protected void OnViewFolderClicked(object sender, System.EventArgs e)
@@ -168,13 +175,15 @@ namespace MultiMC
 
 		protected void OnSettingsClicked(object sender, System.EventArgs e)
 		{
-			SettingsDialog settingsDlg = new SettingsDialog(this);
-			settingsDlg.ParentWindow = this.GdkWindow;
-			settingsDlg.Run();
-			if (settingsDlg.ForceUpdate)
-				DownloadNewVersion();
+			using (SettingsDialog settingsDlg = new SettingsDialog(this))
+			{
+				//settingsDlg.ParentWindow = this.GdkWindow;
+				settingsDlg.Run();
+				if (settingsDlg.ForceUpdate)
+					DownloadNewVersion();
+			}
 		}
-		
+
 		protected void OnRefreshClicked(object sender, System.EventArgs e)
 		{
 			LoadInstances();
@@ -184,7 +193,7 @@ namespace MultiMC
 		{
 			DoUpdateCheck();
 		}
-		
+
 		/// <summary>
 		/// Clears the list of instances and loads it from the instance directory.
 		/// </summary>
@@ -196,26 +205,28 @@ namespace MultiMC
 				instList.AppendValues(inst.Name, inst, Resources.GetInstIcon(inst.IconKey));
 			}
 		}
-		
+
 		#endregion
-		
+
 		#region Task System
-		
+
 		List<Task> currentTasks = new List<Task>();
 		Dictionary<int, ProgressBar> progBars = new Dictionary<int, ProgressBar>();
-		
+
 		private void AddTask(Task newTask)
 		{
 			currentTasks.Add(newTask);
 			int index = currentTasks.IndexOf(newTask);
 			newTask.TaskID = index;
-			
-			ProgressBar taskProgBar = new ProgressBar();
-			taskProgBar.HeightRequest = 20;
-			progBars[newTask.TaskID] = taskProgBar;
-			progBarBox.PackEnd(taskProgBar, true, true, 0);
+
+			using (ProgressBar taskProgBar = new ProgressBar())
+			{
+				taskProgBar.HeightRequest = 20;
+				progBars[newTask.TaskID] = taskProgBar;
+				progBarBox.PackEnd(taskProgBar, true, true, 0);
+			}
 		}
-		
+
 		private void StartTask(Task task)
 		{
 			AddTask(task);
@@ -233,15 +244,15 @@ namespace MultiMC
 		{
 			Gtk.Application.Invoke(
 				(sender1, e1) =>
-			{
-				MessageDialog errDlg = new MessageDialog(this, 
-				                                         DialogFlags.Modal, 
-				                                         MessageType.Error, 
-				                                         ButtonsType.Ok,
-				                                         e.Message);
-				errDlg.Response += (o, args) => errDlg.Destroy();
-				errDlg.Run();
-			});
+				{
+					MessageDialog errDlg = new MessageDialog(this,
+															 DialogFlags.Modal,
+															 MessageType.Error,
+															 ButtonsType.Ok,
+															 e.Message);
+					errDlg.Response += (o, args) => errDlg.Destroy();
+					errDlg.Run();
+				});
 		}
 
 		#region Mod Installation
@@ -253,10 +264,10 @@ namespace MultiMC
 		{
 			if (!File.Exists(SelectedInst.MCJar))
 			{
-				MessageUtils.ShowMessageBox(MessageType.Warning, 
-				                            "You must run the " +
-				                            "instance at least " +
-				                            "once before installing mods.");
+				MessageUtils.ShowMessageBox(MessageType.Warning,
+											"You must run the " +
+											"instance at least " +
+											"once before installing mods.");
 				return null;
 			}
 			Modder modder = new Modder(inst);
@@ -264,7 +275,7 @@ namespace MultiMC
 			StartTask(modder);
 			return modder;
 		}
-		
+
 		#endregion
 
 		#region Updates
@@ -275,24 +286,24 @@ namespace MultiMC
 		private void DoUpdateCheck()
 		{
 			if (updater != null &&
-			    updater.Running)
+				updater.Running)
 			{
 				return;
 			}
-			
+
 			updater = new Updater();
 			updater.Completed += (sender, e) =>
 			{
 				Application.Invoke(
-					(sender2, e2) => 
-				{
-					updateVersion = updater.NewVersion;
-					if (updateVersion != null && 
-					    updater.NewVersion.CompareTo(AppUtils.GetVersion()) > 0)
+					(sender2, e2) =>
 					{
-						DownloadNewVersion();
-					}
-				});
+						updateVersion = updater.NewVersion;
+						if (updateVersion != null &&
+							updater.NewVersion.CompareTo(AppUtils.GetVersion()) > 0)
+						{
+							DownloadNewVersion();
+						}
+					});
 			};
 			Console.WriteLine("Checking for updates...");
 			StartTask(updater);
@@ -320,38 +331,38 @@ namespace MultiMC
 		void updateDL_Completed(object sender, EventArgs e)
 		{
 			Application.Invoke(
-				(sender1, e1) => 
-			{
-				string updatemsg = "Version {0} has been downloaded. " +
-					"Would you like to install it now?";
-				string updatestr = (updateVersion != null ? updateVersion.ToString() : "");
-				if (string.IsNullOrEmpty(updatestr))
+				(sender1, e1) =>
 				{
-					updatestr = "";
-					updatemsg = "MultiMC has downloaded updates, would you like to install them?";
-				}
-				MessageDialog updateDlg = new MessageDialog(this,
-				                                            DialogFlags.Modal,
-				                                            MessageType.Question,
-				                                            ButtonsType.YesNo,
-				                                            updatemsg,
-				                                            updatestr);
-				updateDlg.Response += (o, args) => 
-				{
-					if (args.ResponseId == ResponseType.Yes)
+					string updatemsg = "Version {0} has been downloaded. " +
+						"Would you like to install it now?";
+					string updatestr = (updateVersion != null ? updateVersion.ToString() : "");
+					if (string.IsNullOrEmpty(updatestr))
 					{
-						CloseForUpdates();
+						updatestr = "";
+						updatemsg = "MultiMC has downloaded updates, would you like to install them?";
 					}
-					else
+					MessageDialog updateDlg = new MessageDialog(this,
+																DialogFlags.Modal,
+																MessageType.Question,
+																ButtonsType.YesNo,
+																updatemsg,
+																updatestr);
+					updateDlg.Response += (o, args) =>
 					{
-						File.Delete(Resources.NewVersionFileName);
-					}
-					updateDlg.Destroy();
-				};
-				updateDlg.Run();
-			});
+						if (args.ResponseId == ResponseType.Yes)
+						{
+							CloseForUpdates();
+						}
+						else
+						{
+							File.Delete(Resources.NewVersionFileName);
+						}
+						updateDlg.Destroy();
+					};
+					updateDlg.Run();
+				});
 		}
-		
+
 		void CloseForUpdates()
 		{
 			MainClass.InstallUpdates = true;
@@ -359,21 +370,10 @@ namespace MultiMC
 			Destroy();
 			Application.Quit();
 		}
-		
+
 		#endregion
 
 		#region Exceptions
-
-		/// <summary>
-		/// Thrown when trying to start a new task when one is already running
-		/// </summary>
-		class TaskAlreadyOccupiedException : Exception
-		{
-			public TaskAlreadyOccupiedException(string msg)
-				: base(msg)
-			{
-			}
-		}
 
 		#endregion
 
@@ -383,136 +383,138 @@ namespace MultiMC
 		{
 			Gtk.Application.Invoke(
 				(sender1, e1) =>
-			{
-				if (progBars[(sender as Task).TaskID] != null)
 				{
-					progBars[(sender as Task).TaskID].Show();
-				}
-			});
+					if (progBars[(sender as Task).TaskID] != null)
+					{
+						progBars[(sender as Task).TaskID].Show();
+					}
+				});
 		}
 
 		void taskCompleted(object sender, Task.TaskCompleteEventArgs e)
 		{
 			Gtk.Application.Invoke(
 				(sender1, e1) =>
-			{
-				progBarBox.Remove(progBars[(sender as Task).TaskID]);
-			});
+				{
+					progBarBox.Remove(progBars[(sender as Task).TaskID]);
+				});
 		}
 
 		void taskProgressChange(object sender, Task.ProgressChangeEventArgs e)
 		{
 			Gtk.Application.Invoke(
 				(sender1, e1) =>
-			{
-				float progFraction = ((float)e.Progress) / 100;
-				if (progFraction > 1)
 				{
-					Console.WriteLine(string.Format("Warning: Progress fraction " +
-						"({0}) is greater than the maximum value (1)", progFraction));
-					progFraction = 1;
-				}
-				
-				progBars[(sender as Task).TaskID].Fraction = progFraction;
-			});
+					float progFraction = ((float) e.Progress) / 100;
+					if (progFraction > 1)
+					{
+						Console.WriteLine(string.Format("Warning: Progress fraction " +
+							"({0}) is greater than the maximum value (1)", progFraction));
+						progFraction = 1;
+					}
+
+					progBars[(sender as Task).TaskID].Fraction = progFraction;
+				});
 		}
-		
+
 		void taskStatusChange(object sender, Task.TaskStatusEventArgs e)
 		{
 			Gtk.Application.Invoke(
 				(sender1, e1) =>
-			{
-				progBars[(sender as Task).TaskID].Text = e.Status;
-			});
+				{
+					progBars[(sender as Task).TaskID].Text = e.Status;
+				});
 		}
 
 		#endregion
 
 		#endregion
-		
+
 		#region Instances
-		
-//		ConsoleWindow consoleWindow;
-		
+
+		//		ConsoleWindow consoleWindow;
+
 		public void StartInstance(Instance inst)
 		{
-//			inst.InstQuit += (sender, e) =>
-//			{
-//				if (!cwin.Visible)
-//					Visible = true;
-//			};
-			
-//			Console.WriteLine("Offline allowed: " + inst.CanPlayOffline);
-			
+			//			inst.InstQuit += (sender, e) =>
+			//			{
+			//				if (!cwin.Visible)
+			//					Visible = true;
+			//			};
+
+			//			Console.WriteLine("Offline allowed: " + inst.CanPlayOffline);
+
 			string message = "";
 			UIEnabled = false;
 			DoLogin(
-				(LoginInfo info) => 
-			{
-				string mainGameUrl = "minecraft.jar";
-				if (!info.Cancelled)
+				(LoginInfo info) =>
 				{
-					Console.WriteLine(info.ForceUpdate);
-					GameUpdater updater = 
-						new GameUpdater(inst,
-						                info.LatestVersion,
-						                mainGameUrl,
-						                info.ForceUpdate);
-					
-					EventHandler startDelegate = new EventHandler(
-						(e, args) =>
+					string mainGameUrl = "minecraft.jar";
+					if (!info.Cancelled)
 					{
-						Visible = false;
-						UIEnabled = true;
-						inst.Launch(info.Username, info.SessionID);
-						ConsoleWindow cwin = new ConsoleWindow(inst);
-						cwin.ConsoleClosed += (sender3, e3) => 
-						{
-							Visible = true;
-						};
-					});
-					
-					updater.Completed += (sender, e) =>
-					{
-						if (inst.NeedsRebuild)
-						{
-							Application.Invoke(
-								(sender2, e2) =>
+						Console.WriteLine(info.ForceUpdate);
+						GameUpdater updater =
+							new GameUpdater(inst,
+											info.LatestVersion,
+											mainGameUrl,
+											info.ForceUpdate);
+
+						EventHandler startDelegate = new EventHandler(
+							(e, args) =>
 							{
-								RebuildMCJar(inst).Completed += (sender3, e3) => 
-									Application.Invoke(sender3, e3, startDelegate);
+								Visible = false;
+								UIEnabled = true;
+								inst.Launch(info.Username, info.SessionID);
+								using (ConsoleWindow cwin = new ConsoleWindow(inst))
+								{
+									cwin.ConsoleClosed += (sender3, e3) =>
+									{
+										Visible = true;
+									};
+								}
 							});
-						}
-						else
-							Application.Invoke(sender, e, startDelegate);
-					};
-					
-					Application.Invoke((sender, e) => StartTask(updater));
-				}
-				else
-					UIEnabled = true;
-			}, message, inst.CanPlayOffline);
+
+						updater.Completed += (sender, e) =>
+						{
+							if (inst.NeedsRebuild)
+							{
+								Application.Invoke(
+									(sender2, e2) =>
+									{
+										RebuildMCJar(inst).Completed += (sender3, e3) =>
+											Application.Invoke(sender3, e3, startDelegate);
+									});
+							}
+							else
+								Application.Invoke(sender, e, startDelegate);
+						};
+
+						Application.Invoke((sender, e) => StartTask(updater));
+					}
+					else
+						UIEnabled = true;
+				}, message, inst.CanPlayOffline);
 			//			GameUpdater updater = new GameUpdater(inst, 
-//			                                      loginInfo., 
-//			                                      "minecraft.jar?user="
-//			                                      + username + "&ticket=" + 
-//			                                      downloadTicket,
-//			                                      true);
+			//			                                      loginInfo., 
+			//			                                      "minecraft.jar?user="
+			//			                                      + username + "&ticket=" + 
+			//			                                      downloadTicket,
+			//			                                      true);
 		}
-		
+
 		private delegate void LoginCompleteHandler(LoginInfo info);
-		
+
 		/// <summary>
 		/// Opens a login dialog to allow the user to login.
 		/// </summary>
 		/// 
-		private void DoLogin(LoginCompleteHandler done, string message = "", 
-		                     bool canplayOffline = false)
+		private void DoLogin(LoginCompleteHandler done, string message = "",
+							 bool canplayOffline = false)
 		{
 			string username = "";
 			string password = "";
 			ReadUserInfo(out username, out password);
-			
+
 			LoginDialog loginDlg = new LoginDialog(this, message, canplayOffline);
 			if (!string.IsNullOrEmpty(username))
 			{
@@ -524,69 +526,69 @@ namespace MultiMC
 				loginDlg.RememberPassword = true;
 				loginDlg.Password = password;
 			}
-			loginDlg.Response += (object o, ResponseArgs args) => 
+			loginDlg.Response += (object o, ResponseArgs args) =>
 			{
 				if (args.ResponseId == ResponseType.Ok)
 				{
 					Console.WriteLine("OK Clicked");
 					string parameters = Uri.EscapeUriString(string.Format(
-						"user={0}&password={1}&version={2}", 
+						"user={0}&password={1}&version={2}",
 						loginDlg.Username, loginDlg.Password, 13));
-					
+
 					// Start a new thread and post the login info to login.minecraft.net
 					Thread loginThread = new Thread(
 						() =>
-					{
-						WriteUserInfo((loginDlg.RememberUsername ? loginDlg.Username : ""), 
-						              (loginDlg.RememberPassword ? loginDlg.Password : ""));
-						
-						string reply = AppUtils.ExecutePost("https://login.minecraft.net", 
-						                                    parameters);
-						
-						// If the login failed
-						if (!reply.Contains(":"))
 						{
-							// Translate the error message to a more user friendly wording
-							string errorMessage = reply;
-							switch (reply.ToLower())
+							WriteUserInfo((loginDlg.RememberUsername ? loginDlg.Username : ""),
+										  (loginDlg.RememberPassword ? loginDlg.Password : ""));
+
+							string reply = AppUtils.ExecutePost("https://login.minecraft.net",
+																parameters);
+
+							// If the login failed
+							if (!reply.Contains(":"))
 							{
-							case "bad login":
-								errorMessage = "Invalid username or password.";
-								break;
-							case "old version":
-								errorMessage = "Please update.";
-								break;
-							default:
-								errorMessage = "Login failed: " + reply;
-								break;
-							}
-							
-							// Error
-							Application.Invoke((sender, e) => DoLogin(done, errorMessage));
-						}
-						
-						// If the login succeeded
-						else
-						{
-							string[] responseValues = reply.Split(':');
-							
-							// The response must have 4 values or it's invalid
-							if (responseValues.Length != 4)
-							{
+								// Translate the error message to a more user friendly wording
+								string errorMessage = reply;
+								switch (reply.ToLower())
+								{
+								case "bad login":
+									errorMessage = "Invalid username or password.";
+									break;
+								case "old version":
+									errorMessage = "Please update.";
+									break;
+								default:
+									errorMessage = "Login failed: " + reply;
+									break;
+								}
+
 								// Error
-								Application.Invoke(
-									(sender, e) => 
-									DoLogin(done, "Got an invalid response from server"));
+								Application.Invoke((sender, e) => DoLogin(done, errorMessage));
 							}
-							// Now we can finally return our login info.
+
+							// If the login succeeded
 							else
 							{
-								LoginInfo info = new LoginInfo(responseValues, 
-								                               loginDlg.ForceUpdate);
-								done(info);
+								string[] responseValues = reply.Split(':');
+
+								// The response must have 4 values or it's invalid
+								if (responseValues.Length != 4)
+								{
+									// Error
+									Application.Invoke(
+										(sender, e) =>
+										DoLogin(done, "Got an invalid response from server"));
+								}
+								// Now we can finally return our login info.
+								else
+								{
+									LoginInfo info = new LoginInfo(responseValues,
+																   loginDlg.ForceUpdate);
+									done(info);
+								}
 							}
-						}
-					});
+						});
 					loginThread.Start();
 				}
 				else if (args.ResponseId == ResponseType.Reject)
@@ -603,7 +605,7 @@ namespace MultiMC
 			};
 			loginDlg.Run();
 		}
-		
+
 		private class LoginInfo
 		{
 			#region Properties
@@ -630,32 +632,32 @@ namespace MultiMC
 				get;
 				private set;
 			}
-			
+
 			public bool Cancelled
 			{
 				get;
 				private set;
 			}
-			
+
 			public bool Offline
 			{
 				get;
 				private set;
 			}
-			
+
 			public bool ForceUpdate
 			{
 				get;
 				private set;
 			}
 			#endregion
-			
+
 			public LoginInfo(string[] values = null, bool forceUpdate = false, bool cancel = true)
 			{
 				ForceUpdate = forceUpdate;
 				if (values == null)
 				{
-					values = new[] {"", "", "", ""};
+					values = new[] { "", "", "", "" };
 					Cancelled = cancel;
 					Offline = !cancel;
 				}
@@ -664,14 +666,14 @@ namespace MultiMC
 				Username = values[2];
 				SessionID = values[3];
 			}
-			
-//			public LoginInfo(string errorMessage)
-//			{
-//				ErrorMessage = errorMessage;
-//				Failed = true;
-//			}
+
+			//			public LoginInfo(string errorMessage)
+			//			{
+			//				ErrorMessage = errorMessage;
+			//				Failed = true;
+			//			}
 		}
-		
+
 		private void ReadUserInfo(out string username, out string password)
 		{
 			if (!File.Exists(Resources.LastLoginFileName))
@@ -679,79 +681,75 @@ namespace MultiMC
 				username = password = "";
 				return;
 			}
-			
-			SHA384 sha = SHA384.Create();
-			byte[] hash = sha.ComputeHash(
-				System.Text.ASCIIEncoding.ASCII.GetBytes(Resources.LastLoginKey));
-			
-			byte[] key = new byte[32];
-			byte[] IV = new byte[16];
-			
-			Array.Copy(hash, key, key.Length);
-			Array.ConstrainedCopy(hash, key.Length, IV, 0, IV.Length);
-			
-			using (Rijndael rijAlg = Rijndael.Create())
+
+			using (SHA384 sha = SHA384.Create())
 			{
-				rijAlg.Key = key;
-				rijAlg.IV = IV;
-				
-				ICryptoTransform decryptor = rijAlg.CreateDecryptor(key, IV);
-				
-				using (FileStream fsDecrypt = File.OpenRead(Resources.LastLoginFileName))
+				byte[] hash = sha.ComputeHash(
+					System.Text.ASCIIEncoding.ASCII.GetBytes(Resources.LastLoginKey));
+
+				byte[] key = new byte[32];
+				byte[] IV = new byte[16];
+
+				Array.Copy(hash, key, key.Length);
+				Array.ConstrainedCopy(hash, key.Length, IV, 0, IV.Length);
+
+				using (Rijndael rijAlg = Rijndael.Create())
 				{
-					using (CryptoStream csDecrypt = 
-					       new CryptoStream(fsDecrypt, decryptor, CryptoStreamMode.Read))
+					rijAlg.Key = key;
+					rijAlg.IV = IV;
+
+					ICryptoTransform decryptor = rijAlg.CreateDecryptor(key, IV);
+
+					using (FileStream fsDecrypt = File.OpenRead(Resources.LastLoginFileName))
 					{
-						using (StreamReader srDecrypt = new StreamReader(csDecrypt))
-						{
-							string str = srDecrypt.ReadToEnd();
-							string[] data = str.Split(':');
-							username = data[0];
-							password = data[1];
-						}
+						CryptoStream csDecrypt =
+							new CryptoStream(fsDecrypt, decryptor, CryptoStreamMode.Read);
+						StreamReader srDecrypt = new StreamReader(csDecrypt);
+						string str = srDecrypt.ReadToEnd();
+						string[] data = str.Split(':');
+						username = data[0];
+						password = data[1];
 					}
 				}
 			}
 		}
-		
+
 		private void WriteUserInfo(string username, string password)
 		{
-			SHA384 sha = SHA384.Create();
-			byte[] hash = sha.ComputeHash(
-				System.Text.ASCIIEncoding.ASCII.GetBytes(Resources.LastLoginKey));
-			
-			byte[] key = new byte[32];
-			byte[] IV = new byte[16];
-			
-			Array.Copy(hash, key, key.Length);
-			Array.ConstrainedCopy(hash, key.Length, IV, 0, IV.Length);
-			
-			using (Rijndael rijAlg = Rijndael.Create())
+			using (SHA384 sha = SHA384.Create())
 			{
-				rijAlg.Key = key;
-				rijAlg.IV = IV;
-				
-				ICryptoTransform encryptor = rijAlg.CreateEncryptor(key, IV);
-				
-				using (FileStream fsEncrypt = File.Open(Resources.LastLoginFileName, 
-				                                        FileMode.Create))
+				byte[] hash = sha.ComputeHash(
+					System.Text.ASCIIEncoding.ASCII.GetBytes(Resources.LastLoginKey));
+
+				byte[] key = new byte[32];
+				byte[] IV = new byte[16];
+
+				Array.Copy(hash, key, key.Length);
+				Array.ConstrainedCopy(hash, key.Length, IV, 0, IV.Length);
+
+				using (Rijndael rijAlg = Rijndael.Create())
 				{
-					using (CryptoStream csEncrypt = 
-					       new CryptoStream(fsEncrypt, encryptor, CryptoStreamMode.Write))
+					rijAlg.Key = key;
+					rijAlg.IV = IV;
+
+					ICryptoTransform encryptor = rijAlg.CreateEncryptor(key, IV);
+
+					using (FileStream fsEncrypt = File.Open(Resources.LastLoginFileName,
+															FileMode.Create))
 					{
-						using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
-						{
+						CryptoStream csEncrypt =
+						new CryptoStream(fsEncrypt, encryptor, CryptoStreamMode.Write);
+						StreamWriter swEncrypt = new StreamWriter(csEncrypt);
 							swEncrypt.Write(string.Format("{0}:{1}", username, password));
-						}
 					}
 				}
 			}
 		}
-		
+
 		#endregion
-		
+
 		#region Menu
-		
+
 		private Menu instMenu;
 		MenuItem imPlay;
 		MenuItem imIcon;
@@ -761,55 +759,58 @@ namespace MultiMC
 		MenuItem imRebuild;
 		MenuItem imViewFolder;
 		MenuItem imDelete;
-		
+
 		private void InitMenu()
 		{
 			instMenu = new Menu();
-			
-			instMenu.Add(imPlay = new MenuItem("Play"));
-			instMenu.Add(new SeparatorMenuItem());
-			instMenu.Add(imIcon = new MenuItem("Change Icon"));
-			instMenu.Add(imNotes = new MenuItem("Notes"));
-			instMenu.Add(new SeparatorMenuItem());
-			instMenu.Add(imAddMods = new MenuItem("Add Mods"));
-			instMenu.Add(imEditMods = new MenuItem("Edit Mods"));
-			instMenu.Add(imRebuild = new MenuItem("Rebuild"));
-			instMenu.Add(imViewFolder = new MenuItem("View Folder"));
-			instMenu.Add(new SeparatorMenuItem());
-			instMenu.Add(imDelete = new MenuItem("Delete"));
-			
+
+			using (SeparatorMenuItem sep = new SeparatorMenuItem())
+			{
+				instMenu.Add(imPlay = new MenuItem("Play"));
+				instMenu.Add(sep);
+				instMenu.Add(imIcon = new MenuItem("Change Icon"));
+				instMenu.Add(imNotes = new MenuItem("Notes"));
+				instMenu.Add(sep);
+				instMenu.Add(imAddMods = new MenuItem("Add Mods"));
+				instMenu.Add(imEditMods = new MenuItem("Edit Mods"));
+				instMenu.Add(imRebuild = new MenuItem("Rebuild"));
+				instMenu.Add(imViewFolder = new MenuItem("View Folder"));
+				instMenu.Add(sep);
+				instMenu.Add(imDelete = new MenuItem("Delete"));
+			}
+
 			instMenu.ShowAll();
-			
+
 			imPlay.Activated += (sender, e) =>
 			{
 				if (SelectedInst != null)
 					StartInstance(SelectedInst);
 			};
-			
+
 			imIcon.Activated += ChangeIconActivated;
 			imNotes.Activated += EditNotesActivated;
-			
+
 			imAddMods.Activated += AddModsActivated;
 			imEditMods.Activated += EditModsActivated;
 			imRebuild.Activated += RebuildActivated;
-			imViewFolder.Activated += (sender, e) => 
+			imViewFolder.Activated += (sender, e) =>
 				Process.Start(SelectedInst.RootDir);
-			
+
 			imDelete.Activated += DeleteActivated;
-			
+
 			instIconView.ButtonPressEvent += (object o, ButtonPressEventArgs args) =>
 			{
-				if (args.Event.Button == 3 && 
-				    instIconView.GetPathAtPos((int)args.Event.X, 
-				                          (int)args.Event.Y) != null)
+				if (args.Event.Button == 3 &&
+					instIconView.GetPathAtPos((int) args.Event.X,
+										  (int) args.Event.Y) != null)
 				{
 					instIconView.SelectPath(
-						instIconView.GetPathAtPos((int)args.Event.X,
-					                          (int)args.Event.Y));
+						instIconView.GetPathAtPos((int) args.Event.X,
+											  (int) args.Event.Y));
 					instMenu.Popup();
 				}
 			};
-			
+
 			// If on windows, try to make the menu /not/ look like absolute shit
 			if (OSUtils.Windows)
 				StyleUtils.DeuglifyMenu(instMenu);
@@ -817,84 +818,91 @@ namespace MultiMC
 
 		void ChangeIconActivated(object sender, EventArgs e)
 		{
-			ChangeIconDialog iconDlg = new ChangeIconDialog(SelectedInst, this);
-			iconDlg.ParentWindow = this.GdkWindow;
-			iconDlg.Run();
-			LoadInstances();
+			using (ChangeIconDialog iconDlg = new ChangeIconDialog(SelectedInst, this))
+			{
+				//iconDlg.ParentWindow = this.GdkWindow;
+				iconDlg.Run();
+				LoadInstances();
+			}
 		}
 
 		void EditNotesActivated(object sender, EventArgs e)
 		{
-			EditNotesDialog end = new EditNotesDialog(SelectedInst, this);
-			end.ParentWindow = this.GdkWindow;
-			end.Run();
+			using (EditNotesDialog end = new EditNotesDialog(SelectedInst, this))
+			{
+				//end.ParentWindow = this.GdkWindow;
+				end.Run();
+			}
 		}
-		
+
 		void AddModsActivated(object sender, EventArgs e)
 		{
 			HintDialog.ShowHint(this, Hint.AddModsHint);
 			if (SelectedInst != null)
 				Process.Start(SelectedInst.InstModsDir);
-//			FileChooserDialog fileDlg = new FileChooserDialog("Add mods", 
-//			                                                  this, 
-//			                                                  FileChooserAction.Open, 
-//			                                                  "Cancel", ResponseType.Cancel,
-//			                                                  "Add", ResponseType.Accept);
-//			fileDlg.Response += (object o, ResponseArgs args) => 
-//			{
-//				if (SelectedInst == null)
-//					return;
-//				
-//				if (args.ResponseId == ResponseType.Accept)
-//				{
-//					if (!Directory.Exists(SelectedInst.InstModsDir))
-//						Directory.CreateDirectory(SelectedInst.InstModsDir);
-//					
-//					CopyFiles(fileDlg.Filenames, SelectedInst.InstModsDir);
-//					RebuildMCJar(SelectedInst);
-//				}
-//				fileDlg.Destroy();
-//			};
-//			fileDlg.Run();
+			//			FileChooserDialog fileDlg = new FileChooserDialog("Add mods", 
+			//			                                                  this, 
+			//			                                                  FileChooserAction.Open, 
+			//			                                                  "Cancel", ResponseType.Cancel,
+			//			                                                  "Add", ResponseType.Accept);
+			//			fileDlg.Response += (object o, ResponseArgs args) => 
+			//			{
+			//				if (SelectedInst == null)
+			//					return;
+			//				
+			//				if (args.ResponseId == ResponseType.Accept)
+			//				{
+			//					if (!Directory.Exists(SelectedInst.InstModsDir))
+			//						Directory.CreateDirectory(SelectedInst.InstModsDir);
+			//					
+			//					CopyFiles(fileDlg.Filenames, SelectedInst.InstModsDir);
+			//					RebuildMCJar(SelectedInst);
+			//				}
+			//				fileDlg.Destroy();
+			//			};
+			//			fileDlg.Run();
 		}
-		
+
 		void EditModsActivated(object sender, EventArgs e)
 		{
-			EditModsDialog emd = new EditModsDialog(SelectedInst, this);
-			emd.ParentWindow = this.GdkWindow;
-			emd.Response += (object o, ResponseArgs args) => 
+			using (EditModsDialog emd = new EditModsDialog(SelectedInst, this))
 			{
-				if (args.ResponseId == ResponseType.Ok)
+				//emd.ParentWindow = this.GdkWindow;
+				emd.Response += (object o, ResponseArgs args) =>
 				{
-					RebuildMCJar(SelectedInst);
-				}
-			};
-			HintDialog.ShowHint(emd, Hint.EditModsHint);
-			emd.Run();
+					if (args.ResponseId == ResponseType.Ok)
+					{
+						RebuildMCJar(SelectedInst);
+					}
+				};
+				HintDialog.ShowHint(emd, Hint.EditModsHint);
+				emd.Run();
+			}
 		}
-		
+
 		void RebuildActivated(object sender, EventArgs e)
 		{
 			RebuildMCJar(SelectedInst);
 		}
-		
+
 		void DeleteActivated(object sender, EventArgs e)
 		{
 			DeleteConfirmDialog delConf = new DeleteConfirmDialog(this);
-			delConf.Response += (o, args) => 
+			delConf.Response += (o, args) =>
 			{
 				delConf.Destroy();
 				if (args.ResponseId == ResponseType.Ok &&
-				    delConf.Text == "DELETE")
+					delConf.Text == "DELETE")
 				{
 					SelectedInst.Dispose();
 					try
 					{
 						File.Delete(SelectedInst.RootDir);
-					} catch (UnauthorizedAccessException)
+					}
+					catch (UnauthorizedAccessException)
 					{
 						MessageUtils.ShowMessageBox(
-							this, 
+							this,
 							MessageType.Error,
 							"Failed to delete instance",
 							"MultiMC failed to delete the instance because access was denied.");
@@ -903,102 +911,102 @@ namespace MultiMC
 				}
 			};
 		}
-		
+
 		#endregion
-		
+
 		#region Drag and Drop
-//		
-//		// FIXME Gtk drag and drop bullshit
-////		
-//		private void InitDND()
-//		{
-//			TargetEntry[] targets = new TargetEntry[]
-//			{ 
-//				new TargetEntry("text/plain", 0, 0)
-//			};
-//			
-//			Gtk.Drag.DestSet(instIconView, DestDefaults.All, targets, DragAction.Private);
-//			instIconView.EnableModelDragDest(targets, DragAction.Private);
-//			
-//			instIconView.DragDrop += InstListDragDrop;
-//			instIconView.DragLeave += InstListDragLeave;
-//			instIconView.DragMotion += InstListDragMotion;
-//		}
-//
-//		void InstListDragDrop(object o, DragDropArgs args)
-//		{
-//			Console.WriteLine("drop");
-//			Console.WriteLine(args.Context.DragProtocol.ToString());
-//		}
-//
-//		void InstListDragMotion(object o, DragMotionArgs args)
-//		{
-//			Console.WriteLine("Motion");
-//		}
-//
-//		void InstListDragLeave(object o, DragLeaveArgs args)
-//		{
-//			Console.WriteLine("Leave");
-//		}
-//		
-////		bool DragDataValid(int x, int y)
-////		{
-////			Point p = instanceList.PointToClient(new Point(x, y));
-////
-////			ListViewItem item = instanceList.GetItemAt(p.X, p.Y);
-////			if (item == null)
-////			{
-////				return false;
-////			}
-////
-////			if (currentTask != null && currentTask.Running)
-////			{
-////				return false;
-////			}
-////
-////			if (!dragData.GetDataPresent(DataFormats.FileDrop))
-////			{
-////				return false;
-////			}
-////
-////			string[] files = (string[]) dragData.GetData(DataFormats.FileDrop);
-////			foreach (string file in files)
-////			{
-////				if (!(File.Exists(file) || Directory.Exists(file)))
-////				{
-////					return false;
-////				}
-////			}
-////
-////			return true;
-////		}
-//		
-//		private string DragDropHint {
-//			get { return ddHint; }
-//			set {
-//				ddHint = value;
-//
-//				if (currentTask == null || !currentTask.Running)
-//				{
-//					if (!string.IsNullOrEmpty(ddHint))
-//					{
-//						statusProgBar.Text = ddHint;
-//						statusProgBar.Visible = true;
-//					}
-//					else
-//					{
-//						statusProgBar.Visible = false;
-//					}
-//				}
-//			}
-//		}
-//
-//		string ddHint;
-		
+		//		
+		//		// FIXME Gtk drag and drop bullshit
+		////		
+		//		private void InitDND()
+		//		{
+		//			TargetEntry[] targets = new TargetEntry[]
+		//			{ 
+		//				new TargetEntry("text/plain", 0, 0)
+		//			};
+		//			
+		//			Gtk.Drag.DestSet(instIconView, DestDefaults.All, targets, DragAction.Private);
+		//			instIconView.EnableModelDragDest(targets, DragAction.Private);
+		//			
+		//			instIconView.DragDrop += InstListDragDrop;
+		//			instIconView.DragLeave += InstListDragLeave;
+		//			instIconView.DragMotion += InstListDragMotion;
+		//		}
+		//
+		//		void InstListDragDrop(object o, DragDropArgs args)
+		//		{
+		//			Console.WriteLine("drop");
+		//			Console.WriteLine(args.Context.DragProtocol.ToString());
+		//		}
+		//
+		//		void InstListDragMotion(object o, DragMotionArgs args)
+		//		{
+		//			Console.WriteLine("Motion");
+		//		}
+		//
+		//		void InstListDragLeave(object o, DragLeaveArgs args)
+		//		{
+		//			Console.WriteLine("Leave");
+		//		}
+		//		
+		////		bool DragDataValid(int x, int y)
+		////		{
+		////			Point p = instanceList.PointToClient(new Point(x, y));
+		////
+		////			ListViewItem item = instanceList.GetItemAt(p.X, p.Y);
+		////			if (item == null)
+		////			{
+		////				return false;
+		////			}
+		////
+		////			if (currentTask != null && currentTask.Running)
+		////			{
+		////				return false;
+		////			}
+		////
+		////			if (!dragData.GetDataPresent(DataFormats.FileDrop))
+		////			{
+		////				return false;
+		////			}
+		////
+		////			string[] files = (string[]) dragData.GetData(DataFormats.FileDrop);
+		////			foreach (string file in files)
+		////			{
+		////				if (!(File.Exists(file) || Directory.Exists(file)))
+		////				{
+		////					return false;
+		////				}
+		////			}
+		////
+		////			return true;
+		////		}
+		//		
+		//		private string DragDropHint {
+		//			get { return ddHint; }
+		//			set {
+		//				ddHint = value;
+		//
+		//				if (currentTask == null || !currentTask.Running)
+		//				{
+		//					if (!string.IsNullOrEmpty(ddHint))
+		//					{
+		//						statusProgBar.Text = ddHint;
+		//						statusProgBar.Visible = true;
+		//					}
+		//					else
+		//					{
+		//						statusProgBar.Visible = false;
+		//					}
+		//				}
+		//			}
+		//		}
+		//
+		//		string ddHint;
+
 		#endregion
-		
+
 		#region Other
-		
+
 		/// <summary>
 		/// Recursively copies the list of files and folders into the destination
 		/// </summary>
@@ -1014,8 +1022,8 @@ namespace MultiMC
 					if (!Directory.Exists(destination))
 						Directory.CreateDirectory(destination);
 
-					string copyname = System.IO.Path.Combine(destination, 
-					                                         System.IO.Path.GetFileName(f));
+					string copyname = System.IO.Path.Combine(destination,
+															 System.IO.Path.GetFileName(f));
 					if (File.Exists(copyname))
 					{
 						Console.WriteLine("Overwriting " + copyname);
@@ -1039,10 +1047,10 @@ namespace MultiMC
 				}
 			}
 		}
-		
+
 		public bool UIEnabled
 		{
-			get { return _uiEnabled;}
+			get { return _uiEnabled; }
 			set
 			{
 				_uiEnabled = value;
@@ -1055,9 +1063,9 @@ namespace MultiMC
 		}
 
 		bool _uiEnabled;
-		
+
 		#endregion
-		
+
 		private Instance SelectedInst
 		{
 			get
@@ -1065,7 +1073,7 @@ namespace MultiMC
 				TreeIter iter;
 				if (instList.GetIter(out iter, instIconView.SelectedItems[0]))
 				{
-					return (Instance)instList.GetValue(iter, 1);
+					return (Instance) instList.GetValue(iter, 1);
 				}
 				else
 				{

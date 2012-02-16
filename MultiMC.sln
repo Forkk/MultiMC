@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiMC", "MultiMC\MultiMC.csproj", "{B90EE9BF-2892-41B3-BEA5-A43C99F1BB3F}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupMultiMC", "SetupMultiMC\SetupMultiMC.vdproj", "{EE86E557-3042-4761-B185-019BC53A1686}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,6 +15,11 @@ Global
 		{B90EE9BF-2892-41B3-BEA5-A43C99F1BB3F}.Debug|x86.Build.0 = Debug|x86
 		{B90EE9BF-2892-41B3-BEA5-A43C99F1BB3F}.Release|x86.ActiveCfg = Release|x86
 		{B90EE9BF-2892-41B3-BEA5-A43C99F1BB3F}.Release|x86.Build.0 = Release|x86
+		{EE86E557-3042-4761-B185-019BC53A1686}.Debug|x86.ActiveCfg = Debug
+		{EE86E557-3042-4761-B185-019BC53A1686}.Release|x86.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = MultiMC\MultiMC.csproj

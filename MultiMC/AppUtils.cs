@@ -53,8 +53,10 @@ namespace MultiMC
 		public static string ExecutePost(string url, string urlParams)
 		{
 			Init();
-			WebClient webClient = new WebClient();
-			return webClient.DownloadString(new Uri(url + "?" + urlParams));
+			using (WebClient webClient = new WebClient())
+			{
+				return webClient.DownloadString(new Uri(url + "?" + urlParams));
+			}
 		}
 		
 		private static bool CertCheck(object sender, 

@@ -32,15 +32,17 @@ namespace MultiMC
 			: base("Edit Mods", parent, DialogFlags.Modal)
 		{
 			Inst = inst;
-			
-			Button buttonRefresh = new Button("gtk-refresh");
-			buttonRefresh.Clicked += (sender, e) => 
+
+			using (Button buttonRefresh = new Button("gtk-refresh"))
 			{
-				LoadMods();
-			};
-			ActionArea.Homogeneous = false;
-			ActionArea.PackEnd(buttonRefresh, false, true, 0);
-			buttonRefresh.Visible = true;
+				buttonRefresh.Clicked += (sender, e) =>
+				{
+					LoadMods();
+				};
+				ActionArea.Homogeneous = false;
+				ActionArea.PackEnd(buttonRefresh, false, true, 0);
+				buttonRefresh.Visible = true;
+			}
 			
 			this.Build();
 			
@@ -59,19 +61,24 @@ namespace MultiMC
 			
 			modList = new ListStore(typeof(string), typeof(int), typeof(bool));
 			modView.Model = modList;
-			modView.AppendColumn("Index", new CellRendererText(), "text", 1);
-			modView.AppendColumn("File", new CellRendererText(), "text", 0);
-			
-			CellRendererToggle toggleRenderer = new CellRendererToggle();
-			toggleRenderer.Activatable = true;
-			toggleRenderer.Sensitive = true;
-			toggleRenderer.Toggled += (object o, ToggledArgs args) =>
+			using (CellRendererText cr = new CellRendererText())
+				modView.AppendColumn("Index", cr, "text", 1);
+			using (CellRendererText cr = new CellRendererText())
+				modView.AppendColumn("File", cr, "text", 0);
+
+			using (CellRendererToggle toggleRenderer = new CellRendererToggle())
 			{
-				TreeIter iter;
-				if (modList.GetIter(out iter, new TreePath(args.Path)))
-					modList.SetValue(iter, 2, !(bool)modList.GetValue(iter, 2));
-			};
-			modView.AppendColumn("Delete?", toggleRenderer, "active", 2);
+				toggleRenderer.Activatable = true;
+				toggleRenderer.Sensitive = true;
+				toggleRenderer.Toggled += (object o, ToggledArgs args) =>
+				{
+					TreeIter iter;
+					using (TreePath tp = new TreePath(args.Path))
+						if (modList.GetIter(out iter, tp))
+							modList.SetValue(iter, 2, !(bool) modList.GetValue(iter, 2));
+				};
+				modView.AppendColumn("Delete?", toggleRenderer, "active", 2);
+			}
 			
 			modView.Columns[0].Alignment = 0.0f;
 			modView.Columns[1].Alignment = 0.0f;

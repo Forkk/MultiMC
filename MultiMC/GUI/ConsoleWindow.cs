@@ -33,41 +33,49 @@ namespace MultiMC
 		}
 		
 		StatusIcon statusIcon;
-		
+
 		public ConsoleWindow(Instance inst) : 
 				base(Gtk.WindowType.Toplevel)
 		{
 			// Build the GUI
 			this.Build();
 			this.Deletable = false;
-			
+
 			// If the user has show console on, show the window
 			this.Visible = AppSettings.Main.ShowConsole;
-			
+
 			// Add a listener for when the instance quits
 			Inst = inst;
 			Inst.InstQuit += OnInstQuit;
-			
+
 			// Add formatting tags to the text buffer
 			// Base tag
-			TextTag baseTag = new TextTag("base");
-			baseTag.Font = "Courier New";
-			ConsoleView.Buffer.TagTable.Add(baseTag);
-			
+			using (TextTag baseTag = new TextTag("base"))
+			{
+				baseTag.Font = "Courier New";
+				ConsoleView.Buffer.TagTable.Add(baseTag);
+			}
+
 			// Standard output tag
-			TextTag stdoutTag = new TextTag("std");
-			ConsoleView.Buffer.TagTable.Add(stdoutTag);
-			
+			using (TextTag stdoutTag = new TextTag("std"))
+			{
+				ConsoleView.Buffer.TagTable.Add(stdoutTag);
+			}
+
 			// Error message tag
-			TextTag errorTag = new TextTag("err");
-			errorTag.ForegroundGdk = new Gdk.Color(255, 0, 0);
-			ConsoleView.Buffer.TagTable.Add(errorTag);
-			
+			using (TextTag errorTag = new TextTag("err"))
+			{
+				errorTag.ForegroundGdk = new Gdk.Color(255, 0, 0);
+				ConsoleView.Buffer.TagTable.Add(errorTag);
+			}
+
 			// Misc message tag
-			TextTag miscTag = new TextTag("etc");
-			miscTag.ForegroundGdk = new Gdk.Color(0, 0, 255);
-			ConsoleView.Buffer.TagTable.Add(miscTag);
-			
+			using (TextTag miscTag = new TextTag("etc"))
+			{
+				miscTag.ForegroundGdk = new Gdk.Color(0, 0, 255);
+				ConsoleView.Buffer.TagTable.Add(miscTag);
+			}
+
 			// Listen for output from the instance
 			if (Inst.Running)
 			{
@@ -81,60 +89,62 @@ namespace MultiMC
 					Message("Instance started");
 				};
 			}
-			
+
 			// Add the tray icon
 			statusIcon = new StatusIcon(Pixbuf.LoadFromResource("MainIcon"));
 			statusIcon.Tooltip = "MultiMC Console";
 			statusIcon.Activate += (sender, e) => ShowConsole = !ShowConsole;
-			
+
 			// Make a context menu for the icon
 			Menu trayMenu = new Menu();
-			
+
 			// Show / hide console
 			MenuItem showMenuItem = new MenuItem((ShowConsole ? "Hide Console" : "Show Console"));
-			showMenuItem.Activated += (sender, e) => 
+			showMenuItem.Activated += (sender, e) =>
 			{
 				ShowConsole = !ShowConsole;
-				(showMenuItem.Child as Label).Text = 
+				(showMenuItem.Child as Label).Text =
 					(ShowConsole ? "Hide Console" : "Show Console");
 			};
 			trayMenu.Add(showMenuItem);
-			
+
 			// Kill Minecraft
-			MenuItem killMenuItem = new MenuItem("Kill Minecraft");
-			killMenuItem.Activated += (sender, e) => 
+			using (MenuItem killMenuItem = new MenuItem("Kill Minecraft"))
 			{
-				MessageDialog confirmDlg = new MessageDialog(this, 
-				                                             DialogFlags.Modal, 
-				                                             MessageType.Warning, 
-				                                             ButtonsType.OkCancel, 
-				                                             "Killing Minecraft can " +
-				                                             "cause you to lose saves " +
-				                                             "and other things. " +
-				                                             "Are you sure?");
-				confirmDlg.Title = "Warning";
-				confirmDlg.Response += (object o, ResponseArgs args) => 
+				killMenuItem.Activated += (sender, e) =>
 				{
-					if (args.ResponseId == ResponseType.Ok)
+					MessageDialog confirmDlg = new MessageDialog(this,
+																	DialogFlags.Modal,
+																	MessageType.Warning,
+																	ButtonsType.OkCancel,
+																	"Killing Minecraft can " +
+																	"cause you to lose saves " +
+																	"and other things. " +
+																	"Are you sure?");
+					confirmDlg.Title = "Warning";
+					confirmDlg.Response += (object o, ResponseArgs args) =>
 					{
-						Inst.InstProcess.Kill();
-					}
-					confirmDlg.Destroy();
+						if (args.ResponseId == ResponseType.Ok)
+						{
+							Inst.InstProcess.Kill();
+						}
+						confirmDlg.Destroy();
+					};
+					confirmDlg.Run();
 				};
-				confirmDlg.Run();
-			};
-			trayMenu.Add(killMenuItem);
-			
+				trayMenu.Add(killMenuItem);
+			}
+
 			if (OSUtils.Windows)
 				StyleUtils.DeuglifyMenu(trayMenu);
-			
+
 			trayMenu.ShowAll();
-			statusIcon.PopupMenu += (object o, PopupMenuArgs args) => 
-				statusIcon.PresentMenu(trayMenu, (uint)args.Args[0], (uint)args.Args[1]);
-			
-			Message("Instance started with command: " + 
-			        inst.InstProcess.StartInfo.FileName +
-			        " " + inst.InstProcess.StartInfo.Arguments.ToString());
+			statusIcon.PopupMenu += (object o, PopupMenuArgs args) =>
+				statusIcon.PresentMenu(trayMenu, (uint) args.Args[0], (uint) args.Args[1]);
+
+			Message("Instance started with command: " +
+					inst.InstProcess.StartInfo.FileName +
+					" " + inst.InstProcess.StartInfo.Arguments.ToString());
 		}
 		
 		void AttachOutputListeners()

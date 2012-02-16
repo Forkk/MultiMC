@@ -50,10 +50,8 @@ namespace MultiMC
 			using (Stream resourceStream = 
 				Assembly.GetExecutingAssembly().GetManifestResourceStream(HintFileResourceID))
 			{
-				using (StreamReader reader = new StreamReader(resourceStream))
-				{
-					hintFileString = reader.ReadToEnd();
-				}
+				StreamReader reader = new StreamReader(resourceStream);
+				hintFileString = reader.ReadToEnd();
 			}
 			
 			XmlDocument hintDoc = new XmlDocument();

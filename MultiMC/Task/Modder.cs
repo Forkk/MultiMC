@@ -117,25 +117,26 @@ namespace MultiMC.Tasks
 				}
 			}
 			File.Copy(mcBackup, mcJar);
-			ZipFile jarFile = new ZipFile(mcJar);
-
-			if (!Directory.Exists(Target.InstModsDir))
-				Directory.CreateDirectory(Target.InstModsDir);
-
-			AddToJar(Target.InstModsDir, jarFile);
-
-			TaskStep++; // STEP
-			Status = "Installing mods - Removing META-INF...";
-			string metaInfRegex = Path.Combine("META-INF", "*");
-			if (jarFile.SelectEntries(metaInfRegex) != null)
+			using (ZipFile jarFile = new ZipFile(mcJar))
 			{
-				DebugUtils.Print("Removing META-INF");
-				jarFile.RemoveEntries(jarFile.SelectEntries(metaInfRegex));
-			}
+				if (!Directory.Exists(Target.InstModsDir))
+					Directory.CreateDirectory(Target.InstModsDir);
 
-			TaskStep++; // STEP
-			Status = "Installing mods - Saving minecraft.jar...";
-			jarFile.Save(mcJar);
+				AddToJar(Target.InstModsDir, jarFile);
+
+				TaskStep++; // STEP
+				Status = "Installing mods - Removing META-INF...";
+				string metaInfRegex = Path.Combine("META-INF", "*");
+				if (jarFile.SelectEntries(metaInfRegex) != null)
+				{
+					DebugUtils.Print("Removing META-INF");
+					jarFile.RemoveEntries(jarFile.SelectEntries(metaInfRegex));
+				}
+
+				TaskStep++; // STEP
+				Status = "Installing mods - Saving minecraft.jar...";
+				jarFile.Save(mcJar);
+			}
 
 			TaskStep++; // STEP
 			Status = "Installing mods - Removing temporary files...";
@@ -229,28 +230,30 @@ namespace MultiMC.Tasks
 						Directory.CreateDirectory(tmpDir);
 
 					//Console.WriteLine("Extracting {0} to temp directory...", f);
-					ZipFile zipFile = new ZipFile(f);
-					foreach (ZipEntry entry in zipFile)
+					using (ZipFile zipFile = new ZipFile(f))
 					{
-						entry.Extract(tmpDir);
-						string extractedFile = Path.Combine(tmpDir, entry.FileName);
-						
-						RecursiveSetIndex(extractedFile, (int)modFileIndices[f]);
-						
-						// If it's a file
-//						if (File.Exists(extractedFile))
-//							File.SetCreationTime(extractedFile, File.GetCreationTime(f));
+						foreach (ZipEntry entry in zipFile)
+						{
+							entry.Extract(tmpDir);
+							string extractedFile = Path.Combine(tmpDir, entry.FileName);
 
-						// If it's a directory
-//						else if (Directory.Exists(extractedFile))
-//							Directory.SetCreationTime(extractedFile, File.GetCreationTime(f));
+							RecursiveSetIndex(extractedFile, (int) modFileIndices[f]);
 
-						//Console.WriteLine("{0} create time is {1}", extractedFile, 
-						//    File.GetCreationTime(f).ToString());
+							// If it's a file
+							//						if (File.Exists(extractedFile))
+							//							File.SetCreationTime(extractedFile, File.GetCreationTime(f));
+
+							// If it's a directory
+							//						else if (Directory.Exists(extractedFile))
+							//							Directory.SetCreationTime(extractedFile, File.GetCreationTime(f));
+
+							//Console.WriteLine("{0} create time is {1}", extractedFile, 
+							//    File.GetCreationTime(f).ToString());
+						}
+
+						//Console.WriteLine("Adding to jar...");
+						AddToJar(tmpDir, jarFile, pathInJar);
 					}
-
-					//Console.WriteLine("Adding to jar...");
-					AddToJar(tmpDir, jarFile, pathInJar);
 				}
 			}
 		}

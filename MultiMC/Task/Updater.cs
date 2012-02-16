@@ -27,7 +27,7 @@ using MultiMC;
 
 namespace MultiMC.Tasks
 {
-	class Updater : Task
+	class Updater : Task, IDisposable
 	{
 		WebClient UpdateClient;
 
@@ -137,6 +137,11 @@ namespace MultiMC.Tasks
 		}
 
 		#endregion
+
+		public void Dispose()
+		{
+			UpdateClient.Dispose();
+		}
 	}
 }
 

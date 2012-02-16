@@ -214,12 +214,12 @@ namespace MultiMC.Tasks
 					while (downloadFile)
 					{
 						downloadFile = false;
-						
-						HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uriList[i]);
+
+						HttpWebRequest request = (HttpWebRequest) HttpWebRequest.Create(uriList[i]);
 						request.Headers[HttpRequestHeader.CacheControl] = "no-cache";
-						
-						HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-						
+
+						HttpWebResponse response = (HttpWebResponse) request.GetResponse();
+
 						string etag = "";
 						// If downloading from Mojang, use ETag.
 						if (uriList[i].ToString().StartsWith(Resources.MojangMCDLUri))
@@ -232,65 +232,68 @@ namespace MultiMC.Tasks
 						{
 							// TODO add a way to verify integrity of files downloaded from dropbox
 						}
-						
+
 						Stream dlStream = response.GetResponseStream();
-						FileStream fos = 
-							new FileStream(Path.Combine(Inst.BinDir, currentFile), FileMode.Create);
-						int fileSize = 0;
-						
-						MD5 digest = MD5.Create();
-						digest.Initialize();
-						int readSize;
-						while ((readSize = dlStream.Read(buffer, 0, buffer.Length)) > 0)
+						using (FileStream fos =
+							new FileStream(Path.Combine(Inst.BinDir, currentFile), FileMode.Create))
 						{
-//							Console.WriteLine("Read " + readSize + " bytes");
-							fos.Write(buffer, 0, readSize);
-							
-							this.currentDownloadSize += readSize;
-							fileSize += readSize;
-							
-							digest.TransformBlock(buffer, 0, readSize, null, 0);
-							
-//							Progress = fileSize / fileSizes[i];
-							
-							Progress = (initialPercentage + this.currentDownloadSize *
-							            (100 - initialPercentage) / this.totalDownloadSize);
-						}
-						digest.TransformFinalBlock(new byte[] {}, 0, 0);
-						
-						dlStream.Close();
-						fos.Close();
-						
-						string md5 = DataUtils.HexEncode(digest.Hash).Trim();
-						etag = etag.Trim();
-						
-						bool md5Matches = true;
-						if (!string.IsNullOrEmpty(etag) && !string.IsNullOrEmpty(md5))
-						{
-							// This is temporarily disabled since dropbox doesn't use MD5s as etags
-							md5Matches = md5.Equals(etag);
-//							Console.WriteLine(md5 + "\n" + etag + "\n");
-						}
-						
-						if (md5Matches && fileSize == fileSizes[i] || fileSizes[i] <= 0)
-						{
-							md5s[(currentFile.Contains("natives") ?
-							      currentFile : currentFile)] = etag;
-							md5s.Save(Path.Combine(Inst.BinDir, "md5s"));
-						}
-						else
-						{
-							failedAttempts++;
-							if (failedAttempts < MAX_FAILS)
+							int fileSize = 0;
+
+							using (MD5 digest = MD5.Create())
 							{
-								downloadFile = true;
-								this.currentDownloadSize -= fileSize;
-							}
-							else
-							{
-								OnErrorMessage("Failed to download " + currentFile +
-								               " MD5 sums did not match.");
-								Cancel();
+								digest.Initialize();
+								int readSize;
+								while ((readSize = dlStream.Read(buffer, 0, buffer.Length)) > 0)
+								{
+									//							Console.WriteLine("Read " + readSize + " bytes");
+									fos.Write(buffer, 0, readSize);
+
+									this.currentDownloadSize += readSize;
+									fileSize += readSize;
+
+									digest.TransformBlock(buffer, 0, readSize, null, 0);
+
+									//							Progress = fileSize / fileSizes[i];
+
+									Progress = (initialPercentage + this.currentDownloadSize *
+												(100 - initialPercentage) / this.totalDownloadSize);
+								}
+								digest.TransformFinalBlock(new byte[] { }, 0, 0);
+
+								dlStream.Close();
+
+								string md5 = DataUtils.HexEncode(digest.Hash).Trim();
+								etag = etag.Trim();
+
+								bool md5Matches = true;
+								if (!string.IsNullOrEmpty(etag) && !string.IsNullOrEmpty(md5))
+								{
+									// This is temporarily disabled since dropbox doesn't use MD5s as etags
+									md5Matches = md5.Equals(etag);
+									//							Console.WriteLine(md5 + "\n" + etag + "\n");
+								}
+
+								if (md5Matches && fileSize == fileSizes[i] || fileSizes[i] <= 0)
+								{
+									md5s[(currentFile.Contains("natives") ?
+										  currentFile : currentFile)] = etag;
+									md5s.Save(Path.Combine(Inst.BinDir, "md5s"));
+								}
+								else
+								{
+									failedAttempts++;
+									if (failedAttempts < MAX_FAILS)
+									{
+										downloadFile = true;
+										this.currentDownloadSize -= fileSize;
+									}
+									else
+									{
+										OnErrorMessage("Failed to download " + currentFile +
+													   " MD5 sums did not match.");
+										Cancel();
+									}
+								}
 							}
 						}
 					}
@@ -308,11 +311,12 @@ namespace MultiMC.Tasks
 			
 			if (!Directory.Exists(nativesDir))
 				Directory.CreateDirectory(nativesDir);
-			
-			ZipFile zf = new ZipFile(nativesJar);
-			Console.WriteLine(string.Format("Extracting natives from {0} to {1}", nativesJar, nativesDir));
-			ExtractRecursive(zf, nativesDir);
-			zf.Dispose();
+
+			using (ZipFile zf = new ZipFile(nativesJar))
+			{
+				Console.WriteLine(string.Format("Extracting natives from {0} to {1}", nativesJar, nativesDir));
+				ExtractRecursive(zf, nativesDir);
+			}
 			
 			if (Directory.Exists(Path.Combine(nativesDir, "META-INF")))
 				Directory.Delete(Path.Combine(nativesDir, "META-INF"), true);
@@ -341,10 +345,11 @@ namespace MultiMC.Tasks
 					
 					if (!Directory.Exists(dest))
 						Directory.CreateDirectory(dest);
-					
-					FileStream destStream = File.Open(destFile, FileMode.Create);
-					entry.Extract(destStream);
-					destStream.Close();
+
+					using (FileStream destStream = File.Open(destFile, FileMode.Create))
+					{
+						entry.Extract(destStream);
+					}
 				}
 			}
 		}
@@ -372,18 +377,22 @@ namespace MultiMC.Tasks
 			if (!File.Exists(vfile))
 				return null;
 			string data = "";
-			BinaryReader binRead = new BinaryReader(File.OpenRead(vfile));
-			data = binRead.ReadString();
-			binRead.Close();
-			return data;
+			using (Stream stream = File.OpenRead(vfile))
+			{
+				BinaryReader binRead = new BinaryReader(stream);
+				data = binRead.ReadString();
+				return data;
+			}
 		}
 		
 		public static void WriteVersionFile(string vfile, string version)
 		{
-			BinaryWriter binWrite = new BinaryWriter(File.Open(vfile, FileMode.Create));
-			binWrite.Write(version);
-			binWrite.Flush();
-			binWrite.Close();
+			using (Stream stream = File.Open(vfile, FileMode.Create))
+			{
+				BinaryWriter binWrite = new BinaryWriter(stream);
+				binWrite.Write(version);
+				binWrite.Flush();
+			}
 		}
 		
 		protected EnumState State

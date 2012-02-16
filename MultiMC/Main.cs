@@ -144,8 +144,8 @@ namespace MultiMC
 			if (File.Exists(Resources.NewVersionFileName))
 				File.Delete(Resources.NewVersionFileName);
 			
-			MainWindow win = new MainWindow();
-			win.Show();
+			using (MainWindow win = new MainWindow())
+				win.Show();
 			
 			try
 			{
@@ -223,14 +223,16 @@ namespace MultiMC
 			
 			if (e is System.Reflection.TargetInvocationException)
 				e = e.InnerException;
-			
-			ExceptionDialog errDlg = new ExceptionDialog(e);
-			
-			errDlg.Response += (o, args) => 
+
+			using (ExceptionDialog errDlg = new ExceptionDialog(e))
 			{
-				if (args.ResponseId == ResponseType.Yes)
-					Environment.Exit(-1);
-			};
+				errDlg.Response += (o, args) =>
+				{
+					if (args.ResponseId == ResponseType.Yes)
+						Environment.Exit(-1);
+				};
+				errDlg.Run();
+			}
 		}
 		
 		/// <summary>
