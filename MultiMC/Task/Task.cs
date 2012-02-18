@@ -97,6 +97,7 @@ namespace MultiMC.Tasks
 		public void Start()
 		{
 			TaskThread = new Thread(new ThreadStart(TaskStart));
+			TaskThread.Name = ToString() + " " + TaskID;
 			TaskThread.Start();
 		}
 

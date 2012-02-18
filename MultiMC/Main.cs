@@ -133,7 +133,12 @@ namespace MultiMC
 			AppDomain.CurrentDomain.UnhandledException += (object sender, 
 			                                               UnhandledExceptionEventArgs ueArgs) => 
 			{
-				OnException(ueArgs.ExceptionObject as Exception);
+				File.WriteAllText("error.txt", ueArgs.ExceptionObject.ToString());
+				Exception e;
+				if ((e = ueArgs.ExceptionObject as Exception) == null)
+					return;
+
+				OnException(e);
 			};
 			
 			GLib.ExceptionManager.UnhandledException += (GLib.UnhandledExceptionArgs ueArgs) => 

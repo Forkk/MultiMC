@@ -537,10 +537,10 @@ namespace MultiMC
 			{
 				if (args.ResponseId == ResponseType.Ok)
 				{
-					Console.WriteLine("OK Clicked");
-					string parameters = Uri.EscapeUriString(string.Format(
-						"user={0}&password={1}&version={2}",
-						loginDlg.Username, loginDlg.Password, 13));
+					string parameters = string.Format(
+						"user={0}&password={1}&version=13",
+						Uri.EscapeDataString(loginDlg.Username),
+						Uri.EscapeDataString(loginDlg.Password), 13);
 
 					// Start a new thread and post the login info to login.minecraft.net
 					Thread loginThread = new Thread(
@@ -549,11 +549,21 @@ namespace MultiMC
 							WriteUserInfo((loginDlg.RememberUsername ? loginDlg.Username : ""),
 										  (loginDlg.RememberPassword ? loginDlg.Password : ""));
 
-							string reply = AppUtils.ExecutePost("https://login.minecraft.net",
-																parameters);
+							string reply = "";
+							bool postFailed = false;
+							try
+							{
+								reply = AppUtils.ExecutePost("https://login.minecraft.net/",
+									parameters);
+							}
+							catch (System.Net.WebException e)
+							{
+								postFailed = true;
+								reply = e.Message;
+							}
 
 							// If the login failed
-							if (!reply.Contains(":"))
+							if (!reply.Contains(":") || postFailed)
 							{
 								// Translate the error message to a more user friendly wording
 								string errorMessage = reply;
