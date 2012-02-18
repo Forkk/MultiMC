@@ -226,6 +226,18 @@ namespace MultiMC
 			}
 		}
 		
+		/// <summary>
+		/// Maximum number of characters to be kept in the console at any time.
+		/// When the console text is truncated, it will be shortened to this length.
+		/// </summary>
+		const int ConsoleTruncateLength = 10000;
+
+		/// <summary>
+		/// Threshold for console truncation, when the length of the text in the console
+		/// is greater than or equal to this value, it will be truncated.
+		/// </summary>
+		const int ConsoleTruncateThreshold = ConsoleTruncateLength + 1000;
+
 		void Message(string msg, string tagName = "etc", bool appendNewLine = true)
 		{
 			Application.Invoke(
@@ -235,10 +247,29 @@ namespace MultiMC
 				TextIter end = buf.EndIter;
 				buf.InsertWithTags(ref end,
 				                   msg + (appendNewLine ? "\n" : ""),
-				                   buf.TagTable.Lookup("base"), 
-				                   buf.TagTable.Lookup(tagName));
+				                   buf.TagTable.Lookup("base"),
+								   buf.TagTable.Lookup(tagName));
+
 				ConsoleView.ScrollToIter(buf.EndIter, 0.4, true, 0.0, 1.0);
+
+				if (buf.CharCount > ConsoleTruncateThreshold)
+				{
+					TruncateConsole(buf, ConsoleTruncateLength);
+				}
 			});
+		}
+
+		void TruncateConsole(TextBuffer buf, int toLength)
+		{
+			int pre = buf.CharCount;
+
+			TextIter startIter = buf.StartIter;
+			TextIter endIter = buf.StartIter;
+			endIter.ForwardChars(buf.CharCount - toLength);
+			buf.Delete(ref startIter, ref endIter);
+
+			Console.WriteLine("Truncated console. Pre-trunc: {0} Post-trunc: {1}",
+				pre, buf.CharCount);
 		}
 		
 		void OnInstQuit(object sender, InstQuitEventArgs e)
