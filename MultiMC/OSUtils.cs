@@ -47,7 +47,7 @@ namespace MultiMC
 				case PlatformID.MacOSX:
 					return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal),
 						"Library", "Application Support", ".minecraft");
-					
+
 				default:
 					throw new PlatformNotSupportedException("Your operating system is not supported.");
 				}
@@ -93,6 +93,8 @@ namespace MultiMC
 		{
 			get
 			{
+				if (MacOSX)
+					return false;
 				int p = (int)Environment.OSVersion.Platform;
 				return (p == 4) || (p == 128);
 			}
@@ -102,6 +104,11 @@ namespace MultiMC
 		{
 			get
 			{
+				if (Directory.GetParent(Environment.CurrentDirectory).Parent.Name.EndsWith(".app"))
+				{
+					return true;
+				}
+
 				switch (Environment.OSVersion.Platform)
 				{
 				case PlatformID.MacOSX:
@@ -112,12 +119,12 @@ namespace MultiMC
 				}
 			}
 		}
-		
+
 		public static bool IsOnMono()
 		{
 			return Type.GetType("Mono.Runtime") != null;
 		}
-		
+
 		public static string FindJava()
 		{
 			if (OSUtils.Windows)
@@ -130,16 +137,16 @@ namespace MultiMC
 					@"C:\Program Files (x86)\Java\jre6\bin\java.exe",
 				};
 				Console.WriteLine("Detecting Java path for Windows.");
-				
+
 				foreach (string path in paths)
 					if (File.Exists(path))
 						return path;
 			}
 			// TODO add FindJava for Linux and Mac
-			
+
 			return "java";
 		}
-		
+
 		/// <summary>
 		/// Gets path1 relative to path2
 		/// </summary>
@@ -152,11 +159,11 @@ namespace MultiMC
 				Trim(Path.DirectorySeparatorChar).Split(Path.DirectorySeparatorChar));
 			string[] destParts = fullDestPath.Trim(Path.DirectorySeparatorChar).
 				Split(Path.DirectorySeparatorChar);
-			
-//			DebugUtils.Print("Path Parts: {0}\nDest Parts: {1}", 
-//			                 DataUtils.ArrayToString(pathParts),
-//			                 DataUtils.ArrayToString(destParts));
-			
+
+			//			DebugUtils.Print("Path Parts: {0}\nDest Parts: {1}", 
+			//			                 DataUtils.ArrayToString(pathParts),
+			//			                 DataUtils.ArrayToString(destParts));
+
 			foreach (string part in destParts)
 			{
 				if (part.Equals(pathParts[0]))
@@ -164,7 +171,7 @@ namespace MultiMC
 				else
 					break;
 			}
-			
+
 			StringBuilder sb = new StringBuilder();
 			foreach (string part in pathParts)
 			{
@@ -173,14 +180,14 @@ namespace MultiMC
 			sb.Length--;
 			return sb.ToString();
 		}
-		
-//		public static string MakeRelativePath(string path1, string path2)
-//		{
-//			path1 = path1.EndsWith("" + Path.PathSeparator) ? path1 : path1 + Path.PathSeparator;
-//			path2 = path2.EndsWith("" + Path.PathSeparator) ? path2 : path2 + Path.PathSeparator;
-//			Uri uri = new Uri(path1, UriKind.RelativeOrAbsolute, true).
-//				MakeRelativeUri(new Uri(path2, UriKind.RelativeOrAbsolute, true));
-//			return uri.LocalPath;
-//		}
+
+		//		public static string MakeRelativePath(string path1, string path2)
+		//		{
+		//			path1 = path1.EndsWith("" + Path.PathSeparator) ? path1 : path1 + Path.PathSeparator;
+		//			path2 = path2.EndsWith("" + Path.PathSeparator) ? path2 : path2 + Path.PathSeparator;
+		//			Uri uri = new Uri(path1, UriKind.RelativeOrAbsolute, true).
+		//				MakeRelativeUri(new Uri(path2, UriKind.RelativeOrAbsolute, true));
+		//			return uri.LocalPath;
+		//		}
 	}
 }

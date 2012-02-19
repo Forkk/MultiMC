@@ -43,10 +43,10 @@ namespace MultiMC
 
 			if (OSUtils.Windows)
 				osString = "Windows";
-			else if (OSUtils.Linux)
-				osString = "Linux";
 			else if (OSUtils.MacOSX)
 				osString = "Mac OS X";
+			else if (OSUtils.Linux)
+				osString = "Linux";
 
 			if (!Directory.Exists(Resources.InstDir))
 				Directory.CreateDirectory(Resources.InstDir);
@@ -250,15 +250,15 @@ namespace MultiMC
 		{
 			Gtk.Application.Invoke(
 				(sender1, e1) =>
-			{
-				MessageDialog errDlg = new MessageDialog(this,
-															 DialogFlags.Modal,
-															 MessageType.Error,
-															 ButtonsType.Ok,
-															 e.Message);
-				errDlg.Response += (o, args) => errDlg.Destroy();
-				errDlg.Run();
-			});
+				{
+					MessageDialog errDlg = new MessageDialog(this,
+																 DialogFlags.Modal,
+																 MessageType.Error,
+																 ButtonsType.Ok,
+																 e.Message);
+					errDlg.Response += (o, args) => errDlg.Destroy();
+					errDlg.Run();
+				});
 		}
 
 		#region Mod Installation
@@ -302,14 +302,14 @@ namespace MultiMC
 			{
 				Application.Invoke(
 					(sender2, e2) =>
-				{
-					updateVersion = updater.NewVersion;
-					if (updateVersion != null &&
-							updater.NewVersion.CompareTo(AppUtils.GetVersion()) > 0)
 					{
-						DownloadNewVersion();
-					}
-				});
+						updateVersion = updater.NewVersion;
+						if (updateVersion != null &&
+								updater.NewVersion.CompareTo(AppUtils.GetVersion()) > 0)
+						{
+							DownloadNewVersion();
+						}
+					});
 			};
 			Console.WriteLine("Checking for updates...");
 			StartTask(updater);
@@ -338,35 +338,35 @@ namespace MultiMC
 		{
 			Application.Invoke(
 				(sender1, e1) =>
-			{
-				string updatemsg = "Version {0} has been downloaded. " +
-						"Would you like to install it now?";
-				string updatestr = (updateVersion != null ? updateVersion.ToString() : "");
-				if (string.IsNullOrEmpty(updatestr))
 				{
-					updatestr = "";
-					updatemsg = "MultiMC has downloaded updates, would you like to install them?";
-				}
-				MessageDialog updateDlg = new MessageDialog(this,
-																DialogFlags.Modal,
-																MessageType.Question,
-																ButtonsType.YesNo,
-																updatemsg,
-																updatestr);
-				updateDlg.Response += (o, args) =>
-				{
-					if (args.ResponseId == ResponseType.Yes)
+					string updatemsg = "Version {0} has been downloaded. " +
+							"Would you like to install it now?";
+					string updatestr = (updateVersion != null ? updateVersion.ToString() : "");
+					if (string.IsNullOrEmpty(updatestr))
 					{
-						CloseForUpdates();
+						updatestr = "";
+						updatemsg = "MultiMC has downloaded updates, would you like to install them?";
 					}
-					else
+					MessageDialog updateDlg = new MessageDialog(this,
+																	DialogFlags.Modal,
+																	MessageType.Question,
+																	ButtonsType.YesNo,
+																	updatemsg,
+																	updatestr);
+					updateDlg.Response += (o, args) =>
 					{
-						File.Delete(Resources.NewVersionFileName);
-					}
-					updateDlg.Destroy();
-				};
-				updateDlg.Run();
-			});
+						if (args.ResponseId == ResponseType.Yes)
+						{
+							CloseForUpdates();
+						}
+						else
+						{
+							File.Delete(Resources.NewVersionFileName);
+						}
+						updateDlg.Destroy();
+					};
+					updateDlg.Run();
+				});
 		}
 
 		void CloseForUpdates()
@@ -389,48 +389,48 @@ namespace MultiMC
 		{
 			Gtk.Application.Invoke(
 				(sender1, e1) =>
-			{
-				if (progBars[(sender as Task).TaskID] != null)
 				{
-					progBars[(sender as Task).TaskID].Show();
-				}
-			});
+					if (progBars[(sender as Task).TaskID] != null)
+					{
+						progBars[(sender as Task).TaskID].Show();
+					}
+				});
 		}
 
 		void taskCompleted(object sender, Task.TaskCompleteEventArgs e)
 		{
 			Gtk.Application.Invoke(
 				(sender1, e1) =>
-			{
-				progBarBox.Remove(progBars[(sender as Task).TaskID]);
-				progBars[(sender as Task).TaskID].Dispose();
-			});
+				{
+					progBarBox.Remove(progBars[(sender as Task).TaskID]);
+					progBars[(sender as Task).TaskID].Dispose();
+				});
 		}
 
 		void taskProgressChange(object sender, Task.ProgressChangeEventArgs e)
 		{
 			Gtk.Application.Invoke(
 				(sender1, e1) =>
-			{
-				float progFraction = ((float)e.Progress) / 100;
-				if (progFraction > 1)
 				{
-					Console.WriteLine(string.Format("Warning: Progress fraction " +
-							"({0}) is greater than the maximum value (1)", progFraction));
-					progFraction = 1;
-				}
+					float progFraction = ((float)e.Progress) / 100;
+					if (progFraction > 1)
+					{
+						Console.WriteLine(string.Format("Warning: Progress fraction " +
+								"({0}) is greater than the maximum value (1)", progFraction));
+						progFraction = 1;
+					}
 
-				progBars[(sender as Task).TaskID].Fraction = progFraction;
-			});
+					progBars[(sender as Task).TaskID].Fraction = progFraction;
+				});
 		}
 
 		void taskStatusChange(object sender, Task.TaskStatusEventArgs e)
 		{
 			Gtk.Application.Invoke(
 				(sender1, e1) =>
-			{
-				progBars[(sender as Task).TaskID].Text = e.Status;
-			});
+				{
+					progBars[(sender as Task).TaskID].Text = e.Status;
+				});
 		}
 
 		#endregion
@@ -455,53 +455,53 @@ namespace MultiMC
 			UIEnabled = false;
 			DoLogin(
 				(LoginInfo info) =>
-			{
-				string mainGameUrl = "minecraft.jar";
-				if (!info.Cancelled)
 				{
-					Console.WriteLine(info.ForceUpdate);
-					GameUpdater updater =
-							new GameUpdater(inst,
-											info.LatestVersion,
-											mainGameUrl,
-											info.ForceUpdate);
-
-					EventHandler startDelegate = new EventHandler(
-							(e, args) =>
+					string mainGameUrl = "minecraft.jar";
+					if (!info.Cancelled)
 					{
-						Visible = false;
-						UIEnabled = true;
-						inst.Launch(info.Username, info.SessionID);
-						ConsoleWindow cwin = new ConsoleWindow(inst);
-						cwin.ConsoleClosed += (sender3, e3) =>
+						Console.WriteLine(info.ForceUpdate);
+						GameUpdater updater =
+								new GameUpdater(inst,
+												info.LatestVersion,
+												mainGameUrl,
+												info.ForceUpdate);
+
+						EventHandler startDelegate = new EventHandler(
+								(e, args) =>
+								{
+									Visible = false;
+									UIEnabled = true;
+									inst.Launch(info.Username, info.SessionID);
+									ConsoleWindow cwin = new ConsoleWindow(inst);
+									cwin.ConsoleClosed += (sender3, e3) =>
+									{
+										Visible = true;
+										cwin.Dispose();
+									};
+
+									cwin.Show();
+								});
+
+						updater.Completed += (sender, e) =>
 						{
-							Visible = true;
-							cwin.Dispose();
+							if (inst.NeedsRebuild)
+							{
+								Application.Invoke(
+										(sender2, e2) =>
+										{
+											RebuildMCJar(inst).Completed += (sender3, e3) =>
+														Application.Invoke(sender3, e3, startDelegate);
+										});
+							}
+							else
+								Application.Invoke(sender, e, startDelegate);
 						};
 
-						cwin.Show();
-					});
-
-					updater.Completed += (sender, e) =>
-					{
-						if (inst.NeedsRebuild)
-						{
-							Application.Invoke(
-									(sender2, e2) =>
-							{
-								RebuildMCJar(inst).Completed += (sender3, e3) =>
-											Application.Invoke(sender3, e3, startDelegate);
-							});
-						}
-						else
-							Application.Invoke(sender, e, startDelegate);
-					};
-
-					Application.Invoke((sender, e) => StartTask(updater));
-				}
-				else
-					UIEnabled = true;
-			}, message, inst.CanPlayOffline);
+						Application.Invoke((sender, e) => StartTask(updater));
+					}
+					else
+						UIEnabled = true;
+				}, message, inst.CanPlayOffline);
 			//			GameUpdater updater = new GameUpdater(inst, 
 			//			                                      loginInfo., 
 			//			                                      "minecraft.jar?user="
@@ -546,66 +546,67 @@ namespace MultiMC
 					// Start a new thread and post the login info to login.minecraft.net
 					Thread loginThread = new Thread(
 						() =>
-					{
-						WriteUserInfo((loginDlg.RememberUsername ? loginDlg.Username : ""),
-										  (loginDlg.RememberPassword ? loginDlg.Password : ""));
+						{
+							WriteUserInfo((loginDlg.RememberUsername ? loginDlg.Username : ""),
+											  (loginDlg.RememberPassword ? loginDlg.Password : ""));
 
-						string reply = "";
-						bool postFailed = false;
-						try
-						{
-							reply = AppUtils.ExecutePost("https://login.minecraft.net/",
-									parameters);
-						} catch (System.Net.WebException e)
-						{
-							postFailed = true;
-							reply = e.Message;
-						}
-
-						// If the login failed
-						if (!reply.Contains(":") || postFailed)
-						{
-							// Translate the error message to a more user friendly wording
-							string errorMessage = reply;
-							switch (reply.ToLower())
+							string reply = "";
+							bool postFailed = false;
+							try
 							{
-							case "bad login":
-								errorMessage = "Invalid username or password.";
-								break;
-							case "old version":
-								errorMessage = "Please update.";
-								break;
-							default:
-								errorMessage = "Login failed: " + reply;
-								break;
+								reply = AppUtils.ExecutePost("https://login.minecraft.net/",
+										parameters);
+							}
+							catch (System.Net.WebException e)
+							{
+								postFailed = true;
+								reply = e.Message;
 							}
 
-							// Error
-							Application.Invoke((sender, e) => DoLogin(done, errorMessage));
-						}
-
-							// If the login succeeded
-						else
-						{
-							string[] responseValues = reply.Split(':');
-
-							// The response must have 4 values or it's invalid
-							if (responseValues.Length != 4)
+							// If the login failed
+							if (!reply.Contains(":") || postFailed)
 							{
+								// Translate the error message to a more user friendly wording
+								string errorMessage = reply;
+								switch (reply.ToLower())
+								{
+								case "bad login":
+									errorMessage = "Invalid username or password.";
+									break;
+								case "old version":
+									errorMessage = "Please update.";
+									break;
+								default:
+									errorMessage = "Login failed: " + reply;
+									break;
+								}
+
 								// Error
-								Application.Invoke(
-										(sender, e) =>
-										DoLogin(done, "Got an invalid response from server"));
+								Application.Invoke((sender, e) => DoLogin(done, errorMessage));
 							}
-								// Now we can finally return our login info.
+
+								// If the login succeeded
 							else
 							{
-								LoginInfo info = new LoginInfo(responseValues,
-																   loginDlg.ForceUpdate);
-								done(info);
+								string[] responseValues = reply.Split(':');
+
+								// The response must have 4 values or it's invalid
+								if (responseValues.Length != 4)
+								{
+									// Error
+									Application.Invoke(
+											(sender, e) =>
+											DoLogin(done, "Got an invalid response from server"));
+								}
+								// Now we can finally return our login info.
+								else
+								{
+									LoginInfo info = new LoginInfo(responseValues,
+																	   loginDlg.ForceUpdate);
+									done(info);
+								}
 							}
-						}
-					});
+						});
 					loginThread.Start();
 				}
 				else if (args.ResponseId == ResponseType.Reject)
@@ -738,12 +739,14 @@ namespace MultiMC
 						}
 					}
 				}
-			} catch (IndexOutOfRangeException)
+			}
+			catch (IndexOutOfRangeException)
 			{
 				username = "";
 				password = "";
 				File.Delete(Resources.LastLoginFileName);
-			} catch (CryptographicException)
+			}
+			catch (CryptographicException)
 			{
 				username = "";
 				password = "";
@@ -923,14 +926,16 @@ namespace MultiMC
 					try
 					{
 						Directory.Delete(SelectedInst.RootDir, true);
-					} catch (IOException err)
+					}
+					catch (IOException err)
 					{
 						MessageUtils.ShowMessageBox(
 							this,
 							MessageType.Error,
 							"Failed to delete instance",
 							"MultiMC failed to delete the instance: " + err.ToString());
-					} catch (UnauthorizedAccessException)
+					}
+					catch (UnauthorizedAccessException)
 					{
 						MessageUtils.ShowMessageBox(
 							this,
@@ -1128,12 +1133,12 @@ namespace MultiMC
 
 			aboutDlg.Title = "About MultiMC";
 
-			aboutDlg.ProgramName = 
+			aboutDlg.ProgramName =
 				AppUtils.GetAssemblyAttr<AssemblyTitleAttribute>(assembly).Title;
 
 			aboutDlg.Version = AppUtils.GetVersion().ToString();
 
-			aboutDlg.Comments = 
+			aboutDlg.Comments =
 				AppUtils.GetAssemblyAttr<AssemblyDescriptionAttribute>(assembly).Description;
 
 			aboutDlg.Copyright =

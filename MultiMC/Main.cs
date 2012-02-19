@@ -44,7 +44,7 @@ namespace MultiMC
 		}
 
 		static bool restart;
-		
+
 		public static void Main(string[] args)
 		{
 #if !DEBUG && FORCE_MONO
@@ -90,7 +90,7 @@ namespace MultiMC
 				}
 			}
 #endif
-			
+
 			if (OSUtils.Linux)
 			{
 				if (Environment.CurrentDirectory.Equals(Environment.GetEnvironmentVariable("HOME")))
@@ -100,9 +100,9 @@ namespace MultiMC
 					Console.WriteLine("Set working directory to {0}", workingDir);
 				}
 			}
-			
+
 			Application.Init();
-			
+
 			if (args.Length > 0)
 			{
 				if (args[0].Equals("-u"))
@@ -129,9 +129,9 @@ namespace MultiMC
 					Console.WriteLine("Unknown argument: " + args[0]);
 				}
 			}
-			
-			AppDomain.CurrentDomain.UnhandledException += (object sender, 
-			                                               UnhandledExceptionEventArgs ueArgs) => 
+
+			AppDomain.CurrentDomain.UnhandledException += (object sender,
+														   UnhandledExceptionEventArgs ueArgs) =>
 			{
 				File.WriteAllText("error.txt", ueArgs.ExceptionObject.ToString());
 				Exception e;
@@ -140,12 +140,12 @@ namespace MultiMC
 
 				OnException(e);
 			};
-			
-			GLib.ExceptionManager.UnhandledException += (GLib.UnhandledExceptionArgs ueArgs) => 
+
+			GLib.ExceptionManager.UnhandledException += (GLib.UnhandledExceptionArgs ueArgs) =>
 			{
 				OnException(ueArgs.ExceptionObject as Exception);
 			};
-			
+
 			if (File.Exists(Resources.NewVersionFileName))
 				File.Delete(Resources.NewVersionFileName);
 
@@ -155,30 +155,30 @@ namespace MultiMC
 
 				Application.Run();
 			}
-			
+
 			if (InstallUpdates)
 			{
 				string currentFile = Resources.ExecutableFileName;
-				Console.WriteLine(string.Format("{0} -u \"{1}\"", 
-				                                Resources.NewVersionFileName, currentFile));
+				Console.WriteLine(string.Format("{0} -u \"{1}\"",
+												Resources.NewVersionFileName, currentFile));
 				if (OSUtils.Linux)
 				{
 					Process.Start("sudo chmod",
-					              string.Format("+x \"{0}\"", Resources.NewVersionFileName));
-					ProcessStartInfo info = 
+								  string.Format("+x \"{0}\"", Resources.NewVersionFileName));
+					ProcessStartInfo info =
 						new ProcessStartInfo(Resources.NewVersionFileName,
-						                     string.Format("-u \"{0}\"", currentFile));
+											 string.Format("-u \"{0}\"", currentFile));
 					info.UseShellExecute = false;
 					Process.Start(info);
 				}
 				else
 				{
 					Process.Start(Resources.NewVersionFileName,
-					              string.Format("-u \"{0}\"", currentFile));
+								  string.Format("-u \"{0}\"", currentFile));
 				}
 			}
 		}
-		
+
 		public static void FatalError(string errorMessage, string title)
 		{
 			MessageDialog errorDialog = new MessageDialog(null,
@@ -192,7 +192,7 @@ namespace MultiMC
 			Application.Quit();
 			Environment.Exit(1);
 		}
-		
+
 		public static void FatalException(Exception e)
 		{
 			string errorMessage = string.Format(
@@ -207,21 +207,21 @@ namespace MultiMC
 				e.ToString());
 			FatalError(errorMessage, "Unknown Error");
 		}
-		
+
 		public static void OnException(Exception e)
 		{
 			// We should immediately close for these exceptions
-			if (e is OutOfMemoryException || 
-			    e is StackOverflowException ||
+			if (e is OutOfMemoryException ||
+				e is StackOverflowException ||
 				e is AccessViolationException)
 			{
 				Console.WriteLine("SEVERE: " + e.GetType().ToString() + "! Aborting.");
 				File.WriteAllText("error.txt", e.ToString());
 				Environment.Exit(-2);
 			}
-			
+
 			Console.WriteLine("Caught exception:\n" + e.ToString());
-			
+
 			if (e is System.Reflection.TargetInvocationException)
 				e = e.InnerException;
 
@@ -235,7 +235,7 @@ namespace MultiMC
 				errDlg.Run();
 			}
 		}
-		
+
 		/// <summary>
 		/// Updates the target file by replacing it with the current file.
 		/// </summary>
@@ -249,7 +249,7 @@ namespace MultiMC
 				if (File.Exists(target))
 				{
 					bool success = false;
-					
+
 					const int timeout = 5000;
 					int start = DateTime.Now.Millisecond;
 					while (DateTime.Now.Millisecond < start + timeout)
@@ -262,29 +262,34 @@ namespace MultiMC
 								success = true;
 								break;
 							}
-						} catch (IOException e)
+						}
+						catch (IOException e)
 						{
 							if (e.Message.ToLower().Contains("in use"))
 								continue;
 							else
 							{
 								success = false;
-								
+
 								string errorStr = "Failed to install updates: " +
 									e.Message;
-								MessageUtils.ShowMessageBox(MessageType.Error, 
-								                            errorStr);
+								MessageUtils.ShowMessageBox(MessageType.Error,
+															errorStr);
 								return;
 							}
 						}
 					}
 					if (!success)
 					{
-						MessageUtils.ShowMessageBox(MessageType.Error, 
-						                            "Failed to install updates " +
-						                            "because the operation timed " +
-						                            "out. This may be due to " +
-						                            "MultiMC not closing properly.");
+						File.WriteAllText("update-error.txt", "Failed to install updates " +
+													"because the operation timed " +
+													"out. This may be due to " +
+													"MultiMC not closing properly.");
+						MessageUtils.ShowMessageBox(MessageType.Error,
+													"Failed to install updates " +
+													"because the operation timed " +
+													"out. This may be due to " +
+													"MultiMC not closing properly.");
 						return;
 					}
 					else
@@ -294,13 +299,16 @@ namespace MultiMC
 						File.Copy(Resources.NewVersionFileName, target);
 					}
 				}
-				
+				else
+					Console.WriteLine("Couldn't find file to update. '{0}'", target);
+
 				Process.Start(target);
-			} catch (IOException e)
+			}
+			catch (IOException e)
 			{
 				MessageUtils.ShowMessageBox(MessageType.Error,
-				                            "Failed to install updates: " +
-				                            e.Message);
+											"Failed to install updates: " +
+											e.Message);
 				return;
 			}
 		}

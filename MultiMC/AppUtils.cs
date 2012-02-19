@@ -26,17 +26,17 @@ namespace MultiMC
 	public class AppUtils
 	{
 		static bool initialized;
-		
+
 		private static void Init()
 		{
 			if (!initialized)
 			{
 				initialized = true;
-//				ServicePointManager.ServerCertificateValidationCallback = 
-//					new RemoteCertificateValidationCallback(CertCheck);
+				//				ServicePointManager.ServerCertificateValidationCallback = 
+				//					new RemoteCertificateValidationCallback(CertCheck);
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the version of the program.
 		/// </summary>
@@ -49,7 +49,7 @@ namespace MultiMC
 					GetName().Version;
 			return appVersion;
 		}
-		
+
 		public static string ExecutePost(string url, string urlParams)
 		{
 			Init();
@@ -68,11 +68,11 @@ namespace MultiMC
 
 			return attrs[0] as T;
 		}
-		
-		private static bool CertCheck(object sender, 
-		                              X509Certificate cert, 
-		                              X509Chain chain, 
-		                              SslPolicyErrors error)
+
+		private static bool CertCheck(object sender,
+									  X509Certificate cert,
+									  X509Chain chain,
+									  SslPolicyErrors error)
 		{
 			if (cert == null)
 			{
@@ -83,7 +83,7 @@ namespace MultiMC
 			else
 				return true;
 #else
-			using (Stream stream = 
+			using (Stream stream =
 				Assembly.GetExecutingAssembly().GetManifestResourceStream("sslcert"))
 			{
 				if (stream == null)
@@ -93,10 +93,10 @@ namespace MultiMC
 				}
 				byte[] bytes = new byte[stream.Length];
 				stream.Read(bytes, 0, bytes.Length);
-			
+
 				if (bytes.Length < cert.GetPublicKey().Length)
 					return false;
-				
+
 				for (int i = 0; i < bytes.Length; i++)
 				{
 					if (bytes[i] != cert.GetPublicKey()[i])

@@ -25,34 +25,34 @@ namespace MultiMC
 	public class Resources
 	{
 		// Dropbox: http://dl.dropbox.com/u/52412912/
-		
+
 		// URLs
-//		public const string DotNetZipURL = "http://multimc.tk/MultiMC/DotNetZip.dll";
-//		public const string VInfoUrl = "http://multimc.tk/MultiMC/cs-version";
-//		public const string LatestVersionURL = "http://multimc.tk/MultiMC/MultiMC.exe";
-		
+		//		public const string DotNetZipURL = "http://multimc.tk/MultiMC/DotNetZip.dll";
+		//		public const string VInfoUrl = "http://multimc.tk/MultiMC/cs-version";
+		//		public const string LatestVersionURL = "http://multimc.tk/MultiMC/MultiMC.exe";
+
 		// Minecraft URLs
-		public const string LauncherURL = 
+		public const string LauncherURL =
 			"https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft.jar";
 		public const string MojangMCDLUri = "http://s3.amazonaws.com/MinecraftDownload/";
 		public const string ForkkMCDLUri = "http://dl.dropbox.com/u/52412912/LWJGL/";
-		
+
 		// Update URLs
 		public const string DownloadSiteURL = "http://forkk.net/MultiMC/download/";
 		public const string VInfoUrl = DownloadSiteURL + "cs-version";
 		public const string DotNetZipURL = DownloadSiteURL + "Ionic.Zip.Reduced.dll";
 		public const string OtherUpdateURL = DownloadSiteURL + "MultiMC.exe";
 		public const string LinuxUpdateURL = DownloadSiteURL + "Linux/MultiMC";
-		
+
 		// Other Stuff
 		public const string InstanceXmlFile = "instance.xml";
 		public const string ModListFileName = "modlist";
 		public const string InstDir = "instances";
 		public const string ConfigFileName = "multimc.cfg";
 		public const string LastLoginFileName = "lastlogin";
-		public const string LastLoginKey = 
+		public const string LastLoginKey =
 			"Bi[r;Yq'/FKM].@wgZoIBh~bkY}&W,0>)Gz%Jbusexx)&ijhXV}b^8m;&jfL73tx";
-		
+
 		public static string LatestVersionURL
 		{
 			get
@@ -62,7 +62,7 @@ namespace MultiMC
 				return OtherUpdateURL;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the name of the currently running executable file.
 		/// </summary>
@@ -81,7 +81,7 @@ namespace MultiMC
 				return assemblyName;
 			}
 		}
-		
+
 		public static string NewVersionFileName
 		{
 			get
@@ -89,7 +89,7 @@ namespace MultiMC
 				return OSUtils.Linux ? "MultiMCUpdate" : "MultiMCUpdate.exe";
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the version string for displaying to the user.
 		/// </summary>
@@ -112,7 +112,7 @@ namespace MultiMC
 			else
 				return iconDict["stone"];
 		}
-		
+
 		public static string[] IconKeys
 		{
 			get
@@ -122,13 +122,13 @@ namespace MultiMC
 				return keyArray;
 			}
 		}
-		
+
 		private static Dictionary<string, Pixbuf> iconDict = LoadIcons();
-		
+
 		public static Dictionary<string, Pixbuf> LoadIcons()
 		{
 			Dictionary<string, Pixbuf> pixBufDict = new Dictionary<string, Pixbuf>();
-			
+
 			if (Directory.Exists("icons"))
 			{
 				foreach (string f in Directory.GetFiles("icons"))
@@ -140,22 +140,22 @@ namespace MultiMC
 					}
 				}
 			}
-			
-			foreach (string name in 
-			        new string[]{ "stone", "brick", 
+
+			foreach (string name in
+					new string[]{ "stone", "brick", 
 				"diamond", "dirt", "gold", "grass", "iron", "planks", "tnt" })
 			{
 				if (!pixBufDict.ContainsKey(name))
 					pixBufDict.Add(name, Pixbuf.LoadFromResource("MultiMC.icons." + name));
 			}
-			
+
 			return pixBufDict;
 		}
-		
+
 		public static bool IsValidIcon(string file)
 		{
 			bool exists = File.Exists(file);
-			
+
 			bool supported = false;
 			foreach (PixbufFormat format in Pixbuf.Formats)
 			{
@@ -167,7 +167,7 @@ namespace MultiMC
 					}
 				}
 			}
-			
+
 			return exists && supported;
 		}
 
