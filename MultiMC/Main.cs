@@ -130,16 +130,7 @@ namespace MultiMC
 				}
 			}
 
-			AppDomain.CurrentDomain.UnhandledException += (object sender,
-														   UnhandledExceptionEventArgs ueArgs) =>
-			{
-				File.WriteAllText("error.txt", ueArgs.ExceptionObject.ToString());
-				Exception e;
-				if ((e = ueArgs.ExceptionObject as Exception) == null)
-					return;
-
-				OnException(e);
-			};
+			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(UnhandledError);
 
 			GLib.ExceptionManager.UnhandledException += (GLib.UnhandledExceptionArgs ueArgs) =>
 			{
@@ -180,61 +171,41 @@ namespace MultiMC
 			}
 		}
 
-		public static void FatalError(string errorMessage, string title)
+		static void UnhandledError(object sender, UnhandledExceptionEventArgs ueArgs)
 		{
-			MessageDialog errorDialog = new MessageDialog(null,
-					DialogFlags.Modal,
-					MessageType.Error,
-					ButtonsType.Ok,
-					errorMessage);
-			errorDialog.Title = title;
-			errorDialog.Response += (o, args) => errorDialog.Destroy();
-			errorDialog.Show();
-			Application.Quit();
-			Environment.Exit(1);
-		}
+			object eObj = ueArgs.ExceptionObject;
+			if (eObj is OutOfMemoryException ||
+				eObj is StackOverflowException)
+			{
+				File.WriteAllText("errordump.txt", eObj.ToString());
+				Environment.Exit(-1);
+			}
 
-		public static void FatalException(Exception e)
-		{
-			string errorMessage = string.Format(
-				"MultiMC has encountered a fatal error and needs to close. " +
-				"Sorry for the inconvenience.\n" +
-				"Technical Details:\n" +
-				"Exception type: {0}\n" +
-				"Message: {1}\n\n" +
-				"ToString: {2}",
-				e.GetType().ToString(),
-				e.Message,
-				e.ToString());
-			FatalError(errorMessage, "Unknown Error");
+			Exception e;
+			if ((e = ueArgs.ExceptionObject as Exception) == null)
+				return;
+
+			AppUtils.LogError(e);
+			OnException(e);
 		}
 
 		public static void OnException(Exception e)
 		{
-			// We should immediately close for these exceptions
-			if (e is OutOfMemoryException ||
-				e is StackOverflowException ||
-				e is AccessViolationException)
-			{
-				Console.WriteLine("SEVERE: " + e.GetType().ToString() + "! Aborting.");
-				File.WriteAllText("error.txt", e.ToString());
-				Environment.Exit(-2);
-			}
-
-			Console.WriteLine("Caught exception:\n" + e.ToString());
-
 			if (e is System.Reflection.TargetInvocationException)
 				e = e.InnerException;
 
-			using (ExceptionDialog errDlg = new ExceptionDialog(e))
-			{
-				errDlg.Response += (o, args) =>
+			Application.Invoke((sender, e2) =>
 				{
-					if (args.ResponseId == ResponseType.Yes)
-						Environment.Exit(-1);
-				};
-				errDlg.Run();
-			}
+					using (ExceptionDialog errDlg = new ExceptionDialog(e))
+					{
+						errDlg.Response += (o, args) =>
+						{
+							if (args.ResponseId == ResponseType.Yes)
+								Environment.Exit(-1);
+						};
+						errDlg.Run();
+					}
+				});
 		}
 
 		/// <summary>

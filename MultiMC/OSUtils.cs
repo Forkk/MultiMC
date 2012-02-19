@@ -120,6 +120,21 @@ namespace MultiMC
 			}
 		}
 
+		public static string OSName
+		{
+			get
+			{
+				if (Windows)
+					return "Windows";
+				else if (MacOSX)
+					return "Mac OS X";
+				else if (Linux)
+					return "Linux";
+				else
+					return "Unknown";
+			}
+		}
+
 		public static bool IsOnMono()
 		{
 			return Type.GetType("Mono.Runtime") != null;

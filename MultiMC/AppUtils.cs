@@ -69,6 +69,31 @@ namespace MultiMC
 			return attrs[0] as T;
 		}
 
+		public static void LogError(Exception e, string logFileName = null)
+		{
+			if (string.IsNullOrEmpty(logFileName))
+				logFileName = string.Format("error_{0}-{1}-{2}_{3}.{4}.{5}.txt",
+					DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Year,
+					DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+			System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+			sb.AppendLine(string.Format("Error report for {0}", DateTime.Now));
+			sb.AppendLine();
+			sb.AppendLine(string.Format("Exception type: {0}", e.GetType()));
+			sb.AppendLine(string.Format("MultiMC Version: {0}", AppUtils.GetVersion()));
+			sb.AppendLine();
+			sb.AppendLine("Computer info:");
+			sb.AppendLine(string.Format("\tOperating System: {0}", OSUtils.OSName));
+			sb.AppendLine();
+			sb.AppendLine("---------- BEGIN STACK TRACE ----------");
+			sb.AppendLine(e.ToString());
+			sb.AppendLine("----------- END STACK TRACE -----------");
+			
+			// Write the data to an error log.
+			File.WriteAllText(logFileName, sb.ToString());
+		}
+
 		private static bool CertCheck(object sender,
 									  X509Certificate cert,
 									  X509Chain chain,

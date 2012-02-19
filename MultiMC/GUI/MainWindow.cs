@@ -39,24 +39,15 @@ namespace MultiMC
 		{
 			this.Build();
 
-			string osString = "Unknown OS";
-
-			if (OSUtils.Windows)
-				osString = "Windows";
-			else if (OSUtils.MacOSX)
-				osString = "Mac OS X";
-			else if (OSUtils.Linux)
-				osString = "Linux";
-
 			if (!Directory.Exists(Resources.InstDir))
 				Directory.CreateDirectory(Resources.InstDir);
 
 			if (!File.Exists(AppSettings.Main.JavaPath))
 				AppSettings.Main.JavaPath = OSUtils.FindJava();
 
-			Title = string.Format("MultiMC BETA {0} for {1}",
+			Title = string.Format("MultiMC {0} for {1}",
 								  Resources.VersionString,
-								  osString);
+								  OSUtils.OSName);
 			Icon = Pixbuf.LoadFromResource("MainIcon");
 
 			instList = new ListStore(typeof(string), typeof(Instance), typeof(Gdk.Pixbuf));
