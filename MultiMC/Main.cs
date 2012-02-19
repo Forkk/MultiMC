@@ -176,6 +176,7 @@ namespace MultiMC
 					Process.Start(Resources.NewVersionFileName,
 								  string.Format("-u \"{0}\"", currentFile));
 				}
+				Environment.Exit(0);
 			}
 		}
 
@@ -250,7 +251,7 @@ namespace MultiMC
 				{
 					bool success = false;
 
-					const int timeout = 5000;
+					const int timeout = 1000 * 15;
 					int start = DateTime.Now.Millisecond;
 					while (DateTime.Now.Millisecond < start + timeout)
 					{
