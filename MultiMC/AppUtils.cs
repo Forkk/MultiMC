@@ -56,6 +56,18 @@ namespace MultiMC
 			WebClient webClient = new WebClient();
 			return webClient.DownloadString((url + "?" + urlParams));
 		}
+
+		public static T GetAssemblyAttr<T>(Assembly assembly) where T : Attribute
+		{
+			if (assembly == null)
+				throw new ArgumentNullException("The argument 'assembly' was null");
+
+			object[] attrs = assembly.GetCustomAttributes(typeof(T), true);
+			if (attrs == null || attrs.Length <= 0)
+				return null;
+
+			return attrs[0] as T;
+		}
 		
 		private static bool CertCheck(object sender, 
 		                              X509Certificate cert, 

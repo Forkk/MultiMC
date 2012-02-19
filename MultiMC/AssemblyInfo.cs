@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 // Information about this assembly is defined by the following attributes. 
 // Change them to the values specific to your project.
@@ -7,8 +8,8 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("MultiMC")]
 [assembly: AssemblyDescription("Run and manage multiple installations of Minecraft.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("")]
+[assembly: AssemblyCompany("Andrew Okin")]
+[assembly: AssemblyProduct("MultiMC")]
 [assembly: AssemblyCopyright("Copyright (C) Andrew Okin 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -25,3 +26,4 @@ using System.Runtime.CompilerServices;
 //[assembly: AssemblyDelaySign(false)]
 //[assembly: AssemblyKeyFile("")]
 
+[assembly: GuidAttribute("08C10313-6FB9-4339-9836-507D00458496")]

@@ -5,6 +5,7 @@ namespace MultiMC
 	public partial class MainWindow
 	{
 		private global::Gtk.UIManager UIManager;
+		private global::Gtk.Action aboutAction;
 		private global::Gtk.Action openInstDirAction;
 		private global::Gtk.Action newInstAction;
 		private global::Gtk.Action refreshAction;
@@ -20,6 +21,9 @@ namespace MultiMC
 			// Widget MultiMC.MainWindow
 			this.UIManager = new global::Gtk.UIManager ();
 			global::Gtk.ActionGroup w1 = new global::Gtk.ActionGroup ("Default");
+			this.aboutAction = new global::Gtk.Action ("aboutAction", "About", "About MultiMC", "gtk-about");
+			this.aboutAction.ShortLabel = "About";
+			w1.Add (this.aboutAction, "F1");
 			this.UIManager.InsertActionGroup (w1, 0);
 			global::Gtk.ActionGroup w2 = new global::Gtk.ActionGroup ("Instance Actions");
 			this.openInstDirAction = new global::Gtk.Action ("openInstDirAction", "_Open Instance Folder", "Open instance folder", "gtk-open");
@@ -50,7 +54,7 @@ namespace MultiMC
 			this.windowbox = new global::Gtk.VBox ();
 			this.windowbox.Name = "windowbox";
 			// Container child windowbox.Gtk.Box+BoxChild
-			this.UIManager.AddUiFromString (@"<ui><toolbar name='menuToolbar'><toolitem name='newInstAction' action='newInstAction'/><toolitem name='openInstDirAction' action='openInstDirAction'/><toolitem name='refreshAction' action='refreshAction'/><separator/><toolitem name='preferencesAction' action='preferencesAction'/><toolitem name='updateAction' action='updateAction'/></toolbar></ui>");
+			this.UIManager.AddUiFromString (@"<ui><toolbar name='menuToolbar'><toolitem name='newInstAction' action='newInstAction'/><toolitem name='openInstDirAction' action='openInstDirAction'/><toolitem name='refreshAction' action='refreshAction'/><separator/><toolitem name='preferencesAction' action='preferencesAction'/><toolitem name='updateAction' action='updateAction'/><separator/><toolitem name='aboutAction' action='aboutAction'/></toolbar></ui>");
 			this.menuToolbar = ((global::Gtk.Toolbar)(this.UIManager.GetWidget ("/menuToolbar")));
 			this.menuToolbar.Name = "menuToolbar";
 			this.menuToolbar.ShowArrow = false;
@@ -74,6 +78,7 @@ namespace MultiMC
 			}
 			this.Show ();
 			this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);
+			this.aboutAction.Activated += new global::System.EventHandler (this.OnAboutActionActivated);
 			this.openInstDirAction.Activated += new global::System.EventHandler (this.OnViewFolderClicked);
 			this.newInstAction.Activated += new global::System.EventHandler (this.OnNewClicked);
 			this.refreshAction.Activated += new global::System.EventHandler (this.OnRefreshClicked);

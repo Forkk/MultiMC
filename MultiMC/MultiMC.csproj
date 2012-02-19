@@ -13,6 +13,7 @@
 It also allows you to install mods by dragging and dropping their files.</Description>
     <StartupObject>MultiMC.MainClass</StartupObject>
     <ApplicationIcon>MultiMC.ico</ApplicationIcon>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -25,7 +26,6 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -50,6 +50,9 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <ConsolePause>false</ConsolePause>
     <PlatformTarget>x86</PlatformTarget>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -201,6 +204,9 @@ It also allows you to install mods by dragging and dropping their files.</Descri
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AboutLogo.png" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

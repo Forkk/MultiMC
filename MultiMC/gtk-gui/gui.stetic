@@ -5,7 +5,7 @@
     <target-gtk-version>2.12</target-gtk-version>
   </configuration>
   <import>
-    <widget-library name="../bin/Release/MultiMC.exe" internal="true" />
+    <widget-library name="../bin/Debug/MultiMC.exe" internal="true" />
   </import>
   <widget class="Gtk.Dialog" id="MultiMC.SettingsDialog" design-size="458 783">
     <property name="MemberName" />
@@ -674,7 +674,17 @@
     </child>
   </widget>
   <widget class="Gtk.Window" id="MultiMC.MainWindow" design-size="633 451">
-    <action-group name="Default" />
+    <action-group name="Default">
+      <action id="aboutAction">
+        <property name="Type">Action</property>
+        <property name="Accelerator">F1</property>
+        <property name="Label" translatable="yes">About</property>
+        <property name="ShortLabel" translatable="yes">About</property>
+        <property name="StockId">gtk-about</property>
+        <property name="Tooltip" translatable="yes">About MultiMC</property>
+        <signal name="Activated" handler="OnAboutActionActivated" />
+      </action>
+    </action-group>
     <action-group name="Instance Actions">
       <action id="openInstDirAction">
         <property name="Type">Action</property>
@@ -742,6 +752,8 @@
               <node type="Separator" />
               <node type="Toolitem" action="preferencesAction" />
               <node type="Toolitem" action="updateAction" />
+              <node type="Separator" />
+              <node type="Toolitem" action="aboutAction" />
             </node>
           </widget>
           <packing>
