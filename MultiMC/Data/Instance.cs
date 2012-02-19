@@ -715,6 +715,13 @@ namespace MultiMC.Data
 		
 		private void RecursiveAdd(string dir, bool triggerEvents = true)
 		{
+			if (File.Exists(dir) && !Directory.Exists(dir))
+			{
+				if (!modList.Contains(dir))
+					Add(dir, triggerEvents);
+				return;
+			}
+
 			foreach (string modFile in Directory.GetFileSystemEntries(dir))
 			{
 				if (Directory.Exists(modFile))
