@@ -469,8 +469,6 @@ namespace MultiMC
 										Visible = true;
 										cwin.Dispose();
 									};
-
-									cwin.Show();
 								});
 
 						updater.Completed += (sender, e) =>
