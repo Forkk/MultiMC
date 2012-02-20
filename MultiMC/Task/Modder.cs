@@ -235,8 +235,11 @@ namespace MultiMC.Tasks
 						foreach (ZipEntry entry in zipFile)
 						{
 							entry.Extract(tmpDir);
-							string extractedFile = Path.Combine(tmpDir, entry.FileName);
+							string extractedFile = Path.Combine(tmpDir, 
+								entry.FileName.Replace('/', Path.PathSeparator));
 
+							if (modFileIndices[f] == null)
+								continue;
 							RecursiveSetIndex(extractedFile, (int) modFileIndices[f]);
 
 							// If it's a file
