@@ -52,13 +52,13 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DifferenceEngine, Version=1.0.4435.20168, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\DifferenceEngine.dll</HintPath>
+    </Reference>
     <Reference Include="GitSharp, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\GitSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="NGit, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\NGit.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
@@ -216,6 +216,14 @@ It also allows you to install mods by dragging and dropping their files.</Descri
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AboutLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\GitSharp.Core.dll" />
+    <Content Include="lib\GitSharp.dll" />
+    <Content Include="lib\ICSharpCode.SharpZipLib.dll" />
+    <Content Include="lib\nunit.framework.dll" />
+    <Content Include="lib\Tamir.SharpSSH.dll" />
+    <Content Include="lib\Winterdom.IO.FileMap.dll" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

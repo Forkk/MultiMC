@@ -13,11 +13,13 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 using Gtk;
 
 using GitSharp;
+using GitSharp.Commands;
 
 namespace MultiMC
 {
@@ -85,8 +87,19 @@ namespace MultiMC
 			DebugUtils.Print("Reverting to " + sha);
 			Commit commit = repo.CurrentBranch.CurrentCommit.Ancestors.
 				WhereTrue<Commit>(c => c.Hash == sha)[0];
-
 			commit.Checkout();
+
+			//CheckoutCommand cmd = new CheckoutCommand();
+			//cmd.Repository = repo;
+
+			//if (cmd.Arguments == null)
+			//    cmd.Arguments = new List<string>();
+			//cmd.Arguments.Add(sha);
+
+			//cmd.BranchCreate = "revert";
+			//cmd.Execute();
+
+			//repo.SwitchToBranch("master");
 		}
 
 		public override void Dispose()

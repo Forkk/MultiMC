@@ -72,7 +72,8 @@ namespace MultiMC.Data
 				try
 				{
 					inst = LoadInstance(dir);
-				} catch (InvalidInstanceException e)
+				}
+				catch (InvalidInstanceException e)
 				{
 					Console.WriteLine(e.Message);
 				}
@@ -120,7 +121,7 @@ namespace MultiMC.Data
 			this.RootDir = rootDir;
 
 			this.autosave = autosave;
-			
+
 			InstMods = new InstanceMods(this);
 			InstMods.Update();
 			AutoSave();
@@ -137,7 +138,7 @@ namespace MultiMC.Data
 			this.rootDir = rootDir;
 
 			this.autosave = autosave;
-			
+
 			InstMods = new InstanceMods(this);
 			InstMods.Update();
 
@@ -190,8 +191,8 @@ namespace MultiMC.Data
 		/// <returns>The process the instance is running in</returns>
 		public Process Launch(string username, string sessionID)
 		{
-//			if (!File.Exists("MultiMCLauncher.class"))
-//			{
+			//			if (!File.Exists("MultiMCLauncher.class"))
+			//			{
 			using (FileStream output = File.Open("MultiMCLauncher.class", FileMode.Create))
 			{
 				using (Stream input = System.Reflection.Assembly.
@@ -206,13 +207,13 @@ namespace MultiMC.Data
 					}
 				}
 			}
-//			}
-			
+			//			}
+
 			int xms = AppSettings.Main.MinMemoryAlloc;
 			int xmx = AppSettings.Main.MaxMemoryAlloc;
 			string launcher = AppSettings.Main.LauncherPath;
 			string javaPath = AppSettings.Main.JavaPath;
-			
+
 			Console.WriteLine("Launching instance '" + Name + "' with '" + launcher + "'");
 
 			instProc = new Process();
@@ -248,7 +249,7 @@ namespace MultiMC.Data
 		{
 			if (InstQuit != null)
 				InstQuit(this, new InstQuitEventArgs((sender as Process).ExitCode,
-				                                     (sender as Process).ExitTime));
+													 (sender as Process).ExitTime));
 			InstSaves.BackupAll();
 		}
 
@@ -300,7 +301,7 @@ namespace MultiMC.Data
 		#endregion
 
 		#region Properties
-		
+
 		public InstanceMods InstMods
 		{
 			get;
@@ -366,7 +367,7 @@ namespace MultiMC.Data
 				AutoSave();
 			}
 		}
-		
+
 		public bool NeedsRebuild
 		{
 			get { return bool.Parse(GetXmlElement("NeedsRebuild", "false").InnerText); }
@@ -400,7 +401,7 @@ namespace MultiMC.Data
 		{
 			get { return Path.Combine(RootDir, "instMods"); }
 		}
-		
+
 		/// <summary>
 		/// Gets the mod list file. This file stores a list of all the mods installed in the
 		/// order that they will be installed.
@@ -421,7 +422,7 @@ namespace MultiMC.Data
 			get
 			{
 				if (Directory.Exists(Path.Combine(RootDir, ".minecraft")) &&
-				    !Directory.Exists(Path.Combine(RootDir, "minecraft")))
+					!Directory.Exists(Path.Combine(RootDir, "minecraft")))
 					return Path.Combine(RootDir, ".minecraft");
 				else
 					return Path.Combine(RootDir, "minecraft");
@@ -435,7 +436,7 @@ namespace MultiMC.Data
 		{
 			get { return Path.Combine(MinecraftDir, "bin"); }
 		}
-		
+
 		/// <summary>
 		/// The instance's minecraft.jar
 		/// </summary>
@@ -487,12 +488,12 @@ namespace MultiMC.Data
 				}
 			}
 		}
-		
+
 		public bool Running
 		{
 			get { return !(instProc == null || ProcessDisposed || instProc.HasExited); }
 		}
-		
+
 		public bool CanPlayOffline
 		{
 			get
@@ -517,17 +518,17 @@ namespace MultiMC.Data
 		#endregion
 
 		#region Events
-		
+
 		/// <summary>
 		/// Occurrs when the instance quits.
 		/// </summary>
 		public event EventHandler<InstQuitEventArgs> InstQuit;
-		
+
 		/// <summary>
 		/// Occurs when the instance launches.
 		/// </summary>
 		public event EventHandler InstLaunch;
-		
+
 
 		#endregion
 
@@ -592,20 +593,20 @@ namespace MultiMC.Data
 
 		#endregion
 	}
-	
+
 	public sealed class InstanceMods : IEnumerable<string>, IDisposable
 	{
 		List<string> modList;
 		FileSystemWatcher watcher;
-		
+
 		public InstanceMods(Instance inst)
 		{
 			modList = new List<string>();
 			Inst = inst;
-			
+
 			if (!Directory.Exists(Inst.InstModsDir))
 				Directory.CreateDirectory(Inst.InstModsDir);
-			
+
 			watcher = new FileSystemWatcher(Inst.InstModsDir);
 			watcher.Changed += FileChanged;
 			watcher.Deleted += FileChanged;
@@ -614,16 +615,16 @@ namespace MultiMC.Data
 			watcher.IncludeSubdirectories = true;
 			watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite |
 				NotifyFilters.FileName | NotifyFilters.DirectoryName;
-			
+
 			watcher.EnableRaisingEvents = true;
 		}
-		
+
 		public void Dispose()
 		{
 			watcher.EnableRaisingEvents = false;
 			watcher.Dispose();
 		}
-		
+
 		void FileChanged(object sender, FileSystemEventArgs e)
 		{
 			string filePath = OSUtils.GetRelativePath(e.FullPath, Environment.CurrentDirectory);
@@ -642,12 +643,12 @@ namespace MultiMC.Data
 				break;
 			}
 		}
-		
+
 		void FileRenamed(object sender, RenamedEventArgs e)
 		{
-			string oldPath = OSUtils.GetRelativePath(e.OldFullPath, 
-			                                         Path.GetFullPath(Environment.CurrentDirectory));
-			string path = 
+			string oldPath = OSUtils.GetRelativePath(e.OldFullPath,
+													 Path.GetFullPath(Environment.CurrentDirectory));
+			string path =
 				OSUtils.GetRelativePath(e.FullPath, Path.GetFullPath(
 					Path.GetFullPath(Environment.CurrentDirectory)));
 			int index = this[oldPath];
@@ -660,13 +661,13 @@ namespace MultiMC.Data
 			get;
 			private set;
 		}
-		
+
 		public string this[int i]
 		{
-			get  { return modList[i]; }
+			get { return modList[i]; }
 			private set { modList[i] = value; }
 		}
-		
+
 		public int this[string s]
 		{
 			get { return modList.IndexOf(s); }
@@ -674,12 +675,12 @@ namespace MultiMC.Data
 			{
 				if (!modList.Contains(s))
 					throw new KeyNotFoundException("Can't change index of something " +
-					                               "that isn't in the list!");
+												   "that isn't in the list!");
 				Remove(s);
 				modList.Insert(value, s);
 			}
 		}
-		
+
 		public void Load()
 		{
 			modList.Clear();
@@ -691,7 +692,7 @@ namespace MultiMC.Data
 				}
 			}
 		}
-		
+
 		public void Save()
 		{
 			try
@@ -700,20 +701,21 @@ namespace MultiMC.Data
 				writeList.AddRange(modList);
 				for (int i = 0; i < writeList.Count; i++)
 				{
-					writeList[i] = 
+					writeList[i] =
 						OSUtils.GetRelativePath(writeList[i], Path.GetFullPath(Inst.InstModsDir));
 				}
 				File.WriteAllLines(Inst.ModListFile, writeList);
-			} catch (IOException e)
+			}
+			catch (IOException e)
 			{
 				if (e.Message.ToLower().Contains("in use"))
 				{
 					Console.WriteLine("Failed to save mod list because " +
-					                  "something else was using the file.");
+									  "something else was using the file.");
 				}
 			}
 		}
-		
+
 		public void Update()
 		{
 			Load();
@@ -731,7 +733,7 @@ namespace MultiMC.Data
 			}
 			Save();
 		}
-		
+
 		private void RecursiveAdd(string dir, bool triggerEvents = true)
 		{
 			if (File.Exists(dir) && !Directory.Exists(dir))
@@ -761,7 +763,7 @@ namespace MultiMC.Data
 		{
 			if (!modList.Contains(modFile))
 				modList.Add(modFile);
-			if (triggerEvent) 
+			if (triggerEvent)
 				OnModFileChanged(ModFileChangeTypes.ADDED, modFile);
 		}
 
@@ -782,17 +784,17 @@ namespace MultiMC.Data
 		}
 
 		#endregion
-		
+
 		public IEnumerator<string> GetEnumerator()
 		{
 			return modList.GetEnumerator();
 		}
-		
+
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return modList.GetEnumerator();
 		}
-		
+
 		public void OnModFileChanged(ModFileChangeTypes type, string modFile)
 		{
 			DebugUtils.Print("File {0} was changed ({1})", modFile, type.ToString());
@@ -800,7 +802,7 @@ namespace MultiMC.Data
 			if (ModFileChanged != null)
 				ModFileChanged(this, new ModFileChangedEventArgs(type, modFile));
 		}
-		
+
 		public event EventHandler<ModFileChangedEventArgs> ModFileChanged;
 	}
 
@@ -842,29 +844,51 @@ namespace MultiMC.Data
 			if (!Repository.IsValid(path))
 				DebugUtils.Print("Initializing Git repository for {0}.", path);
 
-			using (Repository repo = (!Repository.IsValid(path) ? 
+			using (Repository repo = (!Repository.IsValid(path) ?
 				Repository.Init(path) : new Repository(path)))
 			{
-				RepositoryStatus status = repo.Status;
+				DebugUtils.Print("Getting index");
+				Index index = repo.Index;
+				DebugUtils.Print("Getting status");
+				RepositoryStatus status = index.Status;
 				DebugUtils.Print("Backing up");
 
+				if (!status.AnyDifferences)
+				{
+					DebugUtils.Print("No changes to backup");
+					return;
+				}
+
 				if (status.Added != null && status.Added.Count() > 0)
-					foreach (string f in status.Added)
-						status.Staged.Add(f);
+				{
+					DebugUtils.Print("Files added: {0}", status.Added.ToString(", "));
+					index.Add(status.Added.ToArray());
+					DebugUtils.Print("Done");
+				}
 				if (status.Modified != null && status.Modified.Count() > 0)
-					foreach (string f in status.Modified)
-						status.Staged.Add(f);
+				{
+					DebugUtils.Print("Files changed: {0}", status.Added.ToString(", "));
+					index.Stage(status.Added.ToArray());
+				}
 				if (status.Removed != null && status.Removed.Count() > 0)
-					foreach (string f in status.Removed)
-						status.Staged.Add(f);
+				{
+					DebugUtils.Print("Files removed: {0}", status.Added.ToString(", "));
+					index.Stage(status.Added.ToArray());
+				}
 				if (status.Untracked != null && status.Untracked.Count() > 0)
-					foreach (string f in status.Untracked)
-						status.Staged.Add(f);
+				{
+					DebugUtils.Print("Files untracked: {0}", status.Added.ToString(", "));
+					index.Stage(status.Added.ToArray());
+				}
+
+				DebugUtils.Print("Refreshing changes");
+				status.Update();
 
 				DebugUtils.Print("Staged: {0}", status.Staged.ToString(", "));
 
-				if (status.Staged.Count > 0)
-					repo.Commit(DateTime.Now.ToString());
+				DebugUtils.Print("Committing");
+				index.CommitChanges("Unnamed Backup", new Author("MultiMC", ""));
+				DebugUtils.Print("done");
 			}
 		}
 
@@ -884,9 +908,9 @@ namespace MultiMC.Data
 			private set;
 		}
 	}
-	
+
 	#region Event Args
-	
+
 	public class ModFileChangedEventArgs : EventArgs
 	{
 		public ModFileChangedEventArgs(ModFileChangeTypes type, string modFile)
@@ -894,20 +918,20 @@ namespace MultiMC.Data
 			ChangeType = type;
 			ModFile = modFile;
 		}
-		
+
 		public ModFileChangeTypes ChangeType
 		{
 			get;
 			protected set;
 		}
-		
+
 		public string ModFile
 		{
 			get;
 			protected set;
 		}
 	}
-	
+
 	public enum ModFileChangeTypes
 	{
 		ADDED,
@@ -923,22 +947,22 @@ namespace MultiMC.Data
 			ExitCode = exitVal;
 			QuitTime = quitTime;
 		}
-			
+
 		public DateTime QuitTime
 		{
 			get;
 			protected set;
 		}
-			
+
 		public int ExitCode
 		{
 			get;
 			protected set;
 		}
 	}
-	
+
 	#endregion
-	
+
 	/// <summary>
 	/// Thrown when trying to load an instance that is not valid
 	/// </summary>
