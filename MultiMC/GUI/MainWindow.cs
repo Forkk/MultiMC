@@ -785,12 +785,18 @@ namespace MultiMC
 
 		private Menu instMenu;
 		MenuItem imPlay;
+
 		MenuItem imIcon;
 		MenuItem imNotes;
+
 		MenuItem imAddMods;
 		MenuItem imEditMods;
 		MenuItem imRebuild;
 		MenuItem imViewFolder;
+
+		MenuItem imBackup;
+		MenuItem imSaveMgr;
+
 		MenuItem imDelete;
 
 		private void InitMenu()
@@ -806,6 +812,9 @@ namespace MultiMC
 			instMenu.Add(imEditMods = new MenuItem("Edit Mods"));
 			instMenu.Add(imRebuild = new MenuItem("Rebuild"));
 			instMenu.Add(imViewFolder = new MenuItem("View Folder"));
+			instMenu.Add(new SeparatorMenuItem());
+			instMenu.Add(imBackup = new MenuItem("Backup Saves"));
+			instMenu.Add(imSaveMgr = new MenuItem("Manage Saves"));
 			instMenu.Add(new SeparatorMenuItem());
 			instMenu.Add(imDelete = new MenuItem("Delete"));
 
@@ -826,6 +835,9 @@ namespace MultiMC
 			imViewFolder.Activated += (sender, e) =>
 				Process.Start(SelectedInst.RootDir);
 
+			imBackup.Activated += (sender, e) => SelectedInst.InstSaves.BackupAll();
+			imSaveMgr.Activated += new EventHandler(SaveManagerClicked);
+
 			imDelete.Activated += DeleteActivated;
 
 			instIconView.ButtonPressEvent += (object o, ButtonPressEventArgs args) =>
@@ -844,6 +856,16 @@ namespace MultiMC
 			// If on windows, try to make the menu /not/ look like absolute shit
 			if (OSUtils.Windows)
 				StyleUtils.DeuglifyMenu(instMenu);
+		}
+
+		void SaveManagerClicked(object sender, EventArgs e)
+		{
+			SaveManagerDialog smDlg = new SaveManagerDialog(this, SelectedInst);
+			smDlg.Response += (sender2, e2) =>
+				{
+					smDlg.Destroy();
+				};
+			smDlg.Run();
 		}
 
 		void ChangeIconActivated(object sender, EventArgs e)

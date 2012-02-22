@@ -7,6 +7,8 @@ using System.IO;
 using System.Xml;
 using System.Diagnostics;
 
+using GitSharp;
+
 using MultiMC;
 using MultiMC.Data;
 
@@ -138,6 +140,8 @@ namespace MultiMC.Data
 			
 			InstMods = new InstanceMods(this);
 			InstMods.Update();
+
+			InstSaves = new InstanceSaves(this);
 		}
 
 		/// <summary>
@@ -245,6 +249,7 @@ namespace MultiMC.Data
 			if (InstQuit != null)
 				InstQuit(this, new InstQuitEventArgs((sender as Process).ExitCode,
 				                                     (sender as Process).ExitTime));
+			InstSaves.BackupAll();
 		}
 
 		/// <summary>
@@ -297,6 +302,12 @@ namespace MultiMC.Data
 		#region Properties
 		
 		public InstanceMods InstMods
+		{
+			get;
+			private set;
+		}
+
+		public InstanceSaves InstSaves
 		{
 			get;
 			private set;
@@ -439,6 +450,14 @@ namespace MultiMC.Data
 		public string ModLoaderDir
 		{
 			get { return Path.Combine(MinecraftDir, "mods"); }
+		}
+
+		/// <summary>
+		/// The saves folder (.minecraft\saves)
+		/// </summary>
+		public string SavesDir
+		{
+			get { return Path.Combine(MinecraftDir, "saves"); }
 		}
 
 		/// <summary>
@@ -783,6 +802,87 @@ namespace MultiMC.Data
 		}
 		
 		public event EventHandler<ModFileChangedEventArgs> ModFileChanged;
+	}
+
+	public sealed class InstanceSaves : IEnumerable<string>
+	{
+		public InstanceSaves(Instance inst)
+		{
+			this.Inst = inst;
+		}
+
+		public IEnumerator<string> GetEnumerator()
+		{
+			if (!Directory.Exists(Inst.SavesDir))
+			{
+				return (IEnumerator<string>)new string[0].GetEnumerator();
+			}
+			else
+			{
+				return (IEnumerator<string>)Directory.GetDirectories(Inst.SavesDir).
+					Where<string>(dir => SaveIsValid(dir)).GetEnumerator();
+			}
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
+
+		public void BackupAll()
+		{
+			foreach (string f in this)
+			{
+				BackupSave(f);
+			}
+		}
+
+		public void BackupSave(string path, bool init = false)
+		{
+			if (!Repository.IsValid(path))
+				DebugUtils.Print("Initializing Git repository for {0}.", path);
+
+			using (Repository repo = (!Repository.IsValid(path) ? 
+				Repository.Init(path) : new Repository(path)))
+			{
+				RepositoryStatus status = repo.Status;
+				DebugUtils.Print("Backing up");
+
+				if (status.Added != null && status.Added.Count() > 0)
+					foreach (string f in status.Added)
+						status.Staged.Add(f);
+				if (status.Modified != null && status.Modified.Count() > 0)
+					foreach (string f in status.Modified)
+						status.Staged.Add(f);
+				if (status.Removed != null && status.Removed.Count() > 0)
+					foreach (string f in status.Removed)
+						status.Staged.Add(f);
+				if (status.Untracked != null && status.Untracked.Count() > 0)
+					foreach (string f in status.Untracked)
+						status.Staged.Add(f);
+
+				DebugUtils.Print("Staged: {0}", status.Staged.ToString(", "));
+
+				if (status.Staged.Count > 0)
+					repo.Commit(DateTime.Now.ToString());
+			}
+		}
+
+		public bool SaveIsValid(string savePath)
+		{
+			return Directory.Exists(savePath) && File.Exists(Path.Combine(savePath, "level.dat"));
+		}
+
+		public bool SaveHasBackups(string savePath)
+		{
+			return SaveIsValid(savePath) && Repository.IsValid(savePath);
+		}
+
+		public Instance Inst
+		{
+			get;
+			private set;
+		}
 	}
 	
 	#region Event Args

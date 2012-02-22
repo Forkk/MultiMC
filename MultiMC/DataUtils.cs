@@ -22,7 +22,7 @@ namespace MultiMC
 	/// <summary>
 	/// Provides many useful methods for handling / converting data.
 	/// </summary>
-	public class DataUtils
+	public static class DataUtils
 	{
 		private static readonly char[] HexLowerChars = new[] 
 		{ 
@@ -58,10 +58,28 @@ namespace MultiMC
 			StringBuilder builder = new StringBuilder();
 			foreach (object obj in array)
 				builder.Append(string.Format("{0}{1}", obj.ToString(), separator));
-			builder.Length--;
+			if (builder.Length > 0)
+				builder.Length--;
 			return builder.ToString();
 		}
+
+		public static string ToString(this IEnumerable array, string separator = ", ")
+		{
+			return ArrayToString(array, separator);
+		}
+
+		// This is why I love C#
+
+		public static T[] WhereTrue<T>(this IEnumerable<T> array, Func<T, bool> func)
+		{
+			List<T> l = new List<T>();
+			foreach (T value in array)
+			{
+				if (func.Invoke(value))
+					l.Add(value);
+			}
+			return l.ToArray();
+		}
 	}
-	
 }
 
