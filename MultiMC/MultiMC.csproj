@@ -52,13 +52,13 @@ It also allows you to install mods by dragging and dropping their files.</Descri
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DifferenceEngine, Version=1.0.4435.20168, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\DifferenceEngine.dll</HintPath>
-    </Reference>
     <Reference Include="GitSharp, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\GitSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="GitSharp.Core, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\GitSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />

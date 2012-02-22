@@ -85,21 +85,7 @@ namespace MultiMC
 		public void RestoreBackup(string sha)
 		{
 			DebugUtils.Print("Reverting to " + sha);
-			Commit commit = repo.CurrentBranch.CurrentCommit.Ancestors.
-				WhereTrue<Commit>(c => c.Hash == sha)[0];
-			commit.Checkout();
-
-			//CheckoutCommand cmd = new CheckoutCommand();
-			//cmd.Repository = repo;
-
-			//if (cmd.Arguments == null)
-			//    cmd.Arguments = new List<string>();
-			//cmd.Arguments.Add(sha);
-
-			//cmd.BranchCreate = "revert";
-			//cmd.Execute();
-
-			//repo.SwitchToBranch("master");
+			repo.CurrentBranch.Reset(sha, ResetBehavior.Hard);
 		}
 
 		public override void Dispose()
