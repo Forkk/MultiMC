@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{966392C0-2CC5-4885-A3A6-DEB77026530F}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MultiMC</RootNamespace>
+    <AssemblyName>MultiMC</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug2\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Ionic.Zip.Reduced, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\Ionic.Zip.Reduced.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppSettings.cs" />
+    <Compile Include="AppUtils.cs" />
+    <Compile Include="DataUtils.cs" />
+    <Compile Include="DebugUtils.cs" />
+    <Compile Include="EventfulList.cs" />
+    <Compile Include="GUI\IAddInstDialog.cs" />
+    <Compile Include="GUI\ITaskStatus.cs" />
+    <Compile Include="GUI\MessageBox.cs" />
+    <Compile Include="Tasks\GameUpdater.cs" />
+    <Compile Include="GUI\IDialog.cs" />
+    <Compile Include="GUI\IMainWindow.cs" />
+    <Compile Include="GUI\IWindow.cs" />
+    <Compile Include="Instance.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="OSUtils.cs" />
+    <Compile Include="ConfigFile.cs" />
+    <Compile Include="Tasks\Downloader.cs" />
+    <Compile Include="Tasks\Modder.cs" />
+    <Compile Include="Tasks\Task.cs" />
+    <Compile Include="Tasks\Updater.cs" />
+    <Compile Include="WinGUI\AboutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\AboutForm.Designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinGUI\LicenseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\LicenseForm.Designer.cs">
+      <DependentUpon>LicenseForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinGUI\NewInstDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\NewInstDialog.Designer.cs">
+      <DependentUpon>NewInstDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinGUI\SettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\SettingsForm.Designer.cs">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinGUI\WinFormsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\WinFormsMessageBox.cs" />
+    <Compile Include="WinGUI\WinFormsTaskStatus.cs" />
+    <Compile Include="WinGUI\WinFormsWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="WinGUI\AboutForm.resx">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinGUI\LicenseForm.resx">
+      <DependentUpon>LicenseForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinGUI\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinGUI\NewInstDialog.resx">
+      <DependentUpon>NewInstDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinGUI\SettingsForm.resx">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Lib\Ionic.Zip.Reduced.dll" />
+    <None Include="Resources\MultiMC.png" />
+    <None Include="Resources\MultiMC64.png" />
+    <None Include="Resources\MultiMC32.png" />
+    <None Include="Resources\MultiMC128.png" />
+    <None Include="Resources\License.txt" />
+    <Content Include="WinGUI\ToolbarIcons\AboutIcon.png" />
+    <Content Include="WinGUI\ToolbarIcons\CheckUpdateIcon.png" />
+    <Content Include="WinGUI\ToolbarIcons\HelpIcon.png" />
+    <Content Include="WinGUI\ToolbarIcons\NewInstIcon.png" />
+    <Content Include="WinGUI\ToolbarIcons\RefreshInstIcon.png" />
+    <Content Include="WinGUI\ToolbarIcons\RenameIcon.png" />
+    <Content Include="WinGUI\ToolbarIcons\ReportBugIcon.png" />
+    <Content Include="WinGUI\ToolbarIcons\SettingsIcon.png" />
+    <Content Include="WinGUI\ToolbarIcons\ViewFolderIcon.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
