@@ -30,6 +30,11 @@ namespace MultiMC.WinGUI
 {
 	public partial class MainForm : WinFormsWindow, IMainWindow
 	{
+		/// <summary>
+		/// Dictionary that maps status strips to their corresponding task IDs
+		/// </summary>
+		Dictionary<int, StatusStrip> statusStrips;
+
 		public MainForm()
 		{
 			InitializeComponent();
@@ -48,62 +53,175 @@ namespace MultiMC.WinGUI
 			tList.Added += new EventHandler<ItemAddRemoveEventArgs<Task>>(TaskAdded);
 			tList.Removed += new EventHandler<ItemAddRemoveEventArgs<Task>>(TaskRemoved);
 			TaskList = tList;
+
+			//mainLayoutPanel.
+
+			statusStrips = new Dictionary<int, StatusStrip>();
 		}
 
 		void TaskAdded(object sender, ItemAddRemoveEventArgs<Task> e)
 		{
+			if (IsTaskIDTaken(e.Item.TaskID))
+				e.Item.TaskID = GetAvailableTaskID();
+			TaskAdded(e.Item);
+		}
+
+		void TaskAdded(Task task)
+		{
 			if (InvokeRequired)
 			{
-				Invoke(new EventHandler<ItemAddRemoveEventArgs<Task>>(TaskAdded), sender, e);
+				Invoke((o, args) => TaskAdded(task));
 			}
 			else
 			{
-				Task task = e.Item;
-
-				task.ProgressChange += (o, args) => UpdateStatus();
-				task.StatusChange += (o, args) => UpdateStatus();
-
-				task.Started += (o, args) => UpdateStatus();
-				task.Completed += (o, args) => UpdateStatus();
+				if (!task.Running)
+				{
+					task.Started += (o, args) =>
+						{
+							AddTaskStatusBar(task);
+						};
+				}
+				else
+					AddTaskStatusBar(task);
+				task.Completed += (o, args) =>
+					{
+						Console.WriteLine("Task {0} completed.", task.TaskID);
+						RemoveTaskStatusBar(task);
+					};
 			}
 		}
 
 		void TaskRemoved(object sender, ItemAddRemoveEventArgs<Task> e)
 		{
-			UpdateStatus();
+			RemoveTaskStatusBar(e.Item);
 		}
 
-		void UpdateStatus(object sender = null, EventArgs e = null)
+		void AddTaskStatusBar(Task task)
 		{
 			if (InvokeRequired)
 			{
-				Invoke(UpdateStatus);
+				Invoke((o, args) => AddTaskStatusBar(task));
+				return;
+			}
+
+			// Status strip
+			StatusStrip taskStatusStrip = new StatusStrip();
+			statusStrips[task.TaskID] = taskStatusStrip;
+			taskStatusStrip.Anchor = AnchorStyles.Top | AnchorStyles.Left | 
+				AnchorStyles.Right | AnchorStyles.Bottom;
+			taskStatusStrip.AutoSize = true;
+			taskStatusStrip.LayoutStyle = ToolStripLayoutStyle.HorizontalStackWithOverflow;
+
+			// Status label
+			ToolStripStatusLabel statusLabel = new ToolStripStatusLabel(task.Status);
+			statusLabel.Name = "status";
+			statusLabel.AutoSize = true;
+			task.StatusChange += (o, args) => UpdateStatusLabel(statusLabel, args.Status);
+			statusLabel.Text = task.Status;
+			taskStatusStrip.Items.Add(statusLabel);
+
+			// Progress bar
+			ToolStripProgressBar progBar = new ToolStripProgressBar("progress");
+			progBar.Alignment = ToolStripItemAlignment.Right;
+			progBar.Size = new Size(100, 16);
+			task.ProgressChange += (o, args) => UpdateProgBar(progBar, args.Progress);
+			UpdateProgBar(progBar, task.Progress);
+			taskStatusStrip.Items.Add(progBar);
+
+			// Add the status bar
+			toolStripContainer.BottomToolStripPanel.Controls.Add(taskStatusStrip);
+			taskStatusStrip.Visible = true;
+		}
+
+		void RemoveTaskStatusBar(Task task)
+		{
+			if (InvokeRequired)
+			{
+				Invoke((o, args) => RemoveTaskStatusBar(task));
+				return;
+			}
+
+			if (toolStripContainer.BottomToolStripPanel.Controls.Contains(statusStrips[task.TaskID]))
+				toolStripContainer.BottomToolStripPanel.Controls.Remove(statusStrips[task.TaskID]);
+		}
+
+		void UpdateProgBar(ToolStripProgressBar progBar, int progress)
+		{
+			if (InvokeRequired)
+			{
+				Invoke((o, args) => UpdateProgBar(progBar, progress));
+				return;
+			}
+
+			if (progress > 0)
+			{
+				progBar.Style = ProgressBarStyle.Blocks;
+				progBar.Value = progress;
 			}
 			else
-			{
-				if (TaskList.Count >= 1)
-				{
-					Task task = TaskList[0];
-					taskStatusLabel.Visible = true;
-					taskStatusLabel.Text = task.Status;
-
-					taskStatusProgBar.Visible = true;
-
-					if (task.Progress > 0)
-					{
-						taskStatusProgBar.Style = ProgressBarStyle.Blocks;
-						taskStatusProgBar.Value = task.Progress;
-					}
-					else
-						taskStatusProgBar.Style = ProgressBarStyle.Marquee;
-				}
-				else
-				{
-					taskStatusLabel.Visible = false;
-					taskStatusProgBar.Visible = false;
-				}
-			}
+				progBar.Style = ProgressBarStyle.Marquee;
 		}
+
+		void UpdateStatusLabel(ToolStripStatusLabel label, string status)
+		{
+			if (InvokeRequired)
+			{
+				Invoke((o, args) => UpdateStatusLabel(label, status));
+				return;
+			}
+
+			label.Text = status;
+		}
+
+		void UpdateInstViewSize()
+		{
+
+		}
+
+		//void UpdateStatus(int taskID)
+		//{
+		//    if (InvokeRequired)
+		//    {
+		//        Invoke((o, args) => UpdateStatus(taskID));
+		//    }
+		//    else
+		//    {
+		//        Task task = TaskList.FirstOrDefault<Task>(t => t.TaskID == taskID);
+		//        if (task != null)
+		//        {
+		//            StatusStrip statusStrip = null;
+		//            ToolStripStatusLabel statusLabel = null;
+		//            ToolStripProgressBar statusProgBar = null;
+		//            if (!statusStrips.ContainsKey(task.TaskID))
+		//            {
+		//                TaskAdded(task);
+		//            }
+		//            else
+		//            {
+		//                statusStrip = statusStrips[task.TaskID];
+		//                statusLabel = statusStrip.Items["status"] as ToolStripStatusLabel;
+		//                statusProgBar = statusStrip.Items["progress"] as ToolStripProgressBar;
+		//            }
+
+		//            statusLabel.Text = task.Status;
+
+		//            if (task.Progress > 0)
+		//            {
+		//                statusProgBar.Style = ProgressBarStyle.Blocks;
+		//                statusProgBar.Value = task.Progress;
+		//            }
+		//            else
+		//                statusProgBar.Style = ProgressBarStyle.Marquee;
+		//        }
+		//        else
+		//        {
+		//            if (statusStrips.ContainsKey(taskID))
+		//            {
+		//                statusStrips.Remove(taskID);
+		//            }
+		//        }
+		//    }
+		//}
 
 		void instList_Removed(object sender, ItemAddRemoveEventArgs<Instance> e)
 		{
@@ -215,13 +333,13 @@ namespace MultiMC.WinGUI
 
 		public bool IsTaskIDTaken(int taskID)
 		{
-			return GetTaskByID(taskID) != null;
+			return TaskList.Any(task => task.TaskID == taskID);
 		}
 
 		public int GetAvailableTaskID()
 		{
 			int i = 0;
-			while (!IsTaskIDTaken(i))
+			while (IsTaskIDTaken(i))
 			{
 				i++;
 			}
@@ -353,6 +471,11 @@ namespace MultiMC.WinGUI
 		}
 
 		private void instView_BeforeLabelEdit(object sender, LabelEditEventArgs e)
+		{
+			// TODO Implement
+		}
+
+		private void mainLayoutPanel_Paint(object sender, PaintEventArgs e)
 		{
 
 		}

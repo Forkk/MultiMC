@@ -30,19 +30,6 @@
 		{
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-			this.menuToolBar = new System.Windows.Forms.ToolStrip();
-			this.addInstButton = new System.Windows.Forms.ToolStripButton();
-			this.viewInstanceFolder = new System.Windows.Forms.ToolStripButton();
-			this.refreshButton = new System.Windows.Forms.ToolStripButton();
-			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-			this.settingsButton = new System.Windows.Forms.ToolStripButton();
-			this.checkUpdateButton = new System.Windows.Forms.ToolStripButton();
-			this.aboutButton = new System.Windows.Forms.ToolStripButton();
-			this.helpButton = new System.Windows.Forms.ToolStripButton();
-			this.statusStrip = new System.Windows.Forms.StatusStrip();
-			this.taskStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-			this.taskStatusProgBar = new System.Windows.Forms.ToolStripProgressBar();
-			this.instView = new System.Windows.Forms.ListView();
 			this.instanceContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.playToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -54,13 +41,110 @@
 			this.viewFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
 			this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.menuToolBar.SuspendLayout();
-			this.statusStrip.SuspendLayout();
+			this.menuToolBar = new System.Windows.Forms.ToolStrip();
+			this.addInstButton = new System.Windows.Forms.ToolStripButton();
+			this.viewInstanceFolder = new System.Windows.Forms.ToolStripButton();
+			this.refreshButton = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.settingsButton = new System.Windows.Forms.ToolStripButton();
+			this.checkUpdateButton = new System.Windows.Forms.ToolStripButton();
+			this.aboutButton = new System.Windows.Forms.ToolStripButton();
+			this.helpButton = new System.Windows.Forms.ToolStripButton();
+			this.instView = new System.Windows.Forms.ListView();
+			this.toolStripContainer = new System.Windows.Forms.ToolStripContainer();
 			this.instanceContextMenu.SuspendLayout();
+			this.menuToolBar.SuspendLayout();
+			this.toolStripContainer.ContentPanel.SuspendLayout();
+			this.toolStripContainer.TopToolStripPanel.SuspendLayout();
+			this.toolStripContainer.SuspendLayout();
 			this.SuspendLayout();
+			// 
+			// instanceContextMenu
+			// 
+			this.instanceContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.playToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.changeIconToolStripMenuItem,
+            this.editNotesToolStripMenuItem,
+            this.toolStripMenuItem1,
+            this.editModsToolStripMenuItem,
+            this.rebuildJarToolStripMenuItem,
+            this.viewFolderToolStripMenuItem,
+            this.toolStripMenuItem2,
+            this.deleteToolStripMenuItem});
+			this.instanceContextMenu.Name = "instanceContextMenu";
+			this.instanceContextMenu.Size = new System.Drawing.Size(142, 176);
+			this.instanceContextMenu.Text = "Instance Menu";
+			this.instanceContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.instanceContextMenu_Opening);
+			// 
+			// playToolStripMenuItem
+			// 
+			this.playToolStripMenuItem.Name = "playToolStripMenuItem";
+			this.playToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+			this.playToolStripMenuItem.Text = "&Play";
+			this.playToolStripMenuItem.Click += new System.EventHandler(this.playToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(138, 6);
+			// 
+			// changeIconToolStripMenuItem
+			// 
+			this.changeIconToolStripMenuItem.Name = "changeIconToolStripMenuItem";
+			this.changeIconToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+			this.changeIconToolStripMenuItem.Text = "Change Icon";
+			this.changeIconToolStripMenuItem.Click += new System.EventHandler(this.changeIconToolStripMenuItem_Click);
+			// 
+			// editNotesToolStripMenuItem
+			// 
+			this.editNotesToolStripMenuItem.Name = "editNotesToolStripMenuItem";
+			this.editNotesToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+			this.editNotesToolStripMenuItem.Text = "Edit Notes";
+			this.editNotesToolStripMenuItem.Click += new System.EventHandler(this.editNotesToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem1
+			// 
+			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(138, 6);
+			// 
+			// editModsToolStripMenuItem
+			// 
+			this.editModsToolStripMenuItem.Name = "editModsToolStripMenuItem";
+			this.editModsToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+			this.editModsToolStripMenuItem.Text = "Edit Mods";
+			this.editModsToolStripMenuItem.Click += new System.EventHandler(this.editModsToolStripMenuItem_Click);
+			// 
+			// rebuildJarToolStripMenuItem
+			// 
+			this.rebuildJarToolStripMenuItem.Name = "rebuildJarToolStripMenuItem";
+			this.rebuildJarToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+			this.rebuildJarToolStripMenuItem.Text = "Rebuild Jar";
+			this.rebuildJarToolStripMenuItem.Click += new System.EventHandler(this.rebuildJarToolStripMenuItem_Click);
+			// 
+			// viewFolderToolStripMenuItem
+			// 
+			this.viewFolderToolStripMenuItem.Name = "viewFolderToolStripMenuItem";
+			this.viewFolderToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+			this.viewFolderToolStripMenuItem.Text = "View Folder";
+			this.viewFolderToolStripMenuItem.Click += new System.EventHandler(this.viewFolderToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem2
+			// 
+			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(138, 6);
+			// 
+			// deleteToolStripMenuItem
+			// 
+			this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+			this.deleteToolStripMenuItem.Text = "Delete";
+			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
 			// 
 			// menuToolBar
 			// 
+			this.menuToolBar.AutoSize = false;
+			this.menuToolBar.Dock = System.Windows.Forms.DockStyle.None;
 			this.menuToolBar.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.menuToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addInstButton,
@@ -74,7 +158,8 @@
 			this.menuToolBar.Location = new System.Drawing.Point(0, 0);
 			this.menuToolBar.Name = "menuToolBar";
 			this.menuToolBar.Size = new System.Drawing.Size(604, 25);
-			this.menuToolBar.TabIndex = 1;
+			this.menuToolBar.Stretch = true;
+			this.menuToolBar.TabIndex = 2;
 			this.menuToolBar.Text = "Menu";
 			// 
 			// addInstButton
@@ -145,169 +230,62 @@
 			this.helpButton.Size = new System.Drawing.Size(52, 22);
 			this.helpButton.Text = "Help";
 			// 
-			// statusStrip
-			// 
-			this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.taskStatusLabel,
-            this.taskStatusProgBar});
-			this.statusStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-			this.statusStrip.Location = new System.Drawing.Point(0, 339);
-			this.statusStrip.Name = "statusStrip";
-			this.statusStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.ManagerRenderMode;
-			this.statusStrip.Size = new System.Drawing.Size(604, 22);
-			this.statusStrip.TabIndex = 2;
-			this.statusStrip.Text = "Status";
-			// 
-			// taskStatusLabel
-			// 
-			this.taskStatusLabel.Name = "taskStatusLabel";
-			this.taskStatusLabel.Size = new System.Drawing.Size(39, 17);
-			this.taskStatusLabel.Text = "Status";
-			this.taskStatusLabel.Visible = false;
-			// 
-			// taskStatusProgBar
-			// 
-			this.taskStatusProgBar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this.taskStatusProgBar.Name = "taskStatusProgBar";
-			this.taskStatusProgBar.Size = new System.Drawing.Size(100, 16);
-			this.taskStatusProgBar.Visible = false;
-			// 
 			// instView
 			// 
+			this.instView.Alignment = System.Windows.Forms.ListViewAlignment.SnapToGrid;
 			this.instView.AllowDrop = true;
-			this.instView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
 			this.instView.ContextMenuStrip = this.instanceContextMenu;
+			this.instView.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.instView.LabelEdit = true;
-			this.instView.Location = new System.Drawing.Point(0, 28);
+			this.instView.Location = new System.Drawing.Point(0, 0);
 			this.instView.MultiSelect = false;
 			this.instView.Name = "instView";
-			this.instView.Size = new System.Drawing.Size(604, 308);
-			this.instView.TabIndex = 0;
+			this.instView.Size = new System.Drawing.Size(604, 336);
+			this.instView.TabIndex = 1;
 			this.instView.UseCompatibleStateImageBehavior = false;
-			this.instView.BeforeLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.instView_BeforeLabelEdit);
-			this.instView.ItemActivate += new System.EventHandler(this.instView_ItemActivate);
 			// 
-			// instanceContextMenu
+			// toolStripContainer
 			// 
-			this.instanceContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.playToolStripMenuItem,
-            this.toolStripSeparator2,
-            this.changeIconToolStripMenuItem,
-            this.editNotesToolStripMenuItem,
-            this.toolStripMenuItem1,
-            this.editModsToolStripMenuItem,
-            this.rebuildJarToolStripMenuItem,
-            this.viewFolderToolStripMenuItem,
-            this.toolStripMenuItem2,
-            this.deleteToolStripMenuItem});
-			this.instanceContextMenu.Name = "instanceContextMenu";
-			this.instanceContextMenu.Size = new System.Drawing.Size(153, 198);
-			this.instanceContextMenu.Text = "Instance Menu";
-			this.instanceContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.instanceContextMenu_Opening);
 			// 
-			// playToolStripMenuItem
+			// toolStripContainer.ContentPanel
 			// 
-			this.playToolStripMenuItem.Name = "playToolStripMenuItem";
-			this.playToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.playToolStripMenuItem.Text = "&Play";
-			this.playToolStripMenuItem.Click += new System.EventHandler(this.playToolStripMenuItem_Click);
+			this.toolStripContainer.ContentPanel.AutoScroll = true;
+			this.toolStripContainer.ContentPanel.Controls.Add(this.instView);
+			this.toolStripContainer.ContentPanel.Size = new System.Drawing.Size(604, 336);
+			this.toolStripContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.toolStripContainer.Location = new System.Drawing.Point(0, 0);
+			this.toolStripContainer.Name = "toolStripContainer";
+			this.toolStripContainer.Size = new System.Drawing.Size(604, 361);
+			this.toolStripContainer.TabIndex = 3;
+			this.toolStripContainer.Text = "toolStripContainer1";
 			// 
-			// toolStripSeparator2
+			// toolStripContainer.TopToolStripPanel
 			// 
-			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
-			// 
-			// changeIconToolStripMenuItem
-			// 
-			this.changeIconToolStripMenuItem.Name = "changeIconToolStripMenuItem";
-			this.changeIconToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.changeIconToolStripMenuItem.Text = "Change Icon";
-			this.changeIconToolStripMenuItem.Click += new System.EventHandler(this.changeIconToolStripMenuItem_Click);
-			// 
-			// editNotesToolStripMenuItem
-			// 
-			this.editNotesToolStripMenuItem.Name = "editNotesToolStripMenuItem";
-			this.editNotesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.editNotesToolStripMenuItem.Text = "Edit Notes";
-			this.editNotesToolStripMenuItem.Click += new System.EventHandler(this.editNotesToolStripMenuItem_Click);
-			// 
-			// toolStripMenuItem1
-			// 
-			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
-			// 
-			// editModsToolStripMenuItem
-			// 
-			this.editModsToolStripMenuItem.Name = "editModsToolStripMenuItem";
-			this.editModsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.editModsToolStripMenuItem.Text = "Edit Mods";
-			this.editModsToolStripMenuItem.Click += new System.EventHandler(this.editModsToolStripMenuItem_Click);
-			// 
-			// rebuildJarToolStripMenuItem
-			// 
-			this.rebuildJarToolStripMenuItem.Name = "rebuildJarToolStripMenuItem";
-			this.rebuildJarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.rebuildJarToolStripMenuItem.Text = "Rebuild Jar";
-			this.rebuildJarToolStripMenuItem.Click += new System.EventHandler(this.rebuildJarToolStripMenuItem_Click);
-			// 
-			// viewFolderToolStripMenuItem
-			// 
-			this.viewFolderToolStripMenuItem.Name = "viewFolderToolStripMenuItem";
-			this.viewFolderToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.viewFolderToolStripMenuItem.Text = "View Folder";
-			this.viewFolderToolStripMenuItem.Click += new System.EventHandler(this.viewFolderToolStripMenuItem_Click);
-			// 
-			// toolStripMenuItem2
-			// 
-			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(149, 6);
-			// 
-			// deleteToolStripMenuItem
-			// 
-			this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.deleteToolStripMenuItem.Text = "Delete";
-			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+			this.toolStripContainer.TopToolStripPanel.Controls.Add(this.menuToolBar);
 			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(604, 361);
-			this.Controls.Add(this.instView);
-			this.Controls.Add(this.statusStrip);
-			this.Controls.Add(this.menuToolBar);
+			this.Controls.Add(this.toolStripContainer);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "MainForm";
 			this.Text = "MultiMC";
 			this.Title = "MultiMC";
+			this.instanceContextMenu.ResumeLayout(false);
 			this.menuToolBar.ResumeLayout(false);
 			this.menuToolBar.PerformLayout();
-			this.statusStrip.ResumeLayout(false);
-			this.statusStrip.PerformLayout();
-			this.instanceContextMenu.ResumeLayout(false);
+			this.toolStripContainer.ContentPanel.ResumeLayout(false);
+			this.toolStripContainer.TopToolStripPanel.ResumeLayout(false);
+			this.toolStripContainer.ResumeLayout(false);
+			this.toolStripContainer.PerformLayout();
 			this.ResumeLayout(false);
-			this.PerformLayout();
 
 		}
 
 		#endregion
 
-		private System.Windows.Forms.ToolStrip menuToolBar;
-		private System.Windows.Forms.StatusStrip statusStrip;
-		private System.Windows.Forms.ListView instView;
-		private System.Windows.Forms.ToolStripButton addInstButton;
-		private System.Windows.Forms.ToolStripButton viewInstanceFolder;
-		private System.Windows.Forms.ToolStripButton refreshButton;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-		private System.Windows.Forms.ToolStripButton settingsButton;
-		private System.Windows.Forms.ToolStripButton checkUpdateButton;
-		private System.Windows.Forms.ToolStripButton helpButton;
-		private System.Windows.Forms.ToolStripButton aboutButton;
-		private System.Windows.Forms.ToolStripStatusLabel taskStatusLabel;
-		private System.Windows.Forms.ToolStripProgressBar taskStatusProgBar;
 		private System.Windows.Forms.ContextMenuStrip instanceContextMenu;
 		private System.Windows.Forms.ToolStripMenuItem playToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
@@ -319,6 +297,17 @@
 		private System.Windows.Forms.ToolStripMenuItem viewFolderToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
 		private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+		private System.Windows.Forms.ToolStrip menuToolBar;
+		private System.Windows.Forms.ToolStripButton addInstButton;
+		private System.Windows.Forms.ToolStripButton viewInstanceFolder;
+		private System.Windows.Forms.ToolStripButton refreshButton;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		private System.Windows.Forms.ToolStripButton settingsButton;
+		private System.Windows.Forms.ToolStripButton checkUpdateButton;
+		private System.Windows.Forms.ToolStripButton aboutButton;
+		private System.Windows.Forms.ToolStripButton helpButton;
+		private System.Windows.Forms.ListView instView;
+		private System.Windows.Forms.ToolStripContainer toolStripContainer;
 	}
 }
 

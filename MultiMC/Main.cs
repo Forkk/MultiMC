@@ -186,11 +186,11 @@ namespace MultiMC
 
 		private void StartTask(Task task)
 		{
-			task.Started += taskStarted;
 			task.Completed += taskCompleted;
 			task.ProgressChange += taskProgressChange;
 			task.StatusChange += taskStatusChange;
 			task.ErrorMessage += TaskErrorMessage;
+			MainWindow.TaskList.Add(task);
 			task.Start();
 		}
 
@@ -311,11 +311,6 @@ namespace MultiMC
 		#endregion
 
 		#region Events for all Tasks
-
-		void taskStarted(object sender, EventArgs e)
-		{
-			MainWindow.TaskList.Add(sender as Task);
-		}
 
 		void taskCompleted(object sender, Task.TaskCompleteEventArgs e)
 		{
