@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace MultiMC
 {
@@ -102,6 +103,12 @@ namespace MultiMC
 		{
 			get { return OS.ToString(); }
 		}
+
+		[DllImport("uxtheme.dll")]
+		public extern static int SetWindowTheme(
+			IntPtr hwnd,
+			[MarshalAs(UnmanagedType.LPWStr)] string pszSubAppName,
+			[MarshalAs(UnmanagedType.LPWStr)] string pszSubIdList);
 	}
 
 	public enum OSEnum

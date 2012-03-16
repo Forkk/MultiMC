@@ -67,6 +67,13 @@ namespace MultiMC.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap brick {
+            get {
+                object obj = ResourceManager.GetObject("brick", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap CheckUpdateIcon {
             get {
                 object obj = ResourceManager.GetObject("CheckUpdateIcon", resourceCulture);
@@ -80,6 +87,20 @@ namespace MultiMC.Properties {
         internal static string ConfigFileName {
             get {
                 return ResourceManager.GetString("ConfigFileName", resourceCulture);
+            }
+        }
+        
+        internal static System.Drawing.Bitmap diamond {
+            get {
+                object obj = ResourceManager.GetObject("diamond", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap dirt {
+            get {
+                object obj = ResourceManager.GetObject("dirt", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -110,9 +131,30 @@ namespace MultiMC.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap gold {
+            get {
+                object obj = ResourceManager.GetObject("gold", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap grass {
+            get {
+                object obj = ResourceManager.GetObject("grass", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap HelpIcon {
             get {
                 object obj = ResourceManager.GetObject("HelpIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap iron {
+            get {
+                object obj = ResourceManager.GetObject("iron", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -136,7 +178,18 @@ namespace MultiMC.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Copyright 2012 Andrew Okin
+        ///
+        ///Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+        ///you may not use this file except in compliance with the License.
+        ///You may obtain a copy of the License at
+        ///
+        ///    http://www.apache.org/licenses/LICENSE-2.0
+        ///
+        ///Unless required by applicable law or agreed to in writing, software
+        ///distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+        ///WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        ///See the License for the specific language govern [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string License {
             get {
@@ -153,6 +206,13 @@ namespace MultiMC.Properties {
             }
         }
         
+        internal static System.Drawing.Icon Logo {
+            get {
+                object obj = ResourceManager.GetObject("Logo", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to modlist.
         /// </summary>
@@ -165,9 +225,9 @@ namespace MultiMC.Properties {
         /// <summary>
         ///   Looks up a localized string similar to http://s3.amazonaws.com/MinecraftDownload/.
         /// </summary>
-        internal static string MojangMCDownloadURL {
+        internal static string MojangMCDownloadUrl {
             get {
-                return ResourceManager.GetString("MojangMCDownloadURL", resourceCulture);
+                return ResourceManager.GetString("MojangMCDownloadUrl", resourceCulture);
             }
         }
         
@@ -208,6 +268,13 @@ namespace MultiMC.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap planks {
+            get {
+                object obj = ResourceManager.GetObject("planks", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap RefreshInstIcon {
             get {
                 object obj = ResourceManager.GetObject("RefreshInstIcon", resourceCulture);
@@ -236,12 +303,35 @@ namespace MultiMC.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap stone {
+            get {
+                object obj = ResourceManager.GetObject("stone", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap tnt {
+            get {
+                object obj = ResourceManager.GetObject("tnt", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to http://forkk.net/MultiMC/download/MultiMC.exe.
         /// </summary>
         internal static string UpdateURL {
             get {
                 return ResourceManager.GetString("UpdateURL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to icons.
+        /// </summary>
+        internal static string UserIconDir {
+            get {
+                return ResourceManager.GetString("UserIconDir", resourceCulture);
             }
         }
         

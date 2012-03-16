@@ -13,13 +13,28 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug2\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -32,6 +47,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\MultiMC.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ionic.Zip.Reduced, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
@@ -56,6 +77,9 @@
     <Compile Include="DebugUtils.cs" />
     <Compile Include="EventfulList.cs" />
     <Compile Include="GUI\IAddInstDialog.cs" />
+    <Compile Include="GUI\IConsoleWindow.cs" />
+    <Compile Include="GUI\IImageCache.cs" />
+    <Compile Include="GUI\ILoginDialog.cs" />
     <Compile Include="GUI\ITaskStatus.cs" />
     <Compile Include="GUI\MessageBox.cs" />
     <Compile Include="Tasks\GameUpdater.cs" />
@@ -68,6 +92,7 @@
     <Compile Include="ConfigFile.cs" />
     <Compile Include="Tasks\Downloader.cs" />
     <Compile Include="Tasks\Modder.cs" />
+    <Compile Include="Tasks\SimpleTask.cs" />
     <Compile Include="Tasks\Task.cs" />
     <Compile Include="Tasks\Updater.cs" />
     <Compile Include="WinGUI\AboutForm.cs">
@@ -76,6 +101,19 @@
     <Compile Include="WinGUI\AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="WinGUI\ConsoleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\ConsoleForm.Designer.cs">
+      <DependentUpon>ConsoleForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinGUI\LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinGUI\WinFormsImageList.cs" />
     <Compile Include="WinGUI\LicenseForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -98,7 +136,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WinGUI\WinFormsMessageBox.cs" />
-    <Compile Include="WinGUI\WinFormsTaskStatus.cs" />
+    <Compile Include="TaskStatus.cs" />
     <Compile Include="WinGUI\WinFormsWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -123,8 +161,14 @@
     <EmbeddedResource Include="WinGUI\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="WinGUI\ConsoleForm.resx">
+      <DependentUpon>ConsoleForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WinGUI\LicenseForm.resx">
       <DependentUpon>LicenseForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinGUI\LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinGUI\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -135,6 +179,7 @@
     <EmbeddedResource Include="WinGUI\SettingsForm.resx">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Launcher\MultiMCLauncher.class" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -145,14 +190,47 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Launcher\MultiMCLauncher.java" />
     <Content Include="Lib\Ionic.Zip.Reduced.dll" />
     <None Include="Resources\MultiMC.png" />
     <None Include="Resources\MultiMC64.png" />
     <None Include="Resources\MultiMC32.png" />
     <None Include="Resources\MultiMC128.png" />
     <None Include="Resources\License.txt" />
+    <None Include="Resources\tnt.png" />
+    <None Include="Resources\brick.png" />
+    <None Include="Resources\diamond.png" />
+    <None Include="Resources\dirt.png" />
+    <None Include="Resources\gold.png" />
+    <None Include="Resources\grass.png" />
+    <None Include="Resources\iron.png" />
+    <None Include="Resources\planks.png" />
+    <None Include="Resources\stone.png" />
+    <None Include="Resources\MultiMC.ico" />
+    <None Include="Resources\Logo.ico" />
     <Content Include="WinGUI\ToolbarIcons\AboutIcon.png" />
     <Content Include="WinGUI\ToolbarIcons\CheckUpdateIcon.png" />
     <Content Include="WinGUI\ToolbarIcons\HelpIcon.png" />
@@ -164,6 +242,10 @@
     <Content Include="WinGUI\ToolbarIcons\ViewFolderIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>"C:\Program Files\Java\jdk1.6.0_27\bin\javac" -d $(ProjectDir)Launcher $(ProjectDir)Launcher\MultiMCLauncher.java
+del $(TargetDir)$(TargetFileName)</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -97,5 +97,16 @@ namespace MultiMC
 		{
 			return dict.Remove(key);
 		}
+
+		protected T ParseSetting<T>(string settingName, T defValue)
+		{
+			T value = defValue;
+
+			if (!DataUtils.TryParse<T>(this[settingName, defValue.ToString()], out value))
+			{
+				return defValue;
+			}
+			return value;
+		}
 	}
 }

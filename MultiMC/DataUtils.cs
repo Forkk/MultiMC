@@ -16,13 +16,14 @@ using System;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace MultiMC
 {
 	/// <summary>
 	/// Provides many useful methods for handling / converting data.
 	/// </summary>
-	public class DataUtils
+	public static class DataUtils
 	{
 		private static readonly char[] HexLowerChars = new[] 
 		{ 
@@ -61,7 +62,53 @@ namespace MultiMC
 			builder.Length--;
 			return builder.ToString();
 		}
+
+		public static bool TryParse<T>(string valueStr, out T value)
+		{
+			Type parsingType = typeof(T);
+			System.Reflection.MethodInfo parseMethod =
+				parsingType.GetMethod("Parse", new Type[] { typeof(string) });
+
+			if (parseMethod == null)
+			{
+				value = default(T);
+				return false;
+			}
+
+			try
+			{
+				try
+				{
+					value = (T)parseMethod.Invoke(null, new object[] { valueStr });
+				}
+				catch (TargetInvocationException e)
+				{
+					throw e.InnerException;
+				}
+			}
+			catch(FormatException)
+			{
+				value = default(T);
+				return false;
+			}
+			catch (InvalidCastException)
+			{
+				value = default(T);
+				return false;
+			}
+			return true;
+		}
+
+		public static IEnumerable<T> Where<T>(this IEnumerable list, Predicate<T> predicate)
+		{
+			List<T> results = new List<T>();
+			foreach (T item in list)
+			{
+				if (predicate(item))
+					results.Add(item);
+			}
+			return results;
+		}
 	}
-	
 }
 

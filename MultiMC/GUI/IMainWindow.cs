@@ -18,6 +18,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using MultiMC.Tasks;
+
 namespace MultiMC.GUI
 {
 	/// <summary>
@@ -37,14 +39,55 @@ namespace MultiMC.GUI
 		event EventHandler HelpClicked;
 		event EventHandler AboutClicked;
 
+
+		event EventHandler<InstActionEventArgs> InstanceLaunched;
+
+		event EventHandler<InstActionEventArgs> ChangeIconClicked;
+		event EventHandler<InstActionEventArgs> EditNotesClicked;
+
+		event EventHandler<InstActionEventArgs> EditModsClicked;
+		event EventHandler<InstActionEventArgs> RebuildJarClicked;
+		event EventHandler<InstActionEventArgs> ViewInstFolderClicked;
+
+		event EventHandler<InstActionEventArgs> DeleteInstClicked;
+
 		IList<Instance> InstanceList
 		{
 			get;
 		}
 
-		List<ITaskStatus> TaskList
+		IList<Task> TaskList
 		{
 			get;
+		}
+
+		IImageList ImageList
+		{
+			get;
+			set;
+		}
+
+		Instance SelectedInst
+		{
+			get;
+		}
+
+		Task GetTaskByID(int taskID);
+		bool IsTaskIDTaken(int taskID);
+		int GetAvailableTaskID();
+	}
+
+	public class InstActionEventArgs : EventArgs
+	{
+		public InstActionEventArgs(Instance inst)
+		{
+			this.Inst = inst;
+		}
+
+		public Instance Inst
+		{
+			get;
+			protected set;
 		}
 	}
 }

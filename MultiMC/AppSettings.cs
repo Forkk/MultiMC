@@ -110,13 +110,13 @@ namespace MultiMC
 
 		public int MinMemoryAlloc
 		{
-			get { return Int32.Parse(this["MinMemoryAlloc", "512"]); }
+			get { return ParseSetting<int>("MinMemoryAlloc", 512); }
 			set { this["MinMemoryAlloc"] = value.ToString(); }
 		}
 
 		public int MaxMemoryAlloc
 		{
-			get { return Int32.Parse(this["MaxMemoryAlloc", "1024"]); }
+			get { return ParseSetting<int>("MaxMemoryAlloc", 1024); }
 			set { this["MaxMemoryAlloc"] = value.ToString(); }
 		}
 
@@ -134,25 +134,25 @@ namespace MultiMC
 
 		public bool ShowConsole
 		{
-			get { return bool.Parse(this["ShowConsole", "false"]); }
+			get { return ParseSetting<bool>("ShowConsole", false); }
 			set { this["ShowConsole"] = value.ToString(); }
 		}
 
 		public bool AutoCloseConsole
 		{
-			get { return bool.Parse(this["AutoCloseConsole", "false"]); }
+			get { return ParseSetting<bool>("AutoCloseConsole", false); }
 			set { this["AutoCloseConsole"] = value.ToString(); }
 		}
 
 		public bool AutoUpdate
 		{
-			get { return bool.Parse(this["AutoUpdate", "true"]); }
+			get { return ParseSetting<bool>("AutoUpdate", true); }
 			set { this["AutoUpdate"] = value.ToString(); }
 		}
 
 		public bool EnableHints
 		{
-			get { return bool.Parse(this["EnableHints", "true"]); }
+			get { return ParseSetting<bool>(this["EnableHints"], true); }
 			set { this["EnableHints"] = value.ToString(); }
 		}
 	}

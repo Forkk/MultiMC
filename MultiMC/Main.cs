@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using System.IO;
+using System.Security.Cryptography;
+using System.Threading;
 
 using MultiMC.GUI;
 using MultiMC.Tasks;
@@ -21,6 +23,12 @@ namespace MultiMC
 			protected set;
 		}
 
+		public IImageList InstIconList
+		{
+			get;
+			protected set;
+		}
+
 		public Main()
 		{
 			switch (Program.Toolkit)
@@ -32,6 +40,19 @@ namespace MultiMC
 
 				// Create the main window
 				MainWindow = new WinGUI.MainForm();
+
+				WinGUI.WinFormsImageList imgList = new WinGUI.WinFormsImageList(
+					Properties.Resources.UserIconDir);
+				imgList.ImgList.Images.Add("grass", Properties.Resources.grass);
+				imgList.ImgList.Images.Add("brick", Properties.Resources.brick);
+				imgList.ImgList.Images.Add("diamond", Properties.Resources.diamond);
+				imgList.ImgList.Images.Add("dirt", Properties.Resources.dirt);
+				imgList.ImgList.Images.Add("gold", Properties.Resources.gold);
+				imgList.ImgList.Images.Add("iron", Properties.Resources.iron);
+				imgList.ImgList.Images.Add("planks", Properties.Resources.planks);
+				imgList.ImgList.Images.Add("tnt", Properties.Resources.tnt);
+
+				InstIconList = imgList;
 				break;
 			case WindowToolkit.GtkSharp:
 				ToolkitNotSupported();
@@ -48,9 +69,18 @@ namespace MultiMC
 			MainWindow.ViewFolderClicked += new EventHandler(ViewFolderClicked);
 
 			MainWindow.SettingsClicked += new EventHandler(SettingsClicked);
+			MainWindow.CheckUpdatesClicked += new EventHandler(UpdateClicked);
 
 			MainWindow.AboutClicked += new EventHandler(AboutClicked);
+
+			MainWindow.InstanceLaunched += new EventHandler<InstActionEventArgs>(LaunchInstance);
+
+			MainWindow.ImageList = InstIconList;
+
+			MainWindow.LoadInstances();
 		}
+
+		#region Menu Bar Events
 
 		void AboutClicked(object sender, EventArgs e)
 		{
@@ -71,7 +101,12 @@ namespace MultiMC
 			aboutDlg.Run();
 		}
 
-		#region Menu Bar Events
+		void UpdateClicked(object sender, EventArgs e)
+		{
+			Task task = new Updater();
+			StartTask(task);
+		}
+
 		void NewInstClicked(object sender, EventArgs e)
 		{
 			IAddInstDialog addInstDlg = null;
@@ -149,31 +184,13 @@ namespace MultiMC
 
 		#region Task System
 
-		List<Task> currentTasks = new List<Task>();
-		//Dictionary<int, ProgressBar> progBars = new Dictionary<int, ProgressBar>();
-
-		private void AddTask(Task newTask)
-		{
-			currentTasks.Add(newTask);
-			int index = currentTasks.IndexOf(newTask);
-			newTask.TaskID = index;
-
-			//ProgressBar taskProgBar = new ProgressBar();
-			//taskProgBar.HeightRequest = 20;
-			//progBars[newTask.TaskID] = taskProgBar;
-			//progBarBox.PackEnd(taskProgBar, true, true, 0);
-		}
-
 		private void StartTask(Task task)
 		{
-			AddTask(task);
-			task.Started += new EventHandler(taskStarted);
+			task.Started += taskStarted;
 			task.Completed += taskCompleted;
-			task.ProgressChange +=
-				new Task.ProgressChangeEventHandler(taskProgressChange);
-			task.StatusChange +=
-				new Task.StatusChangeEventHandler(taskStatusChange);
-			task.ErrorMessage += new Task.ErrorMessageEventHandler(TaskErrorMessage);
+			task.ProgressChange += taskProgressChange;
+			task.StatusChange += taskStatusChange;
+			task.ErrorMessage += TaskErrorMessage;
 			task.Start();
 		}
 
@@ -293,58 +310,26 @@ namespace MultiMC
 
 		#endregion
 
-		#region Exceptions
-
-		#endregion
-
 		#region Events for all Tasks
 
 		void taskStarted(object sender, EventArgs e)
 		{
-			//MainWindow.Invoke(
-			//    (sender1, e1) =>
-			//    {
-			//        if (progBars[(sender as Task).TaskID] != null)
-			//        {
-			//            progBars[(sender as Task).TaskID].Show();
-			//        }
-			//    });
+			MainWindow.TaskList.Add(sender as Task);
 		}
 
 		void taskCompleted(object sender, Task.TaskCompleteEventArgs e)
 		{
-			//MainWindow.Invoke(
-			//    (sender1, e1) =>
-			//    {
-			//        progBarBox.Remove(progBars[(sender as Task).TaskID]);
-			//        progBars[(sender as Task).TaskID].Dispose();
-			//    });
+			MainWindow.TaskList.Remove(sender as Task);
 		}
 
 		void taskProgressChange(object sender, Task.ProgressChangeEventArgs e)
 		{
-			//MainWindow.Invoke(
-			//    (sender1, e1) =>
-			//    {
-			//        float progFraction = ((float)e.Progress) / 100;
-			//        if (progFraction > 1)
-			//        {
-			//            Console.WriteLine(string.Format("Warning: Progress fraction " +
-			//                    "({0}) is greater than the maximum value (1)", progFraction));
-			//            progFraction = 1;
-			//        }
-					
-			//        progBars[(sender as Task).TaskID].Fraction = progFraction;
-			//    });
+			
 		}
 
 		void taskStatusChange(object sender, Task.TaskStatusEventArgs e)
 		{
-			//Gtk.Application.Invoke(
-			//    (sender1, e1) =>
-			//    {
-			//        progBars[(sender as Task).TaskID].Text = e.Status;
-			//    });
+			
 		}
 
 		#endregion
@@ -353,10 +338,14 @@ namespace MultiMC
 
 		#region Instances
 
+		void LaunchInstance(object sender, InstActionEventArgs e)
+		{
+			StartInstance(e.Inst);
+		}
+
 		public Instance SelectedInst
 		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
+			get { return MainWindow.SelectedInst; }
 		}
 
 		#endregion
@@ -364,6 +353,393 @@ namespace MultiMC
 		void ToolkitNotSupported()
 		{
 			throw new NotImplementedException("This window toolkit is not implemented yet.");
+		}
+
+		public void StartInstance(Instance inst)
+		{
+			string message = "";
+			DoLogin(LoginComplete, inst, message, inst.CanPlayOffline);
+		}
+
+		/// <summary>
+		/// Opens a dialog that allows users to log in.
+		/// </summary>
+		/// <remarks>
+		/// If the user fails to log in, this method will reopen the login dialog
+		/// with an error message. The done delegate is not called until the user
+		/// either logs in successfully or clicks cancel.
+		/// </remarks>
+		/// <param name="done">Delegate that is invoked when the user logs in
+		/// successfully.</param>
+		/// <param name="inst">The instance that is being launched.</param>
+		/// <param name="message">An error message to be displayed on the login dialog.</param>
+		/// <param name="canplayOffline">True if the user can play this instance offline.</param>
+		private void DoLogin(LoginCompleteHandler done,
+							 Instance inst,
+							 string message = "",
+							 bool canplayOffline = false)
+		{
+			string username = "";
+			string password = "";
+			ReadUserInfo(out username, out password);
+
+			ILoginDialog loginDlg = null;
+			switch (Program.Toolkit)
+			{
+			case WindowToolkit.WinForms:
+				loginDlg = new WinGUI.LoginForm(message);
+				break;
+			}
+			loginDlg.Parent = MainWindow;
+			loginDlg.DefaultPosition = DefWindowPosition.CenterParent;
+
+			if (!string.IsNullOrEmpty(username))
+			{
+				loginDlg.RememberUsername = true;
+				loginDlg.Username = username;
+			}
+			if (!string.IsNullOrEmpty(password))
+			{
+				loginDlg.RememberPassword = true;
+				loginDlg.Password = password;
+			}
+			loginDlg.Response += (o, args) =>
+			{
+				if (args.Response == DialogResponse.OK)
+				{
+					string parameters = string.Format(
+						"user={0}&password={1}&version=1337",
+						Uri.EscapeDataString(loginDlg.Username),
+						Uri.EscapeDataString(loginDlg.Password), 13);
+
+					// Start a new thread and post the login info to login.minecraft.net
+					SimpleTask loginTask = new SimpleTask(() =>
+					{
+						WriteUserInfo((loginDlg.RememberUsername ? loginDlg.Username : ""),
+										  (loginDlg.RememberPassword ? loginDlg.Password : ""));
+
+						string reply = "";
+						bool postFailed = false;
+						try
+						{
+							if (loggingIn)
+								return;
+							loggingIn = true;
+							reply = AppUtils.ExecutePost("https://login.minecraft.net/",
+									parameters);
+						}
+						catch (System.Net.WebException e)
+						{
+							postFailed = true;
+							reply = e.Message;
+						}
+						finally
+						{
+							loggingIn = false;
+						}
+
+						// If the login failed
+						if (!reply.Contains(":") || postFailed)
+						{
+							// Translate the error message to a more user friendly wording
+							string errorMessage = reply;
+							switch (reply.ToLower())
+							{
+							case "bad login":
+								errorMessage = "Invalid username or password.";
+								break;
+							case "old version":
+								errorMessage = "Invalid launcher version.";
+								break;
+							default:
+								errorMessage = "Login failed: " + reply;
+								break;
+							}
+
+							// Unable to resolve hostname.
+							if (reply.ToLower().Contains("name could not be resolved"))
+							{
+								errorMessage = string.Format(
+									"Couldn't connect to login.minecraft.net, " +
+									"please connect to the internet or use offline mode.");
+							}
+
+							// Error
+							MainWindow.Invoke((sender, e) =>
+								DoLogin(done, inst, errorMessage));
+						}
+
+						// If the login succeeded
+						else
+						{
+							string[] responseValues = reply.Split(':');
+
+							// The response must have 4 values or it's invalid
+							if (responseValues.Length != 4)
+							{
+								// Error
+								MainWindow.Invoke((sender, e) =>
+									DoLogin(done, inst,
+										"Got an invalid response from server", canplayOffline));
+							}
+							// Now we can finally return our login info.
+							else
+							{
+								LoginInfo info = new LoginInfo(responseValues,
+															   loginDlg.ForceUpdate);
+								done(info, inst);
+							}
+						}
+					}, "Logging in...");
+
+
+					if (!loggingIn)
+					{
+						StartTask(loginTask);
+					}
+				}
+				else if (args.Response == DialogResponse.No)
+				{
+					// Play offline
+					done(new LoginInfo(null, false, false), inst);
+				}
+				else
+				{
+					// Login cancelled
+					done(new LoginInfo(), inst);
+				}
+			};
+			loginDlg.Run();
+		}
+
+		private void LoginComplete(LoginInfo info, Instance inst)
+		{
+			string mainGameUrl = "minecraft.jar";
+			if (!info.Cancelled)
+			{
+				GameUpdater updater =
+						new GameUpdater(inst,
+										info.LatestVersion,
+										mainGameUrl,
+										info.ForceUpdate);
+
+				EventHandler startDelegate = new EventHandler((e, args) =>
+					{
+						MainWindow.Visible = false;
+						inst.Launch(info.Username, info.SessionID);
+
+						IConsoleWindow cwin = null;
+						switch (Program.Toolkit)
+						{
+						case WindowToolkit.WinForms:
+							cwin = new WinGUI.ConsoleForm(inst);
+							break;
+						}
+						cwin.Parent = MainWindow;
+						cwin.DefaultPosition = DefWindowPosition.CenterParent;
+
+						cwin.ConsoleClosed += (e2, args2) =>
+							{
+								MainWindow.Visible = true;
+							};
+
+						cwin.Show();
+					});
+
+				updater.Completed += (sender, e) =>
+					{
+						if (inst.NeedsRebuild)
+						{
+							MainWindow.Invoke((sender2, e2) =>
+								{
+									RebuildMCJar(inst).Completed += (sender3, e3) =>
+												MainWindow.Invoke(startDelegate);
+								});
+						}
+						else
+							MainWindow.Invoke(startDelegate);
+					};
+
+				StartTask(updater);
+			}
+		}
+
+		private delegate void LoginCompleteHandler(LoginInfo info, Instance inst);
+
+		bool loggingIn;
+
+		private void ReadUserInfo(out string username, out string password)
+		{
+			try
+			{
+				if (!File.Exists(Properties.Resources.LastLoginFileName))
+				{
+					username = password = "";
+					return;
+				}
+
+				using (SHA384 sha = SHA384.Create())
+				{
+					byte[] hash = sha.ComputeHash(
+						System.Text.ASCIIEncoding.ASCII.GetBytes(Properties.Resources.LastLoginKey));
+
+					byte[] key = new byte[32];
+					byte[] IV = new byte[16];
+
+					Array.Copy(hash, key, key.Length);
+					Array.ConstrainedCopy(hash, key.Length, IV, 0, IV.Length);
+
+					using (Rijndael rijAlg = Rijndael.Create())
+					{
+						rijAlg.Key = key;
+						rijAlg.IV = IV;
+
+						ICryptoTransform decryptor = rijAlg.CreateDecryptor(key, IV);
+
+						using (FileStream fsDecrypt = File.OpenRead(Properties.Resources.LastLoginFileName))
+						{
+							CryptoStream csDecrypt =
+								new CryptoStream(fsDecrypt, decryptor, CryptoStreamMode.Read);
+							StreamReader srDecrypt = new StreamReader(csDecrypt);
+							string str = srDecrypt.ReadToEnd();
+							string[] data = str.Split(':');
+							if (data.Length >= 1)
+								username = data[0];
+							else
+								username = "";
+
+							if (data.Length >= 2)
+								password = data[1];
+							else
+								password = "";
+						}
+					}
+				}
+			}
+			catch (IndexOutOfRangeException)
+			{
+				username = "";
+				password = "";
+				File.Delete(Properties.Resources.LastLoginFileName);
+			}
+			catch (CryptographicException)
+			{
+				username = "";
+				password = "";
+				File.Delete(Properties.Resources.LastLoginFileName);
+			}
+		}
+
+		private void WriteUserInfo(string username, string password)
+		{
+			using (SHA384 sha = SHA384.Create())
+			{
+				byte[] hash = sha.ComputeHash(
+					System.Text.ASCIIEncoding.ASCII.GetBytes(Properties.Resources.LastLoginKey));
+
+				byte[] key = new byte[32];
+				byte[] IV = new byte[16];
+
+				Array.Copy(hash, key, key.Length);
+				Array.ConstrainedCopy(hash, key.Length, IV, 0, IV.Length);
+
+				using (Rijndael rijAlg = Rijndael.Create())
+				{
+					rijAlg.Key = key;
+					rijAlg.IV = IV;
+
+					ICryptoTransform encryptor = rijAlg.CreateEncryptor(key, IV);
+
+					try
+					{
+						using (FileStream fsEncrypt = File.Open(Properties.Resources.LastLoginFileName,
+																FileMode.Create))
+						{
+							using (CryptoStream csEncrypt =
+								new CryptoStream(fsEncrypt, encryptor, CryptoStreamMode.Write))
+							{
+								using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+								{
+									swEncrypt.Write(string.Format("{0}:{1}", username, password));
+								}
+							}
+						}
+					}
+					catch (IOException)
+					{
+						Console.WriteLine("Failed to write lastlogin file.");
+						return;
+					}
+				}
+			}
+		}
+
+		private class LoginInfo
+		{
+			#region Properties
+			public string LatestVersion
+			{
+				get;
+				private set;
+			}
+
+			public string DownloadTicket
+			{
+				get;
+				private set;
+			}
+
+			public string Username
+			{
+				get;
+				private set;
+			}
+
+			public string SessionID
+			{
+				get;
+				private set;
+			}
+
+			public bool Cancelled
+			{
+				get;
+				private set;
+			}
+
+			public bool Offline
+			{
+				get;
+				private set;
+			}
+
+			public bool ForceUpdate
+			{
+				get;
+				private set;
+			}
+			#endregion
+
+			public LoginInfo(string[] values = null, bool forceUpdate = false, bool cancel = true)
+			{
+				ForceUpdate = forceUpdate;
+				if (values == null)
+				{
+					values = new[] { "", "", "", "" };
+					Cancelled = cancel;
+					Offline = !cancel;
+				}
+				LatestVersion = values[0];
+				DownloadTicket = values[1];
+				Username = values[2];
+				SessionID = values[3];
+			}
+
+			//			public LoginInfo(string errorMessage)
+			//			{
+			//				ErrorMessage = errorMessage;
+			//				Failed = true;
+			//			}
 		}
 	}
 }

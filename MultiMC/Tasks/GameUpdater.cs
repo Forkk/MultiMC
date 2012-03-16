@@ -114,7 +114,7 @@ namespace MultiMC.Tasks
 			
 			this.uriList = new Uri[jarList.Length + 1];
 			Uri forkkBaseUri = new Uri(Properties.Resources.ForkkMCDownloadUrl);
-			Uri mojangBaseUri = new Uri(Properties.Resources.ForkkMCDownloadUrl);
+			Uri mojangBaseUri = new Uri(Properties.Resources.MojangMCDownloadUrl);
 			
 			for (int i = 0; i < jarList.Length; i++)
 			{
@@ -228,7 +228,7 @@ namespace MultiMC.Tasks
 
 						string etag = "";
 						// If downloading from Mojang, use ETag.
-						if (uriList[i].ToString().StartsWith(Properties.Resources.MojangMCDownloadURL))
+						if (uriList[i].ToString().StartsWith(Properties.Resources.MojangMCDownloadUrl))
 						{
 							etag = response.Headers[HttpResponseHeader.ETag];
 							etag = etag.TrimEnd('"').TrimStart('"');

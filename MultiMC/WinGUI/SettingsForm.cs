@@ -33,6 +33,11 @@ namespace MultiMC.WinGUI
 			OnResponse(GUI.DialogResponse.OK);
 		}
 
+		private void cancelButton_Click(object sender, EventArgs e)
+		{
+			OnResponse(GUI.DialogResponse.Cancel);
+		}
+
 		protected override void OnResponse(DialogResponse response)
 		{
 			if (response == DialogResponse.OK)
@@ -68,6 +73,12 @@ namespace MultiMC.WinGUI
 			minMemAllocSpinner.Value = AppSettings.Main.MinMemoryAlloc;
 			maxMemAllocSpinner.Value = AppSettings.Main.MaxMemoryAlloc;
 
+			textBoxJavaPath.Text = AppSettings.Main.JavaPath;
+		}
+
+		private void buttonAutoDetect_Click(object sender, EventArgs e)
+		{
+			AppSettings.Main.AutoDetectJavaPath();
 			textBoxJavaPath.Text = AppSettings.Main.JavaPath;
 		}
 	}

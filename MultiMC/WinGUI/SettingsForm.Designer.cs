@@ -48,7 +48,7 @@
 			this.label1 = new System.Windows.Forms.Label();
 			this.buttonPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.okButton = new System.Windows.Forms.Button();
-			this.button1 = new System.Windows.Forms.Button();
+			this.cancelButton = new System.Windows.Forms.Button();
 			this.settingsTabs.SuspendLayout();
 			this.generalTab.SuspendLayout();
 			this.groupBoxUpdates.SuspendLayout();
@@ -183,6 +183,7 @@
 			this.buttonAutoDetect.TabIndex = 2;
 			this.buttonAutoDetect.Text = "Auto-detect";
 			this.buttonAutoDetect.UseVisualStyleBackColor = true;
+			this.buttonAutoDetect.Click += new System.EventHandler(this.buttonAutoDetect_Click);
 			// 
 			// textBoxJavaPath
 			// 
@@ -252,7 +253,7 @@
 			// 
 			this.buttonPanel.AutoSize = true;
 			this.buttonPanel.Controls.Add(this.okButton);
-			this.buttonPanel.Controls.Add(this.button1);
+			this.buttonPanel.Controls.Add(this.cancelButton);
 			this.buttonPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.buttonPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
 			this.buttonPanel.Location = new System.Drawing.Point(0, 321);
@@ -271,20 +272,24 @@
 			this.okButton.UseVisualStyleBackColor = true;
 			this.okButton.Click += new System.EventHandler(this.okButton_Click);
 			// 
-			// button1
+			// cancelButton
 			// 
-			this.button1.Location = new System.Drawing.Point(271, 5);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 23);
-			this.button1.TabIndex = 1;
-			this.button1.Text = "&Cancel";
-			this.button1.UseVisualStyleBackColor = true;
+			this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.cancelButton.Location = new System.Drawing.Point(271, 5);
+			this.cancelButton.Name = "cancelButton";
+			this.cancelButton.Size = new System.Drawing.Size(75, 23);
+			this.cancelButton.TabIndex = 1;
+			this.cancelButton.Text = "&Cancel";
+			this.cancelButton.UseVisualStyleBackColor = true;
+			this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
 			// 
 			// SettingsForm
 			// 
+			this.AcceptButton = this.okButton;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoSize = true;
+			this.CancelButton = this.cancelButton;
 			this.ClientSize = new System.Drawing.Size(434, 354);
 			this.Controls.Add(this.buttonPanel);
 			this.Controls.Add(this.settingsTabs);
@@ -332,6 +337,6 @@
 		private System.Windows.Forms.Label labelJPath;
 		private System.Windows.Forms.TextBox textBoxJavaPath;
 		private System.Windows.Forms.Button buttonAutoDetect;
-		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Button cancelButton;
 	}
 }

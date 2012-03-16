@@ -181,14 +181,12 @@ namespace MultiMC
 		/// <returns>The process the instance is running in</returns>
 		public Process Launch(string username, string sessionID)
 		{
-//			if (!File.Exists("MultiMCLauncher.class"))
-//			{
 			using (FileStream output = File.Open("MultiMCLauncher.class", FileMode.Create))
 			{
 				using (Stream input = System.Reflection.Assembly.
-						GetCallingAssembly().GetManifestResourceStream("MultiMC.JavaLauncher"))
+						GetCallingAssembly().
+							GetManifestResourceStream("MultiMC.Launcher.MultiMCLauncher.class"))
 				{
-
 					byte[] buffer = new byte[1024 * 2];
 					int count = 0;
 					while ((count = input.Read(buffer, 0, buffer.Length)) > 0)
@@ -197,7 +195,6 @@ namespace MultiMC
 					}
 				}
 			}
-//			}
 			
 			int xms = AppSettings.Main.MinMemoryAlloc;
 			int xmx = AppSettings.Main.MaxMemoryAlloc;
@@ -263,7 +260,7 @@ namespace MultiMC
 		/// </summary>
 		public string Name
 		{
-			get { return cfgFile["name"]; }
+			get { return cfgFile["name", RootDir]; }
 			set
 			{
 				cfgFile["name"] = value;
@@ -289,7 +286,7 @@ namespace MultiMC
 		/// </summary>
 		public string Notes
 		{
-			get { return cfgFile["notes"]; }
+			get { return cfgFile["notes", ""]; }
 			set
 			{
 				cfgFile["notes"] = value;
