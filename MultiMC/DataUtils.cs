@@ -1,4 +1,4 @@
-// 
+﻿// 
 //  Copyright 2012  Andrew Okin
 // 
 //    Licensed under the Apache License, Version 2.0 (the "License");
@@ -65,6 +65,7 @@ namespace MultiMC
 
 		public static bool TryParse<T>(string valueStr, out T value)
 		{
+			// ಠ_ಠ
 			Type parsingType = typeof(T);
 			System.Reflection.MethodInfo parseMethod =
 				parsingType.GetMethod("Parse", new Type[] { typeof(string) });

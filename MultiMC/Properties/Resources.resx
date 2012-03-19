@@ -118,123 +118,133 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="AboutIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\wingui\toolbaricons\abouticon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="CheckUpdateIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\wingui\toolbaricons\checkupdateicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ConfigFileName" xml:space="preserve">
-    <value>multimc.cfg</value>
-    <comment>The config file where settings are saved.</comment>
-  </data>
-  <data name="DotNetZipURL" xml:space="preserve">
-    <value>http://forkk.net/MultiMC/download/Ionic.Zip.Reduced.dll</value>
-    <comment>Where to get DotNetZip</comment>
-  </data>
-  <data name="DownloadSiteURL" xml:space="preserve">
-    <value>http://forkk.net/MultiMC/download/</value>
-    <comment>The URL where most MultiMC things can be downloaded.</comment>
-  </data>
-  <data name="ForkkMCDownloadUrl" xml:space="preserve">
-    <value>http://dl.dropbox.com/u/52412912/LWJGL/</value>
-  </data>
-  <data name="HelpIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\wingui\toolbaricons\helpicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="LastLoginFileName" xml:space="preserve">
-    <value>lastlogin</value>
-    <comment>Filename of the lastlogin file.</comment>
-  </data>
-  <data name="LastLoginKey" xml:space="preserve">
-    <value>Bi[r;Yq'/FKM].@wgZoIBh~bkY}&amp;W,0&gt;)Gz%Jbusexx)&amp;ijhXV}b^8m;&amp;jfL73tx</value>
-  </data>
-  <data name="LinuxUpdateURL" xml:space="preserve">
-    <value>http://forkk.net/MultiMC/download/Linux/MultiMC</value>
-    <comment>URL to get updates for Linux from.</comment>
-  </data>
-  <data name="ModListFileName" xml:space="preserve">
-    <value>modlist</value>
-    <comment>The file name of mod lists.</comment>
-  </data>
-  <data name="MojangMCDownloadUrl" xml:space="preserve">
-    <value>http://s3.amazonaws.com/MinecraftDownload/</value>
-    <comment>The URL to download the game from.</comment>
-  </data>
-  <data name="NewInstIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\wingui\toolbaricons\newinsticon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="RefreshInstIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\wingui\toolbaricons\refreshinsticon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="RenameIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\wingui\toolbaricons\renameicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ReportBugIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\wingui\toolbaricons\reportbugicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="SettingsIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\wingui\toolbaricons\settingsicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="UpdateURL" xml:space="preserve">
-    <value>http://forkk.net/MultiMC/download/MultiMC.exe</value>
-    <comment>URL to get updates for windows and Mac from.</comment>
-  </data>
-  <data name="ViewFolderIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\wingui\toolbaricons\viewfoldericon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="VInfoUrl" xml:space="preserve">
-    <value>http://forkk.net/MultiMC/download/cs-version</value>
-    <comment>The URL where the latest version number can be fetched from.</comment>
-  </data>
-  <data name="NewVersionFileName" xml:space="preserve">
-    <value>MultiMCUpdate.exe</value>
-    <comment>Path to download new versions to.</comment>
-  </data>
-  <data name="MultiMC128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\MultiMC128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="MultiMC32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\MultiMC32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="MultiMC64" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\MultiMC64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="License" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\License.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="brick" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\brick.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="diamond" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\diamond.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="dirt" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\dirt.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="gold" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\gold.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="grass" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\grass.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="iron" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\iron.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="planks" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\planks.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="stone" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\stone.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="tnt" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\tnt.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="UserIconDir" xml:space="preserve">
     <value>icons</value>
     <comment>Directory where users can put their custom instance icons.</comment>
   </data>
+  <data name="License" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\License.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="ForkkMCDownloadUrl" xml:space="preserve">
+    <value>http://dl.dropbox.com/u/52412912/LWJGL/</value>
+  </data>
+  <data name="diamond" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\diamond.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="brick" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\brick.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ConfigFileName" xml:space="preserve">
+    <value>multimc.cfg</value>
+    <comment>The config file where settings are saved.</comment>
+  </data>
+  <data name="SettingsIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\wingui\toolbaricons\settingsicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="planks" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\planks.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LinuxUpdateURL" xml:space="preserve">
+    <value>http://forkk.net/MultiMC/download/Linux/MultiMC</value>
+    <comment>URL to get updates for Linux from.</comment>
+  </data>
+  <data name="document_import" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\document-import.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RenameIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\wingui\toolbaricons\renameicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DotNetZipURL" xml:space="preserve">
+    <value>http://forkk.net/MultiMC/download/Ionic.Zip.Reduced.dll</value>
+    <comment>Where to get DotNetZip</comment>
+  </data>
+  <data name="grass" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\grass.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\MultiMC.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="AboutIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\wingui\toolbaricons\abouticon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="UpdateTimeoutMessage" xml:space="preserve">
+    <value>Failed to install updates because the operation timed out. This may be due to MultiMC not closing properly.</value>
+    <comment>The message shown when MultiMC's updates timeout.</comment>
+  </data>
+  <data name="MojangMCDownloadUrl" xml:space="preserve">
+    <value>http://s3.amazonaws.com/MinecraftDownload/</value>
+    <comment>The URL to download the game from.</comment>
+  </data>
+  <data name="stone" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\stone.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ReportBugIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\wingui\toolbaricons\reportbugicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="dirt" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\dirt.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MultiMC64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MultiMC64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LastLoginKey" xml:space="preserve">
+    <value>Bi[r;Yq'/FKM].@wgZoIBh~bkY}&amp;W,0&gt;)Gz%Jbusexx)&amp;ijhXV}b^8m;&amp;jfL73tx</value>
+  </data>
+  <data name="ModListFileName" xml:space="preserve">
+    <value>modlist</value>
+    <comment>The file name of mod lists.</comment>
+  </data>
+  <data name="RefreshInstIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\wingui\toolbaricons\refreshinsticon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="iron" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\iron.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="VInfoUrl" xml:space="preserve">
+    <value>http://forkk.net/MultiMC/download/cs-version</value>
+    <comment>The URL where the latest version number can be fetched from.</comment>
+  </data>
+  <data name="tnt" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tnt.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="UpdateURL" xml:space="preserve">
+    <value>http://forkk.net/MultiMC/download/MultiMC.exe</value>
+    <comment>URL to get updates for windows and Mac from.</comment>
+  </data>
+  <data name="HelpIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\wingui\toolbaricons\helpicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DownloadSiteURL" xml:space="preserve">
+    <value>http://forkk.net/MultiMC/download/</value>
+    <comment>The URL where most MultiMC things can be downloaded.</comment>
+  </data>
+  <data name="MultiMC128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MultiMC128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LastLoginFileName" xml:space="preserve">
+    <value>lastlogin</value>
+    <comment>Filename of the lastlogin file.</comment>
+  </data>
+  <data name="ViewFolderIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\wingui\toolbaricons\viewfoldericon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NewVersionFileName" xml:space="preserve">
+    <value>MultiMCUpdate.exe</value>
+    <comment>Path to download new versions to.</comment>
+  </data>
+  <data name="NewInstIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\wingui\toolbaricons\newinsticon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CheckUpdateIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\wingui\toolbaricons\checkupdateicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="gold" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gold.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImportIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\WinGUI\ToolbarIcons\ImportIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

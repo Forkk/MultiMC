@@ -77,11 +77,21 @@
     <Compile Include="DebugUtils.cs" />
     <Compile Include="EventfulList.cs" />
     <Compile Include="GUI\IAddInstDialog.cs" />
+    <Compile Include="GUI\IChangeIconDialog.cs" />
     <Compile Include="GUI\IConsoleWindow.cs" />
-    <Compile Include="GUI\IImageCache.cs" />
+    <Compile Include="GUI\IEditModsDialog.cs" />
+    <Compile Include="GUI\IImageList.cs" />
     <Compile Include="GUI\ILoginDialog.cs" />
+    <Compile Include="GUI\INotesDialog.cs" />
     <Compile Include="GUI\ITaskStatus.cs" />
     <Compile Include="GUI\MessageBox.cs" />
+    <Compile Include="ProblemDetection\BasicProblem.cs" />
+    <Compile Include="ProblemDetection\MinecraftProblem.cs" />
+    <Compile Include="ProblemDetection\Problems.cs" />
+    <Compile Include="ProblemDetection\Problems\BlockConflict.cs" />
+    <Compile Include="ProblemDetection\Problems\ModLoaderProblems.cs" />
+    <Compile Include="ProblemDetection\Problems\VerifyError.cs" />
+    <Compile Include="ProblemDetection\RegexProblem.cs" />
     <Compile Include="Tasks\GameUpdater.cs" />
     <Compile Include="GUI\IDialog.cs" />
     <Compile Include="GUI\IMainWindow.cs" />
@@ -101,17 +111,35 @@
     <Compile Include="WinGUI\AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="WinGUI\ChangeIconForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\ChangeIconForm.Designer.cs">
+      <DependentUpon>ChangeIconForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinGUI\ConsoleForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WinGUI\ConsoleForm.Designer.cs">
       <DependentUpon>ConsoleForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="WinGUI\EditModsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\EditModsForm.Designer.cs">
+      <DependentUpon>EditModsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinGUI\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WinGUI\LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinGUI\NotesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\NotesForm.Designer.cs">
+      <DependentUpon>NotesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="WinGUI\WinFormsImageList.cs" />
     <Compile Include="WinGUI\LicenseForm.cs">
@@ -161,8 +189,14 @@
     <EmbeddedResource Include="WinGUI\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="WinGUI\ChangeIconForm.resx">
+      <DependentUpon>ChangeIconForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WinGUI\ConsoleForm.resx">
       <DependentUpon>ConsoleForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinGUI\EditModsForm.resx">
+      <DependentUpon>EditModsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinGUI\LicenseForm.resx">
       <DependentUpon>LicenseForm.cs</DependentUpon>
@@ -175,6 +209,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinGUI\NewInstDialog.resx">
       <DependentUpon>NewInstDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinGUI\NotesForm.resx">
+      <DependentUpon>NotesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinGUI\SettingsForm.resx">
       <DependentUpon>SettingsForm.cs</DependentUpon>
@@ -213,6 +250,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\document-import.png" />
     <Content Include="Launcher\MultiMCLauncher.java" />
     <Content Include="Lib\Ionic.Zip.Reduced.dll" />
     <None Include="Resources\MultiMC.png" />
@@ -231,6 +269,7 @@
     <None Include="Resources\stone.png" />
     <None Include="Resources\MultiMC.ico" />
     <None Include="Resources\Logo.ico" />
+    <None Include="WinGUI\ToolbarIcons\ImportIcon.png" />
     <Content Include="WinGUI\ToolbarIcons\AboutIcon.png" />
     <Content Include="WinGUI\ToolbarIcons\CheckUpdateIcon.png" />
     <Content Include="WinGUI\ToolbarIcons\HelpIcon.png" />

@@ -9,17 +9,18 @@ using System.Windows.Forms;
 using System.Diagnostics;
 
 using MultiMC.GUI;
+using MultiMC.ProblemDetection;
 
 namespace MultiMC.WinGUI
 {
 	public partial class ConsoleForm : WinFormsWindow, IConsoleWindow
 	{
+		bool gameCrashed;
+
 		Instance inst;
 
 		public ConsoleForm(Instance inst)
 		{
-			this.ShowConsole = AppSettings.Main.ShowConsole;
-
 			this.inst = inst;
 			Text = inst.Name + " is running...";
 
@@ -61,6 +62,19 @@ namespace MultiMC.WinGUI
 
 		void InstOutput(object sender, DataReceivedEventArgs e)
 		{
+			IMinecraftProblem prob = Problems.GetRelevantProblem(e.Data);
+
+			if (prob != null)
+			{
+				string errorMsg = prob.GetErrorMessage(e.Data);
+
+				MultiMC.GUI.MessageBox.Show(this, errorMsg, "Error Detected");
+				if (prob.ShouldTerminate(e.Data))
+				{
+					KillMinecraft(false);
+				}
+			}
+
 			Message(e.Data);
 		}
 
@@ -73,24 +87,33 @@ namespace MultiMC.WinGUI
 			}
 			else
 			{
-				try
+				if (InvokeRequired)
 				{
-					this.Invoke(new EventHandler(InstClose));
+					try
+					{
+						this.Invoke((o, args) => InstQuit(sender, e));
+					}
+					catch (InvalidOperationException error)
+					{
+						Console.WriteLine("Invalid operation: " + error.ToString());
+					}
 				}
-				catch (InvalidOperationException error)
+				else
 				{
-					Console.WriteLine("Invalid operation: " + error.ToString());
-					//MessageBox.Show("Invalid operation: " + error.ToString());
-				}
-			}
-		}
+					Message(string.Format("Instance exited with code: {0}", e.ExitCode));
+					if (e.ExitCode != 0)
+					{
+						gameCrashed = true;
+						this.Visible = true;
+						Message("Crash detected!");
+					}
 
-		void InstClose(object sender = null, EventArgs e = default(EventArgs))
-		{
-			buttonClose.Enabled = true;
-			if (AppSettings.Main.AutoCloseConsole || !ShowConsole)
-			{
-				Close();
+					buttonClose.Enabled = true;
+					if ((AppSettings.Main.AutoCloseConsole || !this.Visible) && !gameCrashed)
+					{
+						Close();
+					}
+				}
 			}
 		}
 
@@ -125,11 +148,32 @@ namespace MultiMC.WinGUI
 		private void ConsoleForm_Shown(object sender, EventArgs e)
 		{
 			this.Visible = ShowConsole;
+
+			buttonClose.Enabled = false;
 		}
 
 		private void buttonHide_Click(object sender, EventArgs e)
 		{
 			ShowConsole = false;
+		}
+
+		private void killMinecraftToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			KillMinecraft();
+		}
+
+		private void KillMinecraft(bool confMessage = true)
+		{
+			DialogResponse response = confMessage ? DialogResponse.No : DialogResponse.Yes;
+			if (confMessage)
+				response = MultiMC.GUI.MessageBox.Show(this, 
+					"Are you sure you want to kill Minecraft?",
+					"Really?", MessageButtons.YesNo);
+
+			if (response == DialogResponse.Yes)
+			{
+				inst.InstProcess.Kill();
+			}
 		}
 	}
 }

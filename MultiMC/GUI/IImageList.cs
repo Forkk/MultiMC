@@ -7,6 +7,10 @@ namespace MultiMC.GUI
 {
 	public interface IImageList
 	{
-		
+		void LoadImages();
+
+		void DeleteImage(string key);
+
+		bool WasLoadedFromFile(string key);
 	}
 }

@@ -41,18 +41,20 @@ namespace MultiMC
 				// Create the main window
 				MainWindow = new WinGUI.MainForm();
 
-				WinGUI.WinFormsImageList imgList = new WinGUI.WinFormsImageList(
-					Properties.Resources.UserIconDir);
-				imgList.ImgList.Images.Add("grass", Properties.Resources.grass);
-				imgList.ImgList.Images.Add("brick", Properties.Resources.brick);
-				imgList.ImgList.Images.Add("diamond", Properties.Resources.diamond);
-				imgList.ImgList.Images.Add("dirt", Properties.Resources.dirt);
-				imgList.ImgList.Images.Add("gold", Properties.Resources.gold);
-				imgList.ImgList.Images.Add("iron", Properties.Resources.iron);
-				imgList.ImgList.Images.Add("planks", Properties.Resources.planks);
-				imgList.ImgList.Images.Add("tnt", Properties.Resources.tnt);
+				Dictionary<string, System.Drawing.Image> imgDict = 
+					new Dictionary<string,System.Drawing.Image>();
+				imgDict.Add("grass", Properties.Resources.grass);
+				imgDict.Add("brick", Properties.Resources.brick);
+				imgDict.Add("diamond", Properties.Resources.diamond);
+				imgDict.Add("dirt", Properties.Resources.dirt);
+				imgDict.Add("gold", Properties.Resources.gold);
+				imgDict.Add("iron", Properties.Resources.iron);
+				imgDict.Add("planks", Properties.Resources.planks);
+				imgDict.Add("tnt", Properties.Resources.tnt);
 
-				InstIconList = imgList;
+				InstIconList = new WinGUI.WinFormsImageList(
+					Properties.Resources.UserIconDir,
+					imgDict, Properties.Resources.grass);
 				break;
 			case WindowToolkit.GtkSharp:
 				ToolkitNotSupported();
@@ -73,7 +75,17 @@ namespace MultiMC
 
 			MainWindow.AboutClicked += new EventHandler(AboutClicked);
 
+
 			MainWindow.InstanceLaunched += new EventHandler<InstActionEventArgs>(LaunchInstance);
+
+			MainWindow.ChangeIconClicked += new EventHandler<InstActionEventArgs>(ChangeIconClicked);
+			MainWindow.EditNotesClicked += new EventHandler<InstActionEventArgs>(EditNotesClicked);
+
+			MainWindow.EditModsClicked += new EventHandler<InstActionEventArgs>(EditModsClicked);
+			MainWindow.RebuildJarClicked += new EventHandler<InstActionEventArgs>(RebuildClicked);
+			MainWindow.ViewInstFolderClicked += new EventHandler<InstActionEventArgs>(ViewInstFolderClicked);
+
+			MainWindow.DeleteInstClicked += new EventHandler<InstActionEventArgs>(DeleteInstClicked);
 
 			MainWindow.ImageList = InstIconList;
 
@@ -103,8 +115,20 @@ namespace MultiMC
 
 		void UpdateClicked(object sender, EventArgs e)
 		{
-			Task task = new Updater();
+			Updater task = new Updater();
+			task.Completed += new EventHandler<Task.TaskCompleteEventArgs>(updateCheckComplete);
 			StartTask(task);
+		}
+
+		void updateCheckComplete(object sender, Task.TaskCompleteEventArgs e)
+		{
+			Updater updater = sender as Updater;
+			if (updater == null)
+			{
+				Console.WriteLine("Update check failed! Sender is null.");
+				return;
+			}
+			DownloadNewVersion();
 		}
 
 		void NewInstClicked(object sender, EventArgs e)
@@ -167,6 +191,94 @@ namespace MultiMC
 				break;
 			}
 		}
+		#endregion
+
+		#region Instance Menu
+
+		void ChangeIconClicked(object sender, InstActionEventArgs e)
+		{
+			IChangeIconDialog changeIconDlg = null;
+
+			switch (Program.Toolkit)
+			{
+			case WindowToolkit.WinForms:
+				changeIconDlg = new WinGUI.ChangeIconForm();
+				break;
+			}
+
+			changeIconDlg.ImageList = this.InstIconList;
+			changeIconDlg.Response += (o, args) =>
+				{
+					if (args.Response == DialogResponse.OK)
+					{
+						SelectedInst.IconKey = changeIconDlg.ChosenIconKey;
+					}
+					changeIconDlg.Close();
+				};
+			changeIconDlg.Parent = MainWindow;
+			changeIconDlg.DefaultPosition = DefWindowPosition.CenterParent;
+			changeIconDlg.Run();
+			MainWindow.LoadInstances();
+		}
+
+		void EditNotesClicked(object sender, InstActionEventArgs e)
+		{
+			INotesDialog noteDlg = null;
+			switch (Program.Toolkit)
+			{
+			case WindowToolkit.WinForms:
+				noteDlg = new WinGUI.NotesForm();
+				break;
+			}
+
+			noteDlg.Notes = SelectedInst.Notes;
+			noteDlg.Response += (o, args) =>
+				{
+					if (args.Response == DialogResponse.OK)
+					{
+						SelectedInst.Notes = noteDlg.Notes;
+					}
+					noteDlg.Close();
+				};
+			noteDlg.Run();
+		}
+
+		void EditModsClicked(object sender, InstActionEventArgs e)
+		{
+			IEditModsDialog editModsDlg = null;
+			switch (Program.Toolkit)
+			{
+			case WindowToolkit.WinForms:
+				editModsDlg = new WinGUI.EditModsForm(SelectedInst);
+				break;
+			}
+			editModsDlg.LoadModList();
+			editModsDlg.Response += (o, args) =>
+				{
+					if (args.Response == DialogResponse.OK)
+						editModsDlg.SaveModList();
+					editModsDlg.Close();
+				};
+			editModsDlg.Parent = MainWindow;
+			editModsDlg.DefaultPosition = DefWindowPosition.CenterParent;
+			editModsDlg.Run();
+		}
+
+		void RebuildClicked(object sender, InstActionEventArgs e)
+		{
+			StartTask(new Modder(SelectedInst));
+		}
+
+		void ViewInstFolderClicked(object sender, InstActionEventArgs e)
+		{
+			Process.Start(SelectedInst.RootDir);
+		}
+
+		void DeleteInstClicked(object sender, InstActionEventArgs e)
+		{
+			throw new NotImplementedException();
+		}
+
 		#endregion
 
 		public void Run()
@@ -248,7 +360,7 @@ namespace MultiMC
 					{
 						updateVersion = updater.NewVersion;
 						if (updateVersion != null &&
-								updater.NewVersion.CompareTo(AppUtils.GetVersion()) > 0)
+							updater.NewVersion.CompareTo(AppUtils.GetVersion()) > 0)
 						{
 							DownloadNewVersion();
 						}
@@ -294,7 +406,7 @@ namespace MultiMC
 					DialogResponse response = MessageBox.Show(
 						MainWindow, updatemsg, "Update MultiMC?", MessageButtons.YesNo);
 
-					if (response == DialogResponse.OK)
+					if (response == DialogResponse.Yes)
 					{
 						CloseForUpdates();
 					}
@@ -407,12 +519,12 @@ namespace MultiMC
 						Uri.EscapeDataString(loginDlg.Username),
 						Uri.EscapeDataString(loginDlg.Password), 13);
 
+					WriteUserInfo((loginDlg.RememberUsername ? loginDlg.Username : ""),
+								  (loginDlg.RememberPassword ? loginDlg.Password : ""));
+
 					// Start a new thread and post the login info to login.minecraft.net
 					SimpleTask loginTask = new SimpleTask(() =>
 					{
-						WriteUserInfo((loginDlg.RememberUsername ? loginDlg.Username : ""),
-										  (loginDlg.RememberPassword ? loginDlg.Password : ""));
-
 						string reply = "";
 						bool postFailed = false;
 						try
@@ -486,7 +598,6 @@ namespace MultiMC
 							}
 						}
 					}, "Logging in...");
-
 
 					if (!loggingIn)
 					{

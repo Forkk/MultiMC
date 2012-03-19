@@ -32,12 +32,12 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConsoleForm));
 			this.buttonPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.buttonClose = new System.Windows.Forms.Button();
+			this.buttonHide = new System.Windows.Forms.Button();
 			this.instConsole = new System.Windows.Forms.TextBox();
 			this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
 			this.trayMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.showConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.killMinecraftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.buttonHide = new System.Windows.Forms.Button();
 			this.buttonPanel.SuspendLayout();
 			this.trayMenu.SuspendLayout();
 			this.SuspendLayout();
@@ -65,6 +65,16 @@
 			this.buttonClose.UseVisualStyleBackColor = true;
 			this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
 			// 
+			// buttonHide
+			// 
+			this.buttonHide.Location = new System.Drawing.Point(425, 3);
+			this.buttonHide.Name = "buttonHide";
+			this.buttonHide.Size = new System.Drawing.Size(75, 23);
+			this.buttonHide.TabIndex = 1;
+			this.buttonHide.Text = "&Hide";
+			this.buttonHide.UseVisualStyleBackColor = true;
+			this.buttonHide.Click += new System.EventHandler(this.buttonHide_Click);
+			// 
 			// instConsole
 			// 
 			this.instConsole.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -90,30 +100,21 @@
             this.showConsoleToolStripMenuItem,
             this.killMinecraftToolStripMenuItem});
 			this.trayMenu.Name = "trayMenu";
-			this.trayMenu.Size = new System.Drawing.Size(150, 48);
+			this.trayMenu.Size = new System.Drawing.Size(153, 70);
 			// 
 			// showConsoleToolStripMenuItem
 			// 
 			this.showConsoleToolStripMenuItem.Name = "showConsoleToolStripMenuItem";
-			this.showConsoleToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+			this.showConsoleToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.showConsoleToolStripMenuItem.Text = "Show Console";
 			this.showConsoleToolStripMenuItem.Click += new System.EventHandler(this.showConsoleToolStripMenuItem_Click);
 			// 
 			// killMinecraftToolStripMenuItem
 			// 
 			this.killMinecraftToolStripMenuItem.Name = "killMinecraftToolStripMenuItem";
-			this.killMinecraftToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+			this.killMinecraftToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.killMinecraftToolStripMenuItem.Text = "Kill Minecraft";
-			// 
-			// buttonHide
-			// 
-			this.buttonHide.Location = new System.Drawing.Point(425, 3);
-			this.buttonHide.Name = "buttonHide";
-			this.buttonHide.Size = new System.Drawing.Size(75, 23);
-			this.buttonHide.TabIndex = 1;
-			this.buttonHide.Text = "&Hide";
-			this.buttonHide.UseVisualStyleBackColor = true;
-			this.buttonHide.Click += new System.EventHandler(this.buttonHide_Click);
+			this.killMinecraftToolStripMenuItem.Click += new System.EventHandler(this.killMinecraftToolStripMenuItem_Click);
 			// 
 			// ConsoleForm
 			// 

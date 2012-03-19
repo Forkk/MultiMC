@@ -188,6 +188,7 @@
 			this.checkRememberUsername.TabIndex = 2;
 			this.checkRememberUsername.Text = "&Remember Username";
 			this.checkRememberUsername.UseVisualStyleBackColor = true;
+			this.checkRememberUsername.CheckedChanged += new System.EventHandler(this.checkRememberUsername_CheckedChanged);
 			// 
 			// usernameTextBox
 			// 

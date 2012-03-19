@@ -104,6 +104,13 @@ namespace MultiMC.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap document_import {
+            get {
+                object obj = ResourceManager.GetObject("document_import", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to http://forkk.net/MultiMC/download/Ionic.Zip.Reduced.dll.
         /// </summary>
@@ -148,6 +155,13 @@ namespace MultiMC.Properties {
         internal static System.Drawing.Bitmap HelpIcon {
             get {
                 object obj = ResourceManager.GetObject("HelpIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ImportIcon {
+            get {
+                object obj = ResourceManager.GetObject("ImportIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -314,6 +328,15 @@ namespace MultiMC.Properties {
             get {
                 object obj = ResourceManager.GetObject("tnt", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to install updates because the operation timed out. This may be due to MultiMC not closing properly..
+        /// </summary>
+        internal static string UpdateTimeoutMessage {
+            get {
+                return ResourceManager.GetString("UpdateTimeoutMessage", resourceCulture);
             }
         }
         

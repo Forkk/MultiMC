@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
 			this.settingsTabs = new System.Windows.Forms.TabControl();
 			this.generalTab = new System.Windows.Forms.TabPage();
 			this.groupBoxUpdates = new System.Windows.Forms.GroupBox();
@@ -102,9 +103,9 @@
 			this.forceUpdateCheckBox.AutoSize = true;
 			this.forceUpdateCheckBox.Location = new System.Drawing.Point(6, 42);
 			this.forceUpdateCheckBox.Name = "forceUpdateCheckBox";
-			this.forceUpdateCheckBox.Size = new System.Drawing.Size(95, 17);
+			this.forceUpdateCheckBox.Size = new System.Drawing.Size(136, 17);
 			this.forceUpdateCheckBox.TabIndex = 1;
-			this.forceUpdateCheckBox.Text = "Force update?";
+			this.forceUpdateCheckBox.Text = "Force update MultiMC?";
 			this.forceUpdateCheckBox.UseVisualStyleBackColor = true;
 			// 
 			// autoUpdateCheckBox
@@ -114,7 +115,7 @@
 			this.autoUpdateCheckBox.Name = "autoUpdateCheckBox";
 			this.autoUpdateCheckBox.Size = new System.Drawing.Size(214, 17);
 			this.autoUpdateCheckBox.TabIndex = 0;
-			this.autoUpdateCheckBox.Text = "Chech for updates when MultiMC starts.";
+			this.autoUpdateCheckBox.Text = "Check for updates when MultiMC starts.";
 			this.autoUpdateCheckBox.UseVisualStyleBackColor = true;
 			// 
 			// groupBoxConsole
@@ -293,6 +294,7 @@
 			this.ClientSize = new System.Drawing.Size(434, 354);
 			this.Controls.Add(this.buttonPanel);
 			this.Controls.Add(this.settingsTabs);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "SettingsForm";
 			this.Text = "Settings";
 			this.Title = "Settings";

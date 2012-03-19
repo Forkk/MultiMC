@@ -133,6 +133,25 @@ namespace MultiMC
 			}
 #endif
 		}
+
+		/// <summary>
+		/// Gets the name of the currently running executable file.
+		/// </summary>
+		/// <value>
+		/// The name of the executable file.
+		/// </value>
+		public static string ExecutableFileName
+		{
+			get
+			{
+				string assemblyName = Assembly.GetExecutingAssembly().Location;
+				if (OSUtils.Linux)
+				{
+					return assemblyName.Substring(0, assemblyName.LastIndexOf('.'));
+				}
+				return assemblyName;
+			}
+		}
 	}
 }
 

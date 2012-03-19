@@ -23,6 +23,8 @@ namespace MultiMC.WinGUI
 				labelError.Visible = false;
 			else
 				labelError.Text = errorMsg;
+
+			checkRememberPassword.Enabled = RememberUsername;
 		}
 
 		public string Username
@@ -45,7 +47,7 @@ namespace MultiMC.WinGUI
 
 		public bool RememberPassword
 		{
-			get { return checkRememberPassword.Checked; }
+			get { return checkRememberPassword.Checked && checkRememberPassword.Enabled; }
 			set { checkRememberPassword.Checked = value; }
 		}
 
@@ -69,6 +71,11 @@ namespace MultiMC.WinGUI
 		private void buttonCancel_Click(object sender, EventArgs e)
 		{
 			OnResponse(DialogResponse.Cancel);
+		}
+
+		private void checkRememberUsername_CheckedChanged(object sender, EventArgs e)
+		{
+			checkRememberPassword.Enabled = RememberUsername;
 		}
 	}
 }
