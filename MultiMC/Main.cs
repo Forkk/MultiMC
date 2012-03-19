@@ -31,34 +31,59 @@ namespace MultiMC
 
 		public Main()
 		{
-			switch (Program.Toolkit)
+			GUIManager.Create();
+			try
 			{
-			case WindowToolkit.WinForms:
-				// Initialize WinForms
-				System.Windows.Forms.Application.EnableVisualStyles();
-				System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
+				GUIManager.Main.Initialize();
 
-				// Create the main window
-				MainWindow = new WinGUI.MainForm();
+				MainWindow = GUIManager.Main.MainWindow();
+				InstIconList = GUIManager.Main.LoadInstIcons();
+			}
+			catch (FileNotFoundException e)
+			{
+				if (e.Message.ToLower().Contains("system.windows.forms"))
+				{
+					string helpMsg =
+						"You're missing the System.Windows.Forms assembly. (version 4.0)";
+					string errorFileMsg = string.Format(
+@"Oh no!
 
-				Dictionary<string, System.Drawing.Image> imgDict = 
-					new Dictionary<string,System.Drawing.Image>();
-				imgDict.Add("grass", Properties.Resources.grass);
-				imgDict.Add("brick", Properties.Resources.brick);
-				imgDict.Add("diamond", Properties.Resources.diamond);
-				imgDict.Add("dirt", Properties.Resources.dirt);
-				imgDict.Add("gold", Properties.Resources.gold);
-				imgDict.Add("iron", Properties.Resources.iron);
-				imgDict.Add("planks", Properties.Resources.planks);
-				imgDict.Add("tnt", Properties.Resources.tnt);
+You seem to be missing one of MultiMC's prerequisites. 
+Please make sure you have System.Windows.Forms (version 4.0) installed correctly and then try again.
 
-				InstIconList = new WinGUI.WinFormsImageList(
-					Properties.Resources.UserIconDir,
-					imgDict, Properties.Resources.grass);
-				break;
-			case WindowToolkit.GtkSharp:
-				ToolkitNotSupported();
-				break;
+Details:
+{0}
+", e.ToString());
+					if (OSUtils.OS == OSEnum.Linux)
+					{
+						helpMsg =
+							"Try installing the 'libmono-system-windows-forms4.0-cil' " +
+							"package. " +
+							"(sudo apt-get install libmono-system-windows-forms4.0-cil)";
+						errorFileMsg = string.Format(
+@"Oh no!
+
+You seem to be missing one of MultiMC's prerequisites. 
+Please make sure you've installed the 'libmono-system-windows-forms4.0-cil' package.
+
+To do this, simply run this command in terminal:
+	sudo apt-get install libmono-system-windows-forms4.0-cil
+
+Details:
+{0}
+", e.ToString());
+					}
+					string errorMsg = string.Format("Couldn't load WinForms.\n{0}", helpMsg);
+
+					Console.WriteLine(errorMsg);
+					DebugUtils.WriteError(errorFileMsg);
+
+					DebugUtils.FatalErrorDialog("MultiMC requires the package " +
+						"'libmono-system-windows-forms4.0-cil'");
+
+					Environment.Exit(1);
+				}
+				else throw;
 			}
 
 			MainWindow.Title = string.Format("MultiMC {0} for {1}", 
@@ -92,6 +117,17 @@ namespace MultiMC
 			MainWindow.LoadInstances();
 
 			MainWindow.Shown += new EventHandler(MainWindow_Shown);
+
+			// Initialize problem detection
+			try
+			{
+				Console.WriteLine("Initializing problem detection system...");
+				ProblemDetection.Problems.InitProblems();
+			}
+			catch (System.Reflection.ReflectionTypeLoadException e)
+			{
+				Console.WriteLine("Problem detection failed to initialize:\n{0}", e);
+			}
 		}
 
 		void MainWindow_Shown(object sender, EventArgs e)
@@ -115,17 +151,8 @@ namespace MultiMC
 
 		void AboutClicked(object sender, EventArgs e)
 		{
-			IDialog aboutDlg = null;
-			switch (Program.Toolkit)
-			{
-			case WindowToolkit.WinForms:
-				aboutDlg = new WinGUI.AboutForm();
-				break;
-
-			default:
-				ToolkitNotSupported();
-				break;
-			}
+			IDialog aboutDlg = GUIManager.Main.AboutDialog();
+			
 			aboutDlg.Parent = MainWindow;
 			aboutDlg.DefaultPosition = DefWindowPosition.CenterParent;
 
@@ -150,13 +177,8 @@ namespace MultiMC
 
 		void NewInstClicked(object sender, EventArgs e)
 		{
-			IAddInstDialog addInstDlg = null;
-			switch (Program.Toolkit)
-			{
-			case WindowToolkit.WinForms:
-				addInstDlg = new WinGUI.NewInstDialog();
-				break;
-			}
+			IAddInstDialog addInstDlg = GUIManager.Main.AddInstDialog();
+
 			addInstDlg.DefaultPosition = DefWindowPosition.CenterParent;
 			addInstDlg.Parent = MainWindow;
 			addInstDlg.Response += (o, args) =>
@@ -191,22 +213,17 @@ namespace MultiMC
 
 		void SettingsClicked(object sender, EventArgs e)
 		{
-			switch (Program.Toolkit)
-			{
-			case WindowToolkit.WinForms:
-				WinGUI.SettingsForm settingsForm = new WinGUI.SettingsForm();
-				settingsForm.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-				settingsForm.Parent = MainWindow;
-				settingsForm.Response += (o, args) =>
+			IDialog settingsWindow = GUIManager.Main.SettingsWindow();
+			settingsWindow.Parent = MainWindow;
+			settingsWindow.DefaultPosition = DefWindowPosition.CenterParent;
+			settingsWindow.Response += (o, args) =>
+				{
+					if (args.Response != DialogResponse.Other)
 					{
-						if (args.Response != DialogResponse.Other)
-						{
-							settingsForm.Close();
-						}
-					};
-				settingsForm.Run();
-				break;
-			}
+						settingsWindow.Close();
+					}
+				};
+			settingsWindow.Run();
 		}
 		#endregion
 
@@ -214,14 +231,7 @@ namespace MultiMC
 
 		void ChangeIconClicked(object sender, InstActionEventArgs e)
 		{
-			IChangeIconDialog changeIconDlg = null;
-
-			switch (Program.Toolkit)
-			{
-			case WindowToolkit.WinForms:
-				changeIconDlg = new WinGUI.ChangeIconForm();
-				break;
-			}
+			IChangeIconDialog changeIconDlg = GUIManager.Main.ChangeIconDialog();
 
 			changeIconDlg.ImageList = this.InstIconList;
 			changeIconDlg.Response += (o, args) =>
@@ -240,13 +250,7 @@ namespace MultiMC
 
 		void EditNotesClicked(object sender, InstActionEventArgs e)
 		{
-			INotesDialog noteDlg = null;
-			switch (Program.Toolkit)
-			{
-			case WindowToolkit.WinForms:
-				noteDlg = new WinGUI.NotesForm();
-				break;
-			}
+			INotesDialog noteDlg = GUIManager.Main.NotesDialog();
 
 			noteDlg.Notes = SelectedInst.Notes;
 			noteDlg.Response += (o, args) =>
@@ -262,13 +266,8 @@ namespace MultiMC
 
 		void EditModsClicked(object sender, InstActionEventArgs e)
 		{
-			IEditModsDialog editModsDlg = null;
-			switch (Program.Toolkit)
-			{
-			case WindowToolkit.WinForms:
-				editModsDlg = new WinGUI.EditModsForm(SelectedInst);
-				break;
-			}
+			IEditModsDialog editModsDlg = GUIManager.Main.EditModsDialog(SelectedInst);
+
 			editModsDlg.LoadModList();
 			editModsDlg.Response += (o, args) =>
 				{
@@ -300,15 +299,7 @@ namespace MultiMC
 
 		public void Run()
 		{
-			switch (Program.Toolkit)
-			{
-			case WindowToolkit.WinForms:
-				System.Windows.Forms.Application.Run(MainWindow as WinGUI.MainForm);
-				break;
-			default:
-				ToolkitNotSupported();
-				break;
-			}
+			GUIManager.Main.Run(MainWindow);
 		}
 
 		#region Task System
@@ -328,7 +319,7 @@ namespace MultiMC
 			MainWindow.Invoke(
 				(sender1, e1) =>
 				{
-					MessageBox.Show(MainWindow, e.Message, "Error");
+					MessageDialog.Show(MainWindow, e.Message, "Error");
 				});
 		}
 
@@ -341,7 +332,7 @@ namespace MultiMC
 		{
 			if (!File.Exists(SelectedInst.MCJar))
 			{
-				MessageBox.Show(MainWindow,
+				MessageDialog.Show(MainWindow,
 								"You must run the " +
 								"instance at least " +
 								"once before installing mods.",
@@ -425,7 +416,7 @@ namespace MultiMC
 						updateMsg = "MultiMC has downloaded updates, would you like to install them?";
 					}
 
-					DialogResponse response = MessageBox.Show(
+					DialogResponse response = MessageDialog.Show(
 						MainWindow, updateMsg, "Update MultiMC?", MessageButtons.YesNo);
 
 					if (response == DialogResponse.Yes)
@@ -656,13 +647,8 @@ namespace MultiMC
 						MainWindow.Visible = false;
 						inst.Launch(info.Username, info.SessionID);
 
-						IConsoleWindow cwin = null;
-						switch (Program.Toolkit)
-						{
-						case WindowToolkit.WinForms:
-							cwin = new WinGUI.ConsoleForm(inst);
-							break;
-						}
+						IConsoleWindow cwin = GUIManager.Main.ConsoleWindow(inst);
+
 						cwin.Parent = MainWindow;
 						cwin.DefaultPosition = DefWindowPosition.CenterParent;
 

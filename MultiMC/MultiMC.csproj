@@ -61,13 +61,16 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -80,11 +83,13 @@
     <Compile Include="GUI\IChangeIconDialog.cs" />
     <Compile Include="GUI\IConsoleWindow.cs" />
     <Compile Include="GUI\IEditModsDialog.cs" />
+    <Compile Include="GUI\IGUIManager.cs" />
     <Compile Include="GUI\IImageList.cs" />
     <Compile Include="GUI\ILoginDialog.cs" />
     <Compile Include="GUI\INotesDialog.cs" />
     <Compile Include="GUI\ITaskStatus.cs" />
-    <Compile Include="GUI\MessageBox.cs" />
+    <Compile Include="GUI\MessageDialog.cs" />
+    <Compile Include="OldInstance.cs" />
     <Compile Include="ProblemDetection\BasicProblem.cs" />
     <Compile Include="ProblemDetection\MinecraftProblem.cs" />
     <Compile Include="ProblemDetection\Problems.cs" />
@@ -141,6 +146,7 @@
     <Compile Include="WinGUI\NotesForm.Designer.cs">
       <DependentUpon>NotesForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="WinGUI\WinFormsGUIManager.cs" />
     <Compile Include="WinGUI\WinFormsImageList.cs" />
     <Compile Include="WinGUI\LicenseForm.cs">
       <SubType>Form</SubType>
@@ -284,6 +290,9 @@
   <PropertyGroup>
     <PreBuildEvent>"C:\Program Files\Java\jdk1.6.0_27\bin\javac" -d $(ProjectDir)Launcher $(ProjectDir)Launcher\MultiMCLauncher.java
 del $(TargetDir)$(TargetFileName)</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetPath) C:\Users\Andrew\Dropbox\Public\MultiMC.exe</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

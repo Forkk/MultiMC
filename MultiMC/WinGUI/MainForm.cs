@@ -22,6 +22,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 using MultiMC.GUI;
 using MultiMC.Tasks;
@@ -77,17 +78,17 @@ namespace MultiMC.WinGUI
 				if (!task.Running)
 				{
 					task.Started += (o, args) =>
-						{
-							AddTaskStatusBar(task);
-						};
+					{
+						AddTaskStatusBar(task);
+					};
 				}
 				else
 					AddTaskStatusBar(task);
 				task.Completed += (o, args) =>
-					{
-						Console.WriteLine("Task {0} completed.", task.TaskID);
-						RemoveTaskStatusBar(task);
-					};
+				{
+					Console.WriteLine("Task {0} completed.", task.TaskID);
+					RemoveTaskStatusBar(task);
+				};
 			}
 		}
 
@@ -107,7 +108,7 @@ namespace MultiMC.WinGUI
 			// Status strip
 			StatusStrip taskStatusStrip = new StatusStrip();
 			statusStrips[task.TaskID] = taskStatusStrip;
-			taskStatusStrip.Anchor = AnchorStyles.Top | AnchorStyles.Left | 
+			taskStatusStrip.Anchor = AnchorStyles.Top | AnchorStyles.Left |
 				AnchorStyles.Right | AnchorStyles.Bottom;
 			taskStatusStrip.AutoSize = true;
 			taskStatusStrip.LayoutStyle = ToolStripLayoutStyle.HorizontalStackWithOverflow;
@@ -318,7 +319,7 @@ namespace MultiMC.WinGUI
 					//instView.SmallImageList = _imageList.ImgList;
 				}
 				else if (value != null)
-					throw new InvalidOperationException("WinForms needs a WinFormsImageCache.");
+					throw new InvalidOperationException("WinForms needs a WinFormsImageList.");
 				else
 					throw new ArgumentNullException("value");
 			}
@@ -475,9 +476,194 @@ namespace MultiMC.WinGUI
 			// TODO Implement
 		}
 
-		private void mainLayoutPanel_Paint(object sender, PaintEventArgs e)
-		{
+		#region Drag Drop Code
 
+		private string DragDropHint
+		{
+			get;
+			set;
 		}
+
+		private void instView_DragDrop(object sender, DragEventArgs e)
+		{
+			if (!DragDataValid(e.Data, e.X, e.Y))
+			{
+				return;
+			}
+
+			DragDropHint = string.Empty;
+
+			Point p = instView.PointToClient(new Point(e.X, e.Y));
+			Instance inst = instView.GetItemAt(p.X, p.Y).Tag as Instance;
+			string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+			DragKeyStates keyStates = new DragKeyStates(e.KeyState);
+
+			string modsFolder = inst.ModLoaderDir;
+			if (!Directory.Exists(modsFolder))
+				Directory.CreateDirectory(modsFolder);
+
+			string instMods = inst.InstModsDir;
+			if (!Directory.Exists(instMods))
+				Directory.CreateDirectory(instMods);
+
+			string texturePacksFolder = inst.TexturePackDir;
+
+			if (keyStates.ShiftKey)
+			{
+				CopyModFiles(files, modsFolder);
+			}
+			else if (keyStates.AltKey)
+			{
+				CopyModFiles(files, texturePacksFolder);
+			}
+			else
+			{
+				CopyModFiles(files, instMods);
+			}
+		}
+
+		private void instView_DragLeave(object sender, EventArgs e)
+		{
+			DragDropHint = string.Empty;
+		}
+
+		/// <summary>
+		/// Translates drag event key states into a more maintainable format.
+		/// </summary>
+		struct DragKeyStates
+		{
+			public DragKeyStates(int keyState)
+			{
+				this.LeftMouse = (keyState & 1) == 1;
+				this.RightMouse = (keyState & 2) == 2;
+				this.ShiftKey = (keyState & 4) == 4;
+				this.ControlKey = (keyState & 8) == 8;
+				this.MiddleMouse = (keyState & 16) == 16;
+				this.AltKey = (keyState & 32) == 32;
+			}
+
+			public bool LeftMouse;	 // 1
+			public bool RightMouse;	 // 2
+			public bool ShiftKey;	 // 4
+			public bool ControlKey;	 // 8
+			public bool MiddleMouse; // 16
+			public bool AltKey;		 // 32
+		}
+
+		private void instView_DragOver(object sender, DragEventArgs e)
+		{
+			if (DragDataValid(e.Data, e.X, e.Y))
+			{
+				DragKeyStates keyState = new DragKeyStates(e.KeyState);
+
+				// Control + Alt
+				if (keyState.ControlKey && keyState.AltKey)
+				{
+					e.Effect = DragDropEffects.Move;
+					DragDropHint = "Add files to .minecraft\\bin";
+				}
+
+				// Shift
+				else if (keyState.ShiftKey)
+				{
+					e.Effect = DragDropEffects.Copy;
+					DragDropHint = "Add files to .minecraft\\mods";
+
+				}
+
+				// Alt
+				else if (keyState.AltKey)
+				{
+					e.Effect = DragDropEffects.Copy;
+					DragDropHint = "Add to texture packs";
+				}
+
+				// Anything else
+				else
+				{
+					e.Effect = DragDropEffects.Copy;
+					DragDropHint = "Add files to minecraft.jar";
+				}
+			}
+			else
+			{
+				e.Effect = DragDropEffects.None;
+				DragDropHint = string.Empty;
+			}
+		}
+
+		bool DragDataValid(IDataObject dragData, int x, int y)
+		{
+			Point p = instView.PointToClient(new Point(x, y));
+
+			ListViewItem item = instView.GetItemAt(p.X, p.Y);
+			if (item == null)
+			{
+				return false;
+			}
+
+			if (!dragData.GetDataPresent(DataFormats.FileDrop))
+			{
+				return false;
+			}
+
+			string[] files = (string[])dragData.GetData(DataFormats.FileDrop);
+			foreach (string file in files)
+			{
+				if (!(File.Exists(file) || Directory.Exists(file)))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		#endregion
+
+		#region Other
+
+		/// <summary>
+		/// Recursively copies the list of files and folders into the destination
+		/// </summary>
+		/// <param name="cFiles">list of files and folders to copy</param>
+		/// <param name="destination">place to copy the files to</param>
+		private void CopyModFiles(IEnumerable<string> cFiles, string destination)
+		{
+			foreach (string f in cFiles)
+			{
+				// For files...
+				if (File.Exists(f))
+				{
+					if (!Directory.Exists(destination))
+						Directory.CreateDirectory(destination);
+
+					string copyname = Path.Combine(destination, Path.GetFileName(f));
+					if (File.Exists(copyname))
+					{
+						Console.WriteLine("Overwriting " + copyname);
+						File.Delete(copyname);
+						File.Copy(f, copyname);
+						File.SetCreationTime(copyname, DateTime.Now);
+					}
+					else
+					{
+						Console.WriteLine("Adding file " + copyname);
+						File.Copy(f, copyname);
+						File.SetCreationTime(copyname, DateTime.Now);
+					}
+				}
+
+				// For directories
+				else if (Directory.Exists(f))
+				{
+					CopyModFiles(Directory.EnumerateFileSystemEntries(f),
+						Path.Combine(destination, Path.GetFileName(f)));
+				}
+			}
+		}
+
+		#endregion
 	}
 }

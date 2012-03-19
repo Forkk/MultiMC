@@ -145,7 +145,7 @@ namespace MultiMC
 			get
 			{
 				string assemblyName = Assembly.GetExecutingAssembly().Location;
-				if (OSUtils.Linux)
+				if (OSUtils.OS == OSEnum.Linux)
 				{
 					return assemblyName.Substring(0, assemblyName.LastIndexOf('.'));
 				}

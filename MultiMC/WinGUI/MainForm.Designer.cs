@@ -256,6 +256,10 @@
 			this.instView.Size = new System.Drawing.Size(604, 336);
 			this.instView.TabIndex = 1;
 			this.instView.UseCompatibleStateImageBehavior = false;
+			this.instView.ItemActivate += new System.EventHandler(this.instView_ItemActivate);
+			this.instView.DragDrop += new System.Windows.Forms.DragEventHandler(this.instView_DragDrop);
+			this.instView.DragOver += new System.Windows.Forms.DragEventHandler(this.instView_DragOver);
+			this.instView.DragLeave += new System.EventHandler(this.instView_DragLeave);
 			// 
 			// toolStripContainer
 			// 

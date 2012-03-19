@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MultiMC.GUI
 {
-	public static class MessageBox
+	public static class MessageDialog
 	{
 		public static DialogResponse Show(
 			IWindow parent,

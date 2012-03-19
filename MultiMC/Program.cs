@@ -32,11 +32,14 @@ namespace MultiMC
 		[STAThread]
 		static void Main(string[] args)
 		{
-			if (OSUtils.OS == OSEnum.Linux)
+			if (!args.Contains("-v"))
+				Console.WriteLine("Operating System: {0}", OSUtils.OS.ToString());
+
+			if (OSUtils.OS == OSEnum.Linux && !args.Contains("-v"))
 			{
 				if (Environment.CurrentDirectory.Equals(Environment.GetEnvironmentVariable("HOME")))
 				{
-					string workingDir = AppUtils.ExecutableFileName;
+					string workingDir = Path.GetDirectoryName(AppUtils.ExecutableFileName);
 					Environment.CurrentDirectory = workingDir;
 					Console.WriteLine("Set working directory to {0}", workingDir);
 				}
@@ -79,8 +82,6 @@ namespace MultiMC
 				Toolkit = WindowToolkit.GtkSharp;
 			else if (args.Contains("--winforms"))
 				Toolkit = WindowToolkit.WinForms;
-
-			Problems.InitProblems();
 
 			Main main = new Main();
 			main.Run();
@@ -142,7 +143,7 @@ namespace MultiMC
 
 								string errorStr = "Failed to install updates: " +
 									e.Message;
-								MessageBox.Show(null, errorStr, "Error");
+								MessageDialog.Show(null, errorStr, "Error");
 								return;
 							}
 						}
@@ -151,7 +152,7 @@ namespace MultiMC
 					{
 						File.WriteAllText("update-error.txt", 
 							Properties.Resources.UpdateTimeoutMessage);
-						MessageBox.Show(null, Properties.Resources.UpdateTimeoutMessage, 
+						MessageDialog.Show(null, Properties.Resources.UpdateTimeoutMessage, 
 							"Update Timed Out");
 						return;
 					}
@@ -169,7 +170,7 @@ namespace MultiMC
 			}
 			catch (IOException e)
 			{
-				MessageBox.Show(null, string.Format("Failed to install updates: {0}", e.Message));
+				MessageDialog.Show(null, string.Format("Failed to install updates: {0}", e.Message));
 				return;
 			}
 		}

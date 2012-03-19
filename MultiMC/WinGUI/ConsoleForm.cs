@@ -68,7 +68,7 @@ namespace MultiMC.WinGUI
 			{
 				string errorMsg = prob.GetErrorMessage(e.Data);
 
-				MultiMC.GUI.MessageBox.Show(this, errorMsg, "Error Detected");
+				MultiMC.GUI.MessageDialog.Show(this, errorMsg, "Error Detected");
 				if (prob.ShouldTerminate(e.Data))
 				{
 					KillMinecraft(false);
@@ -166,7 +166,7 @@ namespace MultiMC.WinGUI
 		{
 			DialogResponse response = confMessage ? DialogResponse.No : DialogResponse.Yes;
 			if (confMessage)
-				response = MultiMC.GUI.MessageBox.Show(this, 
+				response = MultiMC.GUI.MessageDialog.Show(this, 
 					"Are you sure you want to kill Minecraft?",
 					"Really?", MessageButtons.YesNo);
 

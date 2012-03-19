@@ -95,6 +95,12 @@ namespace MultiMC
 			}
 			if (!File.Exists(configFileName))
 			{
+				if (File.Exists(Path.Combine(rootDir, "instance.xml")))
+				{
+					System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
+					xmlDoc.Load(Path.Combine(rootDir, "instance.xml"));
+					return new Instance(new OldInstance(xmlDoc, rootDir));
+				}
 				throw new InvalidInstanceException("Instance data file '" + configFileName + 
 					"' not found!");
 			}
@@ -137,6 +143,22 @@ namespace MultiMC
 			
 			InstMods = new InstanceMods(this);
 			InstMods.Update();
+		}
+
+		public Instance(OldInstance oldInst)
+		{
+			this.cfgFile = new ConfigFile();
+			this.rootDir = oldInst.RootDir;
+
+			this.autosave = true;
+
+			InstMods = new InstanceMods(this);
+			InstMods.Update();
+
+			this.IconKey = oldInst.IconKey;
+			this.Name = oldInst.Name;
+			this.NeedsRebuild = oldInst.NeedsRebuild;
+			//this.Notes = oldInst.Notes;
 		}
 
 		/// <summary>

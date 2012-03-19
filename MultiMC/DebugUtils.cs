@@ -13,6 +13,8 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 using System;
+using System.IO;
+using System.Diagnostics;
 
 namespace MultiMC
 {
@@ -32,6 +34,33 @@ namespace MultiMC
 #if DEBUG
 			Console.WriteLine(msg, args);
 #endif
+		}
+
+		public static void WriteError(string msg, string file = null)
+		{
+			if (string.IsNullOrEmpty(file))
+				file = string.Format("error-{0}.txt", DateTime.Now.ToFileTimeUtc());
+			File.WriteAllText(file, msg);
+		}
+
+		public static void FatalErrorDialog(string msg)
+		{
+			switch (OSUtils.OS)
+			{
+			case OSEnum.Windows:
+				break;
+
+			case OSEnum.Linux:
+				Console.WriteLine(msg);
+				try
+				{
+					Process.Start("gdialog", string.Format("--msgbox \"{0}\"", msg));
+				}
+				catch (FileNotFoundException)
+				{
+				}
+				break;
+			}
 		}
 	}
 }
