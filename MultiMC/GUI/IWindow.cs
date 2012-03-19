@@ -128,6 +128,11 @@ namespace MultiMC.GUI
 		void Close();
 
 		void Invoke(EventHandler d);
+
+		/// <summary>
+		/// Called when the window is first shown.
+		/// </summary>
+		event EventHandler Shown;
 	}
 
 	/// <summary>

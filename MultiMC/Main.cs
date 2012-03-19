@@ -90,6 +90,25 @@ namespace MultiMC
 			MainWindow.ImageList = InstIconList;
 
 			MainWindow.LoadInstances();
+
+			MainWindow.Shown += new EventHandler(MainWindow_Shown);
+		}
+
+		void MainWindow_Shown(object sender, EventArgs e)
+		{
+			if (!File.Exists("Ionic.Zip.Reduced.dll"))
+			{
+				Downloader dotNetZipDL = new Downloader(
+					"Ionic.Zip.Reduced.dll",
+					Properties.Resources.DotNetZipURL,
+					"Downloading DotNetZip");
+				MainWindow.Invoke((o, args) => StartTask(dotNetZipDL));
+			}
+
+			if (AppSettings.Main.AutoUpdate)
+			{
+				MainWindow.Invoke((o, args) => DoUpdateCheck());
+			}
 		}
 
 		#region Menu Bar Events
@@ -115,9 +134,7 @@ namespace MultiMC
 
 		void UpdateClicked(object sender, EventArgs e)
 		{
-			Updater task = new Updater();
-			task.Completed += new EventHandler<Task.TaskCompleteEventArgs>(updateCheckComplete);
-			StartTask(task);
+			DoUpdateCheck();
 		}
 
 		void updateCheckComplete(object sender, Task.TaskCompleteEventArgs e)
@@ -394,17 +411,22 @@ namespace MultiMC
 			MainWindow.Invoke(
 				(sender1, e1) =>
 				{
-					string updatemsg = "Version {0} has been downloaded. " +
-							"Would you like to install it now?";
+					string updateMsg = "Updates have been downloaded. " +
+						"Would you like to install them?";
+					if (updateVersion != null)
+						updateMsg =  string.Format("Version {0} has been downloaded. " +
+							"Would you like to install it now?", updateVersion);
+
+
 					string updatestr = (updateVersion != null ? updateVersion.ToString() : "");
 					if (string.IsNullOrEmpty(updatestr))
 					{
 						updatestr = "";
-						updatemsg = "MultiMC has downloaded updates, would you like to install them?";
+						updateMsg = "MultiMC has downloaded updates, would you like to install them?";
 					}
 
 					DialogResponse response = MessageBox.Show(
-						MainWindow, updatemsg, "Update MultiMC?", MessageButtons.YesNo);
+						MainWindow, updateMsg, "Update MultiMC?", MessageButtons.YesNo);
 
 					if (response == DialogResponse.Yes)
 					{

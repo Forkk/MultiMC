@@ -43,6 +43,7 @@
 			this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuToolBar = new System.Windows.Forms.ToolStrip();
 			this.addInstButton = new System.Windows.Forms.ToolStripButton();
+			this.importButton = new System.Windows.Forms.ToolStripButton();
 			this.viewInstanceFolder = new System.Windows.Forms.ToolStripButton();
 			this.refreshButton = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -98,6 +99,7 @@
 			// 
 			// editNotesToolStripMenuItem
 			// 
+			this.editNotesToolStripMenuItem.Enabled = false;
 			this.editNotesToolStripMenuItem.Name = "editNotesToolStripMenuItem";
 			this.editNotesToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
 			this.editNotesToolStripMenuItem.Text = "Edit Notes";
@@ -148,6 +150,7 @@
 			this.menuToolBar.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.menuToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addInstButton,
+            this.importButton,
             this.viewInstanceFolder,
             this.refreshButton,
             this.toolStripSeparator1,
@@ -170,6 +173,16 @@
 			this.addInstButton.Name = "addInstButton";
 			this.addInstButton.Size = new System.Drawing.Size(23, 22);
 			this.addInstButton.Text = "Add a new instance";
+			// 
+			// importButton
+			// 
+			this.importButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.importButton.Image = global::MultiMC.Properties.Resources.document_import;
+			this.importButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.importButton.Name = "importButton";
+			this.importButton.Size = new System.Drawing.Size(23, 22);
+			this.importButton.Text = "Import existing minecraft folder.";
+			this.importButton.Visible = false;
 			// 
 			// viewInstanceFolder
 			// 
@@ -308,6 +321,7 @@
 		private System.Windows.Forms.ToolStripButton helpButton;
 		private System.Windows.Forms.ListView instView;
 		private System.Windows.Forms.ToolStripContainer toolStripContainer;
+		private System.Windows.Forms.ToolStripButton importButton;
 	}
 }
 
