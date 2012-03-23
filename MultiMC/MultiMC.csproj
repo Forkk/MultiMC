@@ -128,6 +128,12 @@
     <Compile Include="WinGUI\ConsoleForm.Designer.cs">
       <DependentUpon>ConsoleForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="WinGUI\DeleteConfirmForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\DeleteConfirmForm.Designer.cs">
+      <DependentUpon>DeleteConfirmForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinGUI\EditModsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -200,6 +206,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinGUI\ConsoleForm.resx">
       <DependentUpon>ConsoleForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinGUI\DeleteConfirmForm.resx">
+      <DependentUpon>DeleteConfirmForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinGUI\EditModsForm.resx">
       <DependentUpon>EditModsForm.cs</DependentUpon>

@@ -172,7 +172,8 @@ namespace MultiMC.WinGUI
 
 			if (response == DialogResponse.Yes)
 			{
-				inst.InstProcess.Kill();
+				if (inst.InstProcess != null)
+					inst.InstProcess.Kill();
 			}
 		}
 	}

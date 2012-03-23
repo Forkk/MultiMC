@@ -25,6 +25,7 @@ namespace MultiMC.WinGUI
 			if (OSUtils.OS == OSEnum.Windows)
 			{
 				OSUtils.SetWindowTheme(modView.Handle, "explorer", null);
+				OSUtils.SetWindowTheme(mlModView.Handle, "explorer", null);
 			}
 		}
 
@@ -36,6 +37,14 @@ namespace MultiMC.WinGUI
 				ListViewItem item = new ListViewItem(file);
 				item.Checked = true;
 				modView.Items.Add(item);
+			}
+
+			mlModView.Items.Clear();
+			foreach (string file in Directory.GetFiles(inst.ModLoaderDir))
+			{
+				ListViewItem item = new ListViewItem(file);
+				item.Checked = true;
+				mlModView.Items.Add(item);
 			}
 		}
 
@@ -50,6 +59,14 @@ namespace MultiMC.WinGUI
 					i++;
 				}
 				else
+				{
+					File.Delete(item.Text);
+				}
+			}
+
+			foreach (ListViewItem item in mlModView.Items)
+			{
+				if (!item.Checked)
 				{
 					File.Delete(item.Text);
 				}
@@ -98,10 +115,14 @@ namespace MultiMC.WinGUI
 
 		private void modView_DragDrop(object sender, DragEventArgs e)
 		{
-			int dragIndex = modView.InsertionMark.Index;
+			int dragIndex = modView.InsertionMark.Index + 
+				(modView.InsertionMark.AppearsAfterItem ? 1 : 0);
+			if (modView.Items.Count <= 0)
+				dragIndex = 0;
 
 			if (e.Data.GetDataPresent(
-				"System.Windows.Forms.ListView+SelectedListViewItemCollection"))
+				"System.Windows.Forms.ListView+SelectedListViewItemCollection") &&
+				dragIndex > 0)
 			{
 				// Return if the items are not selected in the ListView control.
 				if (modView.SelectedItems.Count == 0)
@@ -143,11 +164,16 @@ namespace MultiMC.WinGUI
 					modView.Items.Remove(dragItem);
 				}
 			}
-			else if (e.Data.GetDataPresent("FileDrop+FolderDrop"))
+			else if (e.Data.GetDataPresent("FileDrop"))
 			{
-				string[] files = (string[])e.Data.GetData("FileDrop+FolderDrop");
+				string[] files = (string[])e.Data.GetData("FileDrop");
 				e.Effect = DragDropEffects.Copy;
 				AddMods(files, dragIndex);
+			}
+			else
+			{
+				e.Effect = DragDropEffects.None;
+				modView.InsertionMark.Index = -1;
 			}
 		}
 
@@ -155,17 +181,7 @@ namespace MultiMC.WinGUI
 		{
 			foreach (string file in files)
 			{
-				File.Copy(file, Path.Combine(inst.InstModsDir, Path.GetFileName(file)), true);
-				EventHandler<ModFileChangedEventArgs> addedHandler = null;
-				addedHandler = (o, args) =>
-				{
-					if (args.ModFile == file)
-					{
-						inst.InstMods[file] = index;
-					}
-					inst.InstMods.ModFileChanged -= addedHandler;
-				};
-				inst.InstMods.ModFileChanged += addedHandler;
+				inst.InstMods.InsertMod(file, index);
 				LoadModList();
 			}
 		}
@@ -176,16 +192,60 @@ namespace MultiMC.WinGUI
 			Point cp = modView.PointToClient(new Point(e.X, e.Y));
 
 			// Obtain the item that is located at the specified location of the mouse pointer.
-			if (modView.GetItemAt(cp.X, cp.Y) == null)
+			modView.InsertionMark.Index = modView.InsertionMark.NearestIndex(cp);
+			modView.InsertionMark.AppearsAfterItem = 
+				modView.Items[modView.Items.Count-1].Bounds.Bottom < cp.Y;
+			//if (modView.GetItemAt(cp.X, cp.Y) == null)
+			//{
+			//    modView.InsertionMark.Index = modView.Items.Count - 1;
+			//    modView.InsertionMark.AppearsAfterItem = true;
+			//}
+			//else
+			//{
+			//    modView.InsertionMark.AppearsAfterItem = false;
+			//    modView.InsertionMark.Index = modView.GetItemAt(cp.X, cp.Y).Index;
+			//}
+		}
+
+		private void modView_DragLeave(object sender, EventArgs e)
+		{
+			modView.InsertionMark.Index = -1;
+		}
+
+		private void mlModView_DragOver(object sender, DragEventArgs e)
+		{
+			if (e.Data.GetDataPresent("FileDrop"))
 			{
-				modView.InsertionMark.Index = modView.Items.Count - 1;
-				modView.InsertionMark.AppearsAfterItem = true;
+				e.Effect = DragDropEffects.Copy;
 			}
-			else
+		}
+
+		private void mlModView_DragDrop(object sender, DragEventArgs e)
+		{
+			if (e.Data.GetDataPresent("FileDrop"))
 			{
-				modView.InsertionMark.AppearsAfterItem = false;
-				modView.InsertionMark.Index = modView.GetItemAt(cp.X, cp.Y).Index;
+				foreach (string file in e.Data.GetData("FileDrop") as string[])
+				{
+					File.Copy(file, Path.Combine(inst.ModLoaderDir, Path.GetFileName(file)), true);
+				}
+				LoadModList();
 			}
+		}
+
+		private void UpdateSizes()
+		{
+			modView.Columns[0].Width = modView.Width - 2;
+			mlModView.Columns[0].Width = mlModView.Width - 2;
+		}
+
+		private void modView_Resize(object sender, EventArgs e)
+		{
+			UpdateSizes();
+		}
+
+		private void mlModView_Resize(object sender, EventArgs e)
+		{
+			UpdateSizes();
 		}
 	}
 }

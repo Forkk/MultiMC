@@ -79,5 +79,10 @@ namespace MultiMC.WinGUI
 		{
 			Application.Run(mainWindow as MainForm);
 		}
+
+		public IDialog DeleteDialog()
+		{
+			return new DeleteConfirmForm();
+		}
 	}
 }

@@ -30,6 +30,8 @@ namespace MultiMC.GUI
 
 		IEditModsDialog EditModsDialog(Instance inst);
 
+		IDialog DeleteDialog();
+
 		void Run(IMainWindow mainWindow);
 	}
 

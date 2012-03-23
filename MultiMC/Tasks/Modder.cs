@@ -213,8 +213,8 @@ namespace MultiMC.Tasks
 				}
 
 				// For zip files
-				else if (File.Exists(f) && Path.GetExtension(f) == ".zip" && 
-					OSUtils.OS == OSEnum.Windows)
+				else if (File.Exists(f) &&
+					(Path.GetExtension(f) == ".zip" || Path.GetExtension(f) == ".jar"))
 				{
 					string tmpDir = Path.Combine(Target.RootDir, MODTEMP_DIR_NAME,
 						Path.GetFileNameWithoutExtension(f));

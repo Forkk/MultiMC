@@ -292,7 +292,29 @@ Details:
 
 		void DeleteInstClicked(object sender, InstActionEventArgs e)
 		{
-			throw new NotImplementedException();
+			IDialog deleteDialog = GUIManager.Main.DeleteDialog();
+			deleteDialog.Response += (o, args) =>
+				{
+					if (args.Response == DialogResponse.OK)
+					{
+						try
+						{
+							Directory.Delete(SelectedInst.RootDir, true);
+						}
+						catch (IOException)
+						{
+							Directory.Delete(SelectedInst.RootDir, true);
+						}
+						catch (UnauthorizedAccessException)
+						{
+						}
+						MainWindow.LoadInstances();
+					}
+					deleteDialog.Close();
+				};
+			deleteDialog.Parent = MainWindow;
+			deleteDialog.DefaultPosition = DefWindowPosition.CenterParent;
+			deleteDialog.Run();
 		}
 
 		#endregion

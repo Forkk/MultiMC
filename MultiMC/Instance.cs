@@ -620,6 +620,11 @@ namespace MultiMC
 				modList.Insert(value, s);
 			}
 		}
+
+		public void InsertMod(string file, int index)
+		{
+			RecursiveAdd(file, false, index);
+		}
 		
 		public void Load()
 		{
@@ -673,12 +678,17 @@ namespace MultiMC
 			Save();
 		}
 		
-		private void RecursiveAdd(string dir, bool triggerEvents = true)
+		private void RecursiveAdd(string dir, bool triggerEvents = true, int index = -1)
 		{
 			if (File.Exists(dir) && !Directory.Exists(dir))
 			{
 				if (!modList.Contains(dir))
-					Add(dir, triggerEvents);
+				{
+					if (index == -1)
+						Add(dir, triggerEvents);
+					else
+						Insert(index, dir, triggerEvents);
+				}
 				return;
 			}
 
@@ -686,12 +696,17 @@ namespace MultiMC
 			{
 				if (Directory.Exists(modFile))
 				{
-					RecursiveAdd(Path.Combine(dir, Path.GetFileName(modFile)), triggerEvents);
+					RecursiveAdd(Path.Combine(dir, Path.GetFileName(modFile)), triggerEvents, index);
 				}
 				else if (File.Exists(modFile))
 				{
 					if (!modList.Contains(modFile))
-						Add(modFile, triggerEvents);
+					{
+						if (index == -1)
+							Add(modFile, triggerEvents);
+						else
+							Insert(index, modFile, triggerEvents);
+					}
 				}
 			}
 		}
