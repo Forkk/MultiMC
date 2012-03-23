@@ -40,11 +40,14 @@ namespace MultiMC.WinGUI
 			}
 
 			mlModView.Items.Clear();
-			foreach (string file in Directory.GetFiles(inst.ModLoaderDir))
+			if (Directory.Exists(inst.ModLoaderDir))
 			{
-				ListViewItem item = new ListViewItem(file);
-				item.Checked = true;
-				mlModView.Items.Add(item);
+				foreach (string file in Directory.GetFiles(inst.ModLoaderDir))
+				{
+					ListViewItem item = new ListViewItem(file);
+					item.Checked = true;
+					mlModView.Items.Add(item);
+				}
 			}
 		}
 
