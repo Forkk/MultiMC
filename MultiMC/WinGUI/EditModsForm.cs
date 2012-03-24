@@ -34,7 +34,8 @@ namespace MultiMC.WinGUI
 			modView.Items.Clear();
 			foreach (string file in inst.InstMods)
 			{
-				ListViewItem item = new ListViewItem(file);
+				ListViewItem item = new ListViewItem(Path.GetFileName(file));
+				item.Tag = item.ToolTipText = file;
 				item.Checked = true;
 				modView.Items.Add(item);
 			}
@@ -42,9 +43,10 @@ namespace MultiMC.WinGUI
 			mlModView.Items.Clear();
 			if (Directory.Exists(inst.ModLoaderDir))
 			{
-				foreach (string file in Directory.GetFiles(inst.ModLoaderDir))
+				foreach (string file in Directory.GetFileSystemEntries(inst.ModLoaderDir))
 				{
-					ListViewItem item = new ListViewItem(file);
+					ListViewItem item = new ListViewItem(Path.GetFileName(file));
+					item.Tag = item.ToolTipText = file;
 					item.Checked = true;
 					mlModView.Items.Add(item);
 				}
@@ -58,12 +60,12 @@ namespace MultiMC.WinGUI
 			{
 				if (item.Checked)
 				{
-					inst.InstMods[item.Text] = i;
+					inst.InstMods[item.Tag as string] = i;
 					i++;
 				}
 				else
 				{
-					File.Delete(item.Text);
+					File.Delete(item.Tag as string);
 				}
 			}
 
@@ -71,7 +73,10 @@ namespace MultiMC.WinGUI
 			{
 				if (!item.Checked)
 				{
-					File.Delete(item.Text);
+					if (File.Exists(item.Tag as string))
+						File.Delete(item.Tag as string);
+					else if (Directory.Exists(item.Tag as string))
+						Directory.Delete(item.Tag as string, true);
 				}
 			}
 			inst.InstMods.Save();
@@ -196,8 +201,11 @@ namespace MultiMC.WinGUI
 
 			// Obtain the item that is located at the specified location of the mouse pointer.
 			modView.InsertionMark.Index = modView.InsertionMark.NearestIndex(cp);
-			modView.InsertionMark.AppearsAfterItem = 
-				modView.Items[modView.Items.Count-1].Bounds.Bottom < cp.Y;
+			if (modView.Items.Count > 0)
+				modView.InsertionMark.AppearsAfterItem =
+					modView.Items[modView.Items.Count - 1].Bounds.Bottom < cp.Y;
+			else
+				modView.InsertionMark.AppearsAfterItem = false;
 			//if (modView.GetItemAt(cp.X, cp.Y) == null)
 			//{
 			//    modView.InsertionMark.Index = modView.Items.Count - 1;
@@ -227,11 +235,53 @@ namespace MultiMC.WinGUI
 		{
 			if (e.Data.GetDataPresent("FileDrop"))
 			{
-				foreach (string file in e.Data.GetData("FileDrop") as string[])
+				try
 				{
-					File.Copy(file, Path.Combine(inst.ModLoaderDir, Path.GetFileName(file)), true);
+					foreach (string file in e.Data.GetData("FileDrop") as string[])
+					{
+						if (Directory.Exists(file))
+						{
+							RecursiveCopy(file, Path.Combine(inst.ModLoaderDir,
+								Path.GetFileName(file)), true);
+						}
+						else if (File.Exists(file))
+							File.Copy(file, Path.Combine(inst.ModLoaderDir,
+								Path.GetFileName(file)), true);
+					}
+				}
+				catch (UnauthorizedAccessException)
+				{
+					MessageDialog.Show(this,
+						"Can't copy files to mods folder. Access was denied.",
+						"Failed to copy files");
+				}
+				catch (IOException err)
+				{
+					MessageDialog.Show(this,
+						"Can't copy files to mods folder. An unknown error occurred: " + 
+						err.Message,
+						"Failed to copy files");
 				}
 				LoadModList();
+			}
+		}
+
+		private void RecursiveCopy(string source, string dest, bool overwrite = false)
+		{
+			if (!Directory.Exists(dest))
+				Directory.CreateDirectory(dest);
+
+			if (File.Exists(source))
+				File.Copy(source, Path.Combine(dest, Path.GetFileName(source)), overwrite);
+
+			foreach (string file in Directory.GetFiles(source))
+			{
+				File.Copy(file, Path.Combine(dest, Path.GetFileName(file)), overwrite);
+			}
+			foreach (string dir in Directory.GetDirectories(source))
+			{
+				string newdest = Path.Combine(dest, Path.GetFileName(dir));
+				RecursiveCopy(dir, newdest, overwrite);
 			}
 		}
 
