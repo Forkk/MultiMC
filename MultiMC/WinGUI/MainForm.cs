@@ -665,5 +665,29 @@ namespace MultiMC.WinGUI
 		}
 
 		#endregion
+
+		private void instView_AfterLabelEdit(object sender, LabelEditEventArgs e)
+		{
+			ListViewItem item = instView.Items[e.Item];
+			Instance inst = (item.Tag as Instance);
+
+			if (Instance.NameIsValid(e.Label))
+			{
+				inst.Name = e.Label;
+			}
+			else
+			{
+				e.CancelEdit = true;
+			}
+		}
+
+		private void instView_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyData == Keys.F2)
+			{
+				if (instView.SelectedItems.Count > 0)
+					instView.SelectedItems[0].BeginEdit();
+			}
+		}
 	}
 }

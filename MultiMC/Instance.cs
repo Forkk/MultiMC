@@ -17,7 +17,7 @@ namespace MultiMC
 		/// <summary>
 		/// Invalid characters that aren't allowed in an instance's name.
 		/// </summary>
-		const string INVALID_NAME_CHARS = "< > \n \\ &";
+		const string INVALID_NAME_CHARS = "<>\n\r\\&=";
 
 		/// <summary>
 		/// Name of the data file inside instance folders
@@ -534,14 +534,14 @@ namespace MultiMC
 		#endregion
 	}
 	
-	public sealed class InstanceMods : IEnumerable<string>, IDisposable
+	public sealed class InstanceMods : IEnumerable<Mod>, IDisposable
 	{
-		List<string> modList;
+		List<Mod> modList;
 		FileSystemWatcher watcher;
 		
 		public InstanceMods(Instance inst)
 		{
-			modList = new List<string>();
+			modList = new List<Mod>();
 			Inst = inst;
 			
 			if (!Directory.Exists(Inst.InstModsDir))
@@ -576,7 +576,7 @@ namespace MultiMC
 				Save();
 				break;
 			case WatcherChangeTypes.Deleted:
-				Remove(filePath);
+				Remove(modList.First(m => m.FileName == filePath));
 				Save();
 				break;
 			default:
@@ -592,7 +592,7 @@ namespace MultiMC
 				OSUtils.GetRelativePath(e.FullPath, Path.GetFullPath(
 					Path.GetFullPath(Environment.CurrentDirectory)));
 			int index = this[oldPath];
-			this[index] = path;
+			this[index] = new Mod(path);
 			Save();
 		}
 
@@ -602,13 +602,13 @@ namespace MultiMC
 			private set;
 		}
 		
-		public string this[int i]
+		public Mod this[int i]
 		{
 			get  { return modList[i]; }
 			private set { modList[i] = value; }
 		}
 		
-		public int this[string s]
+		public int this[Mod s]
 		{
 			get { return modList.IndexOf(s); }
 			set
@@ -618,6 +618,20 @@ namespace MultiMC
 					                               "that isn't in the list!");
 				Remove(s);
 				modList.Insert(value, s);
+			}
+		}
+
+		public int this[string s]
+		{
+			get { return modList.FindIndex(m => m.FileName == s); }
+			set
+			{
+				if (!modList.Any(m => m.FileName == s))
+					throw new KeyNotFoundException("Can't change index of something " +
+												   "that isn't in the list!");
+				Mod mod = modList.First(m => m.FileName == s);
+				Remove(mod);
+				modList.Insert(value, mod);
 			}
 		}
 
@@ -643,7 +657,7 @@ namespace MultiMC
 			try
 			{
 				List<string> writeList = new List<string>();
-				writeList.AddRange(modList);
+				writeList.AddRange(modList.Select(mod => mod.FileName));
 				for (int i = 0; i < writeList.Count; i++)
 				{
 					writeList[i] = 
@@ -667,7 +681,7 @@ namespace MultiMC
 			{
 				for (int i = 0; i < modList.Count; i++)
 				{
-					if (!File.Exists(modList[i]))
+					if (!File.Exists(modList[i].FileName))
 					{
 						Remove(modList[i]);
 						i--;
@@ -682,12 +696,12 @@ namespace MultiMC
 		{
 			if (File.Exists(dir) && !Directory.Exists(dir))
 			{
-				if (!modList.Contains(dir))
+				if (!modList.Any(m => m.FileName == dir))
 				{
 					if (index == -1)
-						Add(dir, triggerEvents);
+						Add(new Mod(dir), triggerEvents);
 					else
-						Insert(index, dir, triggerEvents);
+						Insert(index, new Mod(dir), triggerEvents);
 				}
 				return;
 			}
@@ -700,12 +714,12 @@ namespace MultiMC
 				}
 				else if (File.Exists(modFile))
 				{
-					if (!modList.Contains(modFile))
+					if (!modList.Any(m => m.FileName == modFile))
 					{
 						if (index == -1)
-							Add(modFile, triggerEvents);
+							Add(new Mod(modFile), triggerEvents);
 						else
-							Insert(index, modFile, triggerEvents);
+							Insert(index, new Mod(modFile), triggerEvents);
 					}
 				}
 			}
@@ -713,33 +727,38 @@ namespace MultiMC
 
 		#region Add and Remove
 
-		private void Add(string modFile, bool triggerEvent = true)
+		private void Add(string mod, bool triggerEvent = true)
 		{
-			if (!modList.Contains(modFile))
-				modList.Add(modFile);
+			Add(new Mod(mod));
+		}
+
+		private void Add(Mod mod, bool triggerEvent = true)
+		{
+			if (!modList.Contains(mod))
+				modList.Add(mod);
 			if (triggerEvent) 
-				OnModFileChanged(ModFileChangeTypes.ADDED, modFile);
+				OnModFileChanged(ModFileChangeTypes.ADDED, mod);
 		}
 
-		private void Insert(int index, string modFile, bool triggerEvent = true)
+		private void Insert(int index, Mod mod, bool triggerEvent = true)
 		{
-			if (!modList.Contains(modFile))
-				modList.Insert(index, modFile);
+			if (!modList.Contains(mod))
+				modList.Insert(index, mod);
 			if (triggerEvent)
-				OnModFileChanged(ModFileChangeTypes.ADDED, modFile);
+				OnModFileChanged(ModFileChangeTypes.ADDED, mod);
 		}
 
-		private void Remove(string modFile, bool triggerEvent = true)
+		private void Remove(Mod mod, bool triggerEvent = true)
 		{
-			if (modList.Contains(modFile))
-				modList.Remove(modFile);
+			if (modList.Contains(mod))
+				modList.Remove(mod);
 			if (triggerEvent)
-				OnModFileChanged(ModFileChangeTypes.REMOVED, modFile);
+				OnModFileChanged(ModFileChangeTypes.REMOVED, mod);
 		}
 
 		#endregion
 		
-		public IEnumerator<string> GetEnumerator()
+		public IEnumerator<Mod> GetEnumerator()
 		{
 			return modList.GetEnumerator();
 		}
@@ -749,12 +768,12 @@ namespace MultiMC
 			return modList.GetEnumerator();
 		}
 		
-		public void OnModFileChanged(ModFileChangeTypes type, string modFile)
+		public void OnModFileChanged(ModFileChangeTypes type, Mod mod)
 		{
-			DebugUtils.Print("File {0} was changed ({1})", modFile, type.ToString());
+			DebugUtils.Print("File {0} was changed ({1})", mod.FileName, type.ToString());
 			Inst.NeedsRebuild = true;
 			if (ModFileChanged != null)
-				ModFileChanged(this, new ModFileChangedEventArgs(type, modFile));
+				ModFileChanged(this, new ModFileChangedEventArgs(type, mod));
 		}
 		
 		public event EventHandler<ModFileChangedEventArgs> ModFileChanged;
@@ -764,7 +783,7 @@ namespace MultiMC
 	
 	public class ModFileChangedEventArgs : EventArgs
 	{
-		public ModFileChangedEventArgs(ModFileChangeTypes type, string modFile)
+		public ModFileChangedEventArgs(ModFileChangeTypes type, Mod modFile)
 		{
 			ChangeType = type;
 			ModFile = modFile;
@@ -776,7 +795,7 @@ namespace MultiMC
 			protected set;
 		}
 		
-		public string ModFile
+		public Mod ModFile
 		{
 			get;
 			protected set;

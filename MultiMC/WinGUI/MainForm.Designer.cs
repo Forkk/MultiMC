@@ -99,7 +99,6 @@
 			// 
 			// editNotesToolStripMenuItem
 			// 
-			this.editNotesToolStripMenuItem.Enabled = false;
 			this.editNotesToolStripMenuItem.Name = "editNotesToolStripMenuItem";
 			this.editNotesToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
 			this.editNotesToolStripMenuItem.Text = "Edit Notes";
@@ -256,10 +255,12 @@
 			this.instView.Size = new System.Drawing.Size(604, 336);
 			this.instView.TabIndex = 1;
 			this.instView.UseCompatibleStateImageBehavior = false;
+			this.instView.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.instView_AfterLabelEdit);
 			this.instView.ItemActivate += new System.EventHandler(this.instView_ItemActivate);
 			this.instView.DragDrop += new System.Windows.Forms.DragEventHandler(this.instView_DragDrop);
 			this.instView.DragOver += new System.Windows.Forms.DragEventHandler(this.instView_DragOver);
 			this.instView.DragLeave += new System.EventHandler(this.instView_DragLeave);
+			this.instView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.instView_KeyDown);
 			// 
 			// toolStripContainer
 			// 

@@ -15,6 +15,8 @@
 //
 using System;
 using System.Configuration;
+using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 
@@ -29,34 +31,62 @@ namespace MultiMC
 
 		public virtual void Save(string path)
 		{
-			string[] line = new string[dict.Count];
+			using (Stream stream = File.Open(path, FileMode.Create))
+			{
+				Save(stream);
+			}
+		}
+
+		public virtual void Save(Stream stream)
+		{
+			string[] lines = new string[dict.Count];
 			int i = 0;
 			foreach (KeyValuePair<string, string> kv in dict)
-				line[i++] = kv.Key + "=" + kv.Value;
-			File.WriteAllLines(path, line);
+			{
+				Console.WriteLine(kv.Key + "=" + kv.Value);
+				lines[i++] = kv.Key + "=" + kv.Value;
+			}
+
+			StreamWriter writer = new StreamWriter(stream);
+			foreach (string line in lines)
+			{
+				writer.WriteLine(line);
+			}
+			writer.Flush();
 		}
 
 		public virtual void Load(string path)
 		{
 			try
 			{
-				dict.Clear();
-				string[] lines = File.ReadAllLines(path);
-				foreach (string line in lines)
+				using (Stream stream = File.OpenRead(path))
 				{
-					if (!line.StartsWith("#"))
-					{
-						string[] lineData = line.Split('=');
-						dict.Add(lineData[0], lineData[1]);
-					}
+					Load(stream);
 				}
-			}
-			catch (IndexOutOfRangeException e)
-			{
-				Console.WriteLine(e.ToString());
 			}
 			catch (FileNotFoundException)
 			{
+
+			}
+		}
+
+		public virtual void Load(Stream stream)
+		{
+			StreamReader reader = new StreamReader(stream);
+			dict.Clear();
+			string[] lines = reader.ReadToEnd().Split('\n').
+				Select(l => l.TrimEnd('\n', '\r')).ToArray();
+			foreach (string line in lines)
+			{
+				if (!line.StartsWith("#"))
+				{
+					string[] lineData = line.Split('=');
+					if (lineData.Length >= 2)
+					{
+						//Console.WriteLine("{0} = {1}", lineData[0], lineData[1]);
+						dict.Add(lineData[0], lineData[1]);
+					}
+				}
 			}
 		}
 
@@ -98,11 +128,22 @@ namespace MultiMC
 			return dict.Remove(key);
 		}
 
-		protected T ParseSetting<T>(string settingName, T defValue)
+		public T ParseSetting<T>(string settingName, T defValue)
 		{
 			T value = defValue;
 
 			if (!DataUtils.TryParse<T>(this[settingName, defValue.ToString()], out value))
+			{
+				return defValue;
+			}
+			return value;
+		}
+
+		public T ParseEnumSetting<T>(string settingName, T defValue) where T : struct
+		{
+			T value = defValue;
+
+			if (!Enum.TryParse<T>(this[settingName, defValue.ToString()], out value))
 			{
 				return defValue;
 			}

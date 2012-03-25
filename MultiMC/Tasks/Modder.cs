@@ -85,9 +85,9 @@ namespace MultiMC.Tasks
 		{
 			OnStart();
 			modFileIndices = new Hashtable();
-			foreach (string modFile in Target.InstMods)
+			foreach (Mod mod in Target.InstMods)
 			{
-				modFileIndices[modFile] = Target.InstMods[modFile];
+				modFileIndices[mod] = Target.InstMods[mod];
 			}
 
 			string mcBin = Target.BinDir;

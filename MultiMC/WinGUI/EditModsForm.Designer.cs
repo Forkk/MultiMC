@@ -29,9 +29,6 @@
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditModsForm));
-			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-			this.buttonOk = new System.Windows.Forms.Button();
-			this.buttonCancel = new System.Windows.Forms.Button();
 			this.labelHelp = new System.Windows.Forms.Label();
 			this.modTabControl = new System.Windows.Forms.TabControl();
 			this.tabPageJar = new System.Windows.Forms.TabPage();
@@ -40,46 +37,19 @@
 			this.tabPageMLMods = new System.Windows.Forms.TabPage();
 			this.mlModView = new System.Windows.Forms.ListView();
 			this.modColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.flowLayoutPanel1.SuspendLayout();
+			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+			this.buttonExport = new System.Windows.Forms.Button();
+			this.rButtonPanel = new System.Windows.Forms.FlowLayoutPanel();
+			this.buttonOk = new System.Windows.Forms.Button();
+			this.buttonCancel = new System.Windows.Forms.Button();
 			this.modTabControl.SuspendLayout();
 			this.tabPageJar.SuspendLayout();
 			this.tabPageMLMods.SuspendLayout();
+			this.tableLayoutPanel1.SuspendLayout();
+			this.flowLayoutPanel1.SuspendLayout();
+			this.rButtonPanel.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// flowLayoutPanel1
-			// 
-			this.flowLayoutPanel1.AutoSize = true;
-			this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.flowLayoutPanel1.Controls.Add(this.buttonOk);
-			this.flowLayoutPanel1.Controls.Add(this.buttonCancel);
-			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-			this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 379);
-			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-			this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(2);
-			this.flowLayoutPanel1.Size = new System.Drawing.Size(584, 33);
-			this.flowLayoutPanel1.TabIndex = 1;
-			// 
-			// buttonOk
-			// 
-			this.buttonOk.Location = new System.Drawing.Point(502, 5);
-			this.buttonOk.Name = "buttonOk";
-			this.buttonOk.Size = new System.Drawing.Size(75, 23);
-			this.buttonOk.TabIndex = 0;
-			this.buttonOk.Text = "&OK";
-			this.buttonOk.UseVisualStyleBackColor = true;
-			this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
-			// 
-			// buttonCancel
-			// 
-			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.buttonCancel.Location = new System.Drawing.Point(421, 5);
-			this.buttonCancel.Name = "buttonCancel";
-			this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-			this.buttonCancel.TabIndex = 1;
-			this.buttonCancel.Text = "&Cancel";
-			this.buttonCancel.UseVisualStyleBackColor = true;
-			this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
 			// 
 			// labelHelp
 			// 
@@ -177,6 +147,81 @@
 			this.modColumn.Text = "Mod Name";
 			this.modColumn.Width = 440;
 			// 
+			// tableLayoutPanel1
+			// 
+			this.tableLayoutPanel1.ColumnCount = 2;
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 0);
+			this.tableLayoutPanel1.Controls.Add(this.rButtonPanel, 1, 0);
+			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 379);
+			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+			this.tableLayoutPanel1.RowCount = 1;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(584, 33);
+			this.tableLayoutPanel1.TabIndex = 4;
+			// 
+			// flowLayoutPanel1
+			// 
+			this.flowLayoutPanel1.AutoSize = true;
+			this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.flowLayoutPanel1.Controls.Add(this.buttonExport);
+			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+			this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
+			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+			this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(2);
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(292, 33);
+			this.flowLayoutPanel1.TabIndex = 3;
+			// 
+			// buttonExport
+			// 
+			this.buttonExport.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.buttonExport.Enabled = false;
+			this.buttonExport.Location = new System.Drawing.Point(5, 5);
+			this.buttonExport.Name = "buttonExport";
+			this.buttonExport.Size = new System.Drawing.Size(75, 23);
+			this.buttonExport.TabIndex = 1;
+			this.buttonExport.Text = "&Export";
+			this.buttonExport.UseVisualStyleBackColor = true;
+			this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
+			// 
+			// rButtonPanel
+			// 
+			this.rButtonPanel.AutoSize = true;
+			this.rButtonPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.rButtonPanel.Controls.Add(this.buttonOk);
+			this.rButtonPanel.Controls.Add(this.buttonCancel);
+			this.rButtonPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.rButtonPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+			this.rButtonPanel.Location = new System.Drawing.Point(292, 0);
+			this.rButtonPanel.Margin = new System.Windows.Forms.Padding(0);
+			this.rButtonPanel.Name = "rButtonPanel";
+			this.rButtonPanel.Padding = new System.Windows.Forms.Padding(2);
+			this.rButtonPanel.Size = new System.Drawing.Size(292, 33);
+			this.rButtonPanel.TabIndex = 2;
+			// 
+			// buttonOk
+			// 
+			this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.buttonOk.Location = new System.Drawing.Point(210, 5);
+			this.buttonOk.Name = "buttonOk";
+			this.buttonOk.Size = new System.Drawing.Size(75, 23);
+			this.buttonOk.TabIndex = 0;
+			this.buttonOk.Text = "&OK";
+			this.buttonOk.UseVisualStyleBackColor = true;
+			// 
+			// buttonCancel
+			// 
+			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.buttonCancel.Location = new System.Drawing.Point(129, 5);
+			this.buttonCancel.Name = "buttonCancel";
+			this.buttonCancel.Size = new System.Drawing.Size(75, 23);
+			this.buttonCancel.TabIndex = 1;
+			this.buttonCancel.Text = "&Cancel";
+			this.buttonCancel.UseVisualStyleBackColor = true;
+			// 
 			// EditModsForm
 			// 
 			this.AcceptButton = this.buttonOk;
@@ -184,27 +229,28 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.buttonCancel;
 			this.ClientSize = new System.Drawing.Size(584, 412);
+			this.Controls.Add(this.tableLayoutPanel1);
 			this.Controls.Add(this.modTabControl);
 			this.Controls.Add(this.labelHelp);
-			this.Controls.Add(this.flowLayoutPanel1);
+			this.DefaultPosition = MultiMC.GUI.DefWindowPosition.CenterParent;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "EditModsForm";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Edit mods";
 			this.Title = "Edit mods";
-			this.flowLayoutPanel1.ResumeLayout(false);
 			this.modTabControl.ResumeLayout(false);
 			this.tabPageJar.ResumeLayout(false);
 			this.tabPageMLMods.ResumeLayout(false);
+			this.tableLayoutPanel1.ResumeLayout(false);
+			this.tableLayoutPanel1.PerformLayout();
+			this.flowLayoutPanel1.ResumeLayout(false);
+			this.rButtonPanel.ResumeLayout(false);
 			this.ResumeLayout(false);
-			this.PerformLayout();
 
 		}
 
 		#endregion
 
-		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-		private System.Windows.Forms.Button buttonOk;
-		private System.Windows.Forms.Button buttonCancel;
 		private System.Windows.Forms.Label labelHelp;
 		private System.Windows.Forms.TabControl modTabControl;
 		private System.Windows.Forms.TabPage tabPageJar;
@@ -213,5 +259,11 @@
 		private System.Windows.Forms.TabPage tabPageMLMods;
 		private System.Windows.Forms.ListView mlModView;
 		private System.Windows.Forms.ColumnHeader modColumn;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+		private System.Windows.Forms.FlowLayoutPanel rButtonPanel;
+		private System.Windows.Forms.Button buttonOk;
+		private System.Windows.Forms.Button buttonCancel;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+		private System.Windows.Forms.Button buttonExport;
 	}
 }

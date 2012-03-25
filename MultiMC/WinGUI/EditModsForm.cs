@@ -29,14 +29,24 @@ namespace MultiMC.WinGUI
 			}
 		}
 
+		private Mod GetLinkedMod(ListViewItem item)
+		{
+			return item.Tag as Mod;
+		}
+
 		public void LoadModList()
 		{
 			modView.Items.Clear();
-			foreach (string file in inst.InstMods)
+			foreach (Mod mod in inst.InstMods)
 			{
-				ListViewItem item = new ListViewItem(Path.GetFileName(file));
-				item.Tag = item.ToolTipText = file;
+				string itemLabel = Path.GetFileName(mod.FileName);
+				if (mod.Name != mod.FileName)
+					itemLabel = mod.Name;
+
+				ListViewItem item = new ListViewItem(itemLabel);
+				item.Tag = mod;
 				item.Checked = true;
+
 				modView.Items.Add(item);
 			}
 
@@ -45,8 +55,13 @@ namespace MultiMC.WinGUI
 			{
 				foreach (string file in Directory.GetFileSystemEntries(inst.ModLoaderDir))
 				{
-					ListViewItem item = new ListViewItem(Path.GetFileName(file));
-					item.Tag = item.ToolTipText = file;
+					Mod mod = new Mod(file);
+					string itemLabel = Path.GetFileName(file);
+					if (mod.Name != mod.FileName)
+						itemLabel = mod.Name;
+
+					ListViewItem item = new ListViewItem(itemLabel);
+					item.Tag = new Mod(file);
 					item.Checked = true;
 					mlModView.Items.Add(item);
 				}
@@ -60,12 +75,12 @@ namespace MultiMC.WinGUI
 			{
 				if (item.Checked)
 				{
-					inst.InstMods[item.Tag as string] = i;
+					inst.InstMods[GetLinkedMod(item).FileName] = i;
 					i++;
 				}
 				else
 				{
-					File.Delete(item.Tag as string);
+					File.Delete(GetLinkedMod(item).FileName);
 				}
 			}
 
@@ -73,10 +88,10 @@ namespace MultiMC.WinGUI
 			{
 				if (!item.Checked)
 				{
-					if (File.Exists(item.Tag as string))
-						File.Delete(item.Tag as string);
-					else if (Directory.Exists(item.Tag as string))
-						Directory.Delete(item.Tag as string, true);
+					if (File.Exists(GetLinkedMod(item).FileName))
+						File.Delete(GetLinkedMod(item).FileName);
+					else if (Directory.Exists(GetLinkedMod(item).FileName))
+						Directory.Delete(GetLinkedMod(item).FileName, true);
 				}
 			}
 			inst.InstMods.Save();
@@ -299,6 +314,11 @@ namespace MultiMC.WinGUI
 		private void mlModView_Resize(object sender, EventArgs e)
 		{
 			UpdateSizes();
+		}
+
+		private void buttonExport_Click(object sender, EventArgs e)
+		{
+
 		}
 	}
 }
