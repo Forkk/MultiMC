@@ -43,8 +43,15 @@ namespace MultiMC.WinGUI
 				OSUtils.SetWindowTheme(mlModView.Handle, "explorer", null);
 			}
 
-			inst.InstMods.ModFileChanged += (o, args) => 
-				this.Invoke((o2, args2) => LoadModList());
+			inst.InstMods.ModFileChanged += InstMods_ModFileChanged;
+
+			this.FormClosed += (o, args) =>
+				inst.InstMods.ModFileChanged -= InstMods_ModFileChanged;
+		}
+
+		void InstMods_ModFileChanged(object sender, ModFileChangedEventArgs e)
+		{
+			this.Invoke((o, args) => LoadModList());
 		}
 
 		private Mod GetLinkedMod(ListViewItem item)
