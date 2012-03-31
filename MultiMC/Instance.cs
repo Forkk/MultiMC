@@ -582,8 +582,9 @@ namespace MultiMC
 		
 		void FileChanged(object sender, FileSystemEventArgs e)
 		{
-			string filePath = OSUtils.GetRelativePath(e.FullPath, Environment.CurrentDirectory);
-			Console.WriteLine(filePath);
+			string filePath = 
+				OSUtils.GetRelativePath(e.FullPath, Environment.CurrentDirectory);
+
 			switch (e.ChangeType)
 			{
 			case WatcherChangeTypes.Created:
@@ -786,16 +787,28 @@ namespace MultiMC
 
 		private void Add(Mod mod, bool triggerEvent = true)
 		{
-			if (!modList.Contains(mod))
-				modList.Add(mod);
+			if (modList.Any(m => m.FileName == mod.FileName))
+			{
+				//Console.WriteLine("{0} was added to modlist twice. Removed original.",
+				//    mod.FileName);
+				Remove(modList.Where(m => m.FileName == mod.FileName), false);
+			}
+
+			modList.Add(mod);
+
 			if (triggerEvent) 
 				OnModFileChanged(ModFileChangeTypes.ADDED, mod);
 		}
 
 		private void Insert(int index, Mod mod, bool triggerEvent = true)
 		{
-			if (!modList.Contains(mod))
-				modList.Insert(index, mod);
+			if (modList.Any(m => m.FileName == mod.FileName))
+			{
+				Remove(modList.Where(m => m.FileName == mod.FileName), false);
+			}
+
+			modList.Insert(index, mod);
+
 			if (triggerEvent)
 				OnModFileChanged(ModFileChangeTypes.ADDED, mod);
 		}

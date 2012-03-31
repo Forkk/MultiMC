@@ -43,7 +43,8 @@ namespace MultiMC.WinGUI
 				OSUtils.SetWindowTheme(mlModView.Handle, "explorer", null);
 			}
 
-			inst.InstMods.ModFileChanged += (o, args) => LoadModList();
+			inst.InstMods.ModFileChanged += (o, args) => 
+				this.Invoke((o2, args2) => LoadModList());
 		}
 
 		private Mod GetLinkedMod(ListViewItem item)
@@ -379,6 +380,7 @@ namespace MultiMC.WinGUI
 						Directory.Delete(GetLinkedMod(item).FileName, true);
 				}
 			}
+			LoadModList();
 		}
 	}
 }
