@@ -133,6 +133,11 @@ namespace MultiMC.GUI
 		/// Called when the window is first shown.
 		/// </summary>
 		event EventHandler Shown;
+
+		/// <summary>
+		/// Called after the window has been closed
+		/// </summary>
+		event EventHandler Closed;
 	}
 
 	/// <summary>

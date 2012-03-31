@@ -116,22 +116,31 @@ Details:
 			MainWindow.AboutClicked += new EventHandler(AboutClicked);
 
 
-			MainWindow.InstanceLaunched += new EventHandler<InstActionEventArgs>(LaunchInstance);
+			MainWindow.InstanceLaunched += 
+				new EventHandler<InstActionEventArgs>(LaunchInstance);
 
-			MainWindow.ChangeIconClicked += new EventHandler<InstActionEventArgs>(ChangeIconClicked);
-			MainWindow.EditNotesClicked += new EventHandler<InstActionEventArgs>(EditNotesClicked);
+			MainWindow.ChangeIconClicked += 
+				new EventHandler<InstActionEventArgs>(ChangeIconClicked);
+			MainWindow.EditNotesClicked += 
+				new EventHandler<InstActionEventArgs>(EditNotesClicked);
 
-			MainWindow.EditModsClicked += new EventHandler<InstActionEventArgs>(EditModsClicked);
-			MainWindow.RebuildJarClicked += new EventHandler<InstActionEventArgs>(RebuildClicked);
-			MainWindow.ViewInstFolderClicked += new EventHandler<InstActionEventArgs>(ViewInstFolderClicked);
+			MainWindow.EditModsClicked += 
+				new EventHandler<InstActionEventArgs>(EditModsClicked);
+			MainWindow.RebuildJarClicked += 
+				new EventHandler<InstActionEventArgs>(RebuildClicked);
+			MainWindow.ViewInstFolderClicked += 
+				new EventHandler<InstActionEventArgs>(ViewInstFolderClicked);
 
-			MainWindow.DeleteInstClicked += new EventHandler<InstActionEventArgs>(DeleteInstClicked);
+			MainWindow.DeleteInstClicked += 
+				new EventHandler<InstActionEventArgs>(DeleteInstClicked);
 
 			MainWindow.ImageList = InstIconList;
 
 			MainWindow.LoadInstances();
 
 			MainWindow.Shown += new EventHandler(MainWindow_Shown);
+
+			MainWindow.Closed += new EventHandler(MainWindow_Closed);
 
 			// Initialize problem detection
 			try
@@ -142,6 +151,14 @@ Details:
 			catch (System.Reflection.ReflectionTypeLoadException e)
 			{
 				Console.WriteLine("Problem detection failed to initialize:\n{0}", e);
+			}
+		}
+
+		void MainWindow_Closed(object sender, EventArgs e)
+		{
+			foreach (Task task in MainWindow.TaskList)
+			{
+				task.Cancel();
 			}
 		}
 
@@ -159,7 +176,7 @@ Details:
 			Downloader mcVersionsDL = new Downloader(
 				Properties.Resources.MCVersionFile,
 				Properties.Resources.MCVersionFileDL,
-				"Downloading version info file");
+				"Downloading version info file", 30);
 			mcVersionsDL.QuietMode = true;
 			MainWindow.Invoke((o, args) => StartTask(mcVersionsDL));
 
