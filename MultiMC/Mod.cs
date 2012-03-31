@@ -1,4 +1,19 @@
-﻿using System;
+﻿// 
+//  Copyright 2012  Andrew Okin
+// 
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+// 
+//        http://www.apache.org/licenses/LICENSE-2.0
+// 
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
+//
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,32 +32,35 @@ namespace MultiMC
 			FileName = file;
 			modInfo = new ConfigFile();
 
-			using (ZipFile zipFile = ZipFile.Read(file))
+			if (File.Exists(file))
 			{
-				ZipEntry entry = null;
-				try
+				using (ZipFile zipFile = ZipFile.Read(file))
 				{
-					entry = zipFile.First(e => Path.GetExtension(e.FileName) == ".minf");
-				}
-				catch (InvalidOperationException)
-				{
-
-				}
-
-				if (entry != null)
-				{
-					byte[] data = null;
-					using (MemoryStream outStream = new MemoryStream())
+					ZipEntry entry = null;
+					try
 					{
-						entry.Extract(outStream);
-						data = outStream.ToArray();
+						entry = zipFile.First(e => Path.GetExtension(e.FileName) == ".minf");
+					}
+					catch (InvalidOperationException)
+					{
+
 					}
 
-					if (data != null)
+					if (entry != null)
 					{
-						using (Stream stream = new MemoryStream(data))
+						byte[] data = null;
+						using (MemoryStream outStream = new MemoryStream())
 						{
-							modInfo.Load(stream);
+							entry.Extract(outStream);
+							data = outStream.ToArray();
+						}
+
+						if (data != null)
+						{
+							using (Stream stream = new MemoryStream(data))
+							{
+								modInfo.Load(stream);
+							}
 						}
 					}
 				}

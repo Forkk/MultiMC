@@ -1,4 +1,19 @@
-﻿using System;
+﻿// 
+//  Copyright 2012  Andrew Okin
+// 
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+// 
+//        http://www.apache.org/licenses/LICENSE-2.0
+// 
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
+//
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -141,6 +156,13 @@ Details:
 				MainWindow.Invoke((o, args) => StartTask(dotNetZipDL));
 			}
 
+			Downloader mcVersionsDL = new Downloader(
+				Properties.Resources.MCVersionFile,
+				Properties.Resources.MCVersionFileDL,
+				"Downloading version info file");
+			mcVersionsDL.QuietMode = true;
+			MainWindow.Invoke((o, args) => StartTask(mcVersionsDL));
+
 			if (AppSettings.Main.AutoUpdate)
 			{
 				MainWindow.Invoke((o, args) => DoUpdateCheck());
@@ -282,7 +304,7 @@ Details:
 
 		void RebuildClicked(object sender, InstActionEventArgs e)
 		{
-			StartTask(new Modder(SelectedInst));
+			RebuildMCJar(SelectedInst);
 		}
 
 		void ViewInstFolderClicked(object sender, InstActionEventArgs e)
@@ -361,6 +383,39 @@ Details:
 								"Error");
 				return null;
 			}
+
+			string instVersion = inst.Version;
+			Console.WriteLine("Checking mod versions for minecraft {0} instance.",
+				instVersion);
+			foreach (Mod mod in inst.InstMods)
+			{
+				string modVersion = MCVersionMap.VersionMap[mod.MCVersion];
+				if (modVersion == null)
+				{
+					if (!string.IsNullOrEmpty(mod.MCVersion))
+					{
+						Console.WriteLine("Unknown Minecraft version: {0}", mod.MCVersion);
+					}
+
+					continue;
+				}
+				else if (modVersion != instVersion)
+				{
+					DialogResponse response = MessageDialog.Show(MainWindow,
+						string.Format("One of your mods ({0} for Minecraft {1}) " + 
+							"is not compatible with " +
+							"this version of minecraft.\n" + 
+							"Continue installing it?",
+							mod.Name, mod.MCVersion),
+							"Warning", MessageButtons.OkCancel);
+
+					if (response == DialogResponse.Cancel)
+					{
+						return null;
+					}
+				}
+			}
+
 			Modder modder = new Modder(inst);
 			modder.Completed += (sender, e) => inst.NeedsRebuild = false;
 			StartTask(modder);
@@ -491,11 +546,6 @@ Details:
 		}
 
 		#endregion
-
-		void ToolkitNotSupported()
-		{
-			throw new NotImplementedException("This window toolkit is not implemented yet.");
-		}
 
 		public void StartInstance(Instance inst)
 		{
@@ -658,6 +708,7 @@ Details:
 			string mainGameUrl = "minecraft.jar";
 			if (!info.Cancelled)
 			{
+				Console.WriteLine("Version: {0}", info.LatestVersion);
 				GameUpdater updater =
 						new GameUpdater(inst,
 										info.LatestVersion,
@@ -688,8 +739,13 @@ Details:
 						{
 							MainWindow.Invoke((sender2, e2) =>
 								{
-									RebuildMCJar(inst).Completed += (sender3, e3) =>
-												MainWindow.Invoke(startDelegate);
+									Modder modder = RebuildMCJar(inst);
+
+									if (modder == null)
+										MainWindow.Invoke(startDelegate);
+									else
+										modder.Completed += (sender3, e3) =>
+											MainWindow.Invoke(startDelegate);
 								});
 						}
 						else

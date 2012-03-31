@@ -327,6 +327,12 @@ namespace MultiMC
 			}
 		}
 
+		public bool AskToUpdate
+		{
+			get { return cfgFile.ParseSetting<bool>("AskUpdate", true); }
+			set { cfgFile["AskUpdate"] = value.ToString(); }
+		}
+
 		#region Directories
 
 		/// <summary>
@@ -446,6 +452,15 @@ namespace MultiMC
 						return true;
 				}
 				return false;
+			}
+		}
+
+		public string Version
+		{
+			get
+			{
+				string vfile = Path.Combine(BinDir, "version");
+				return Tasks.GameUpdater.ReadVersionFile(vfile);
 			}
 		}
 
@@ -576,8 +591,11 @@ namespace MultiMC
 				Save();
 				break;
 			case WatcherChangeTypes.Deleted:
-				Remove(modList.First(m => m.FileName == filePath));
+				Remove(modList.Where(m => m.FileName == filePath));
 				Save();
+				break;
+			case WatcherChangeTypes.Changed:
+				Inst.NeedsRebuild = true;
 				break;
 			default:
 				break;
@@ -587,10 +605,11 @@ namespace MultiMC
 		void FileRenamed(object sender, RenamedEventArgs e)
 		{
 			string oldPath = OSUtils.GetRelativePath(e.OldFullPath, 
-			                                         Path.GetFullPath(Environment.CurrentDirectory));
-			string path = 
-				OSUtils.GetRelativePath(e.FullPath, Path.GetFullPath(
+				Path.GetFullPath(Environment.CurrentDirectory));
+
+			string path = OSUtils.GetRelativePath(e.FullPath, Path.GetFullPath(
 					Path.GetFullPath(Environment.CurrentDirectory)));
+
 			int index = this[oldPath];
 			this[index] = new Mod(path);
 			Save();
@@ -671,6 +690,7 @@ namespace MultiMC
 					Console.WriteLine("Failed to save mod list because " +
 					                  "something else was using the file.");
 				}
+				else throw;
 			}
 		}
 		
@@ -694,7 +714,7 @@ namespace MultiMC
 		
 		private void RecursiveAdd(string dir, bool triggerEvents = true, int index = -1)
 		{
-			if (File.Exists(dir) && !Directory.Exists(dir))
+			if (File.Exists(dir))
 			{
 				if (!modList.Any(m => m.FileName == dir))
 				{
@@ -703,25 +723,57 @@ namespace MultiMC
 					else
 						Insert(index, new Mod(dir), triggerEvents);
 				}
-				return;
 			}
-
-			foreach (string modFile in Directory.GetFileSystemEntries(dir))
+			else if (Directory.Exists(dir))
 			{
-				if (Directory.Exists(modFile))
+				foreach (string modFile in Directory.GetFileSystemEntries(dir))
 				{
 					RecursiveAdd(Path.Combine(dir, Path.GetFileName(modFile)), triggerEvents, index);
+					//if (Directory.Exists(modFile))
+					//{
+					//    RecursiveAdd(Path.Combine(dir, Path.GetFileName(modFile)), triggerEvents, index);
+					//}
+					//else if (File.Exists(modFile))
+					//{
+					//    if (!modList.Any(m => m.FileName == modFile))
+					//    {
+					//        if (index == -1)
+					//            Add(new Mod(modFile), triggerEvents);
+					//        else
+					//            Insert(index, new Mod(modFile), triggerEvents);
+					//    }
+					//}
 				}
-				else if (File.Exists(modFile))
+			}
+		}
+
+		public void RecursiveCopy(string dir, int index = -1)
+		{
+			try
+			{
+				if (File.Exists(dir))
 				{
-					if (!modList.Any(m => m.FileName == modFile))
+					string dest = Path.Combine(Inst.InstModsDir, Path.GetFileName(dir));
+					File.Copy(dir, dest);
+					if (!modList.Any(m => m.FileName == dir))
 					{
 						if (index == -1)
-							Add(new Mod(modFile), triggerEvents);
+							Add(new Mod(dest), true);
 						else
-							Insert(index, new Mod(modFile), triggerEvents);
+							Insert(index, new Mod(dest), true);
 					}
 				}
+				else if (Directory.Exists(dir))
+				{
+					foreach (string modFile in Directory.GetFileSystemEntries(dir))
+					{
+						RecursiveCopy(Path.Combine(dir, Path.GetFileName(modFile)), index);
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.ToString());
 			}
 		}
 
@@ -746,6 +798,20 @@ namespace MultiMC
 				modList.Insert(index, mod);
 			if (triggerEvent)
 				OnModFileChanged(ModFileChangeTypes.ADDED, mod);
+		}
+
+		private void Remove(IEnumerable<Mod> mods, bool triggerEvent = true)
+		{
+			List<Mod> removeList = new List<Mod>();
+			foreach (Mod mod in mods)
+			{
+				removeList.Add(mod);
+			}
+
+			foreach (Mod mod in removeList)
+			{
+				Remove(mod, triggerEvent);
+			}
 		}
 
 		private void Remove(Mod mod, bool triggerEvent = true)

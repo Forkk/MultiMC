@@ -480,9 +480,14 @@ namespace MultiMC.WinGUI
 
 		private string DragDropHint
 		{
-			get;
-			set;
+			get { return _ddHint; }
+			set
+			{
+				_ddHint = value;
+			}
 		}
+
+		string _ddHint;
 
 		private void instView_DragDrop(object sender, DragEventArgs e)
 		{
@@ -645,13 +650,11 @@ namespace MultiMC.WinGUI
 						Console.WriteLine("Overwriting " + copyname);
 						File.Delete(copyname);
 						File.Copy(f, copyname);
-						File.SetCreationTime(copyname, DateTime.Now);
 					}
 					else
 					{
 						Console.WriteLine("Adding file " + copyname);
 						File.Copy(f, copyname);
-						File.SetCreationTime(copyname, DateTime.Now);
 					}
 				}
 

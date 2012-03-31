@@ -89,6 +89,7 @@
     <Compile Include="GUI\INotesDialog.cs" />
     <Compile Include="GUI\ITaskStatus.cs" />
     <Compile Include="GUI\MessageDialog.cs" />
+    <Compile Include="MCVersionMap.cs" />
     <Compile Include="Mod.cs" />
     <Compile Include="OldInstance.cs" />
     <Compile Include="ProblemDetection\BasicProblem.cs" />

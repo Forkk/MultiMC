@@ -228,6 +228,24 @@ namespace MultiMC.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to mc-versions.cfg.
+        /// </summary>
+        internal static string MCVersionFile {
+            get {
+                return ResourceManager.GetString("MCVersionFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to http://forkk.net/mc-versions.cfg.
+        /// </summary>
+        internal static string MCVersionFileDL {
+            get {
+                return ResourceManager.GetString("MCVersionFileDL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to modlist.
         /// </summary>
         internal static string ModListFileName {

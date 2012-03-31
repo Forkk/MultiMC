@@ -73,6 +73,8 @@ namespace MultiMC.Tasks
 		string tmpFile;
 		WebClient webClient;
 
+		public bool QuietMode = false;
+
 		public Downloader(string targetFile, string downloadUrl,
 						  string message = null, int timeout = 180)
 			: base()
@@ -111,8 +113,9 @@ namespace MultiMC.Tasks
 			{
 				if (DateTime.Now.Second >= lastProgressTime + Timeout)
 				{
-					OnErrorMessage(string.Format("No progress for {0} seconds, download timed out.",
-												 DateTime.Now.Second - lastProgressTime));
+					if (!QuietMode)
+						OnErrorMessage(string.Format("No progress for {0} seconds, " + 
+							"download timed out.", DateTime.Now.Second - lastProgressTime));
 					Cancel();
 				}
 			}

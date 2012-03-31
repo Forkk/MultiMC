@@ -59,9 +59,7 @@
 			this.labelHelp.Name = "labelHelp";
 			this.labelHelp.Size = new System.Drawing.Size(560, 41);
 			this.labelHelp.TabIndex = 2;
-			this.labelHelp.Text = "Uncheck the box next to a mod to uninstall it. \r\nYou can drag mods up or down in " +
-				"the list to change the order in which they will be installed.\r\nDrag mods into th" +
-				"is window to install them.";
+			this.labelHelp.Text = resources.GetString("labelHelp.Text");
 			// 
 			// modTabControl
 			// 
@@ -90,7 +88,6 @@
 			// modView
 			// 
 			this.modView.AllowDrop = true;
-			this.modView.CheckBoxes = true;
 			this.modView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnModName});
 			this.modView.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -106,6 +103,7 @@
 			this.modView.DragEnter += new System.Windows.Forms.DragEventHandler(this.modView_DragEnter);
 			this.modView.DragOver += new System.Windows.Forms.DragEventHandler(this.modView_DragOver);
 			this.modView.DragLeave += new System.EventHandler(this.modView_DragLeave);
+			this.modView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.modView_KeyDown);
 			this.modView.Resize += new System.EventHandler(this.modView_Resize);
 			// 
 			// columnModName
@@ -127,7 +125,6 @@
 			// mlModView
 			// 
 			this.mlModView.AllowDrop = true;
-			this.mlModView.CheckBoxes = true;
 			this.mlModView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.modColumn});
 			this.mlModView.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -140,6 +137,7 @@
 			this.mlModView.View = System.Windows.Forms.View.Details;
 			this.mlModView.DragDrop += new System.Windows.Forms.DragEventHandler(this.mlModView_DragDrop);
 			this.mlModView.DragOver += new System.Windows.Forms.DragEventHandler(this.mlModView_DragOver);
+			this.mlModView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.mlModView_KeyDown);
 			this.mlModView.Resize += new System.EventHandler(this.mlModView_Resize);
 			// 
 			// modColumn

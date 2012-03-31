@@ -43,7 +43,7 @@ namespace MultiMC
 			int i = 0;
 			foreach (KeyValuePair<string, string> kv in dict)
 			{
-				Console.WriteLine(kv.Key + "=" + kv.Value);
+				//Console.WriteLine(kv.Key + "=" + kv.Value);
 				lines[i++] = kv.Key + "=" + kv.Value;
 			}
 
@@ -84,7 +84,7 @@ namespace MultiMC
 					if (lineData.Length >= 2)
 					{
 						//Console.WriteLine("{0} = {1}", lineData[0], lineData[1]);
-						dict.Add(lineData[0], lineData[1]);
+						dict[lineData[0]] = lineData[1];
 					}
 				}
 			}

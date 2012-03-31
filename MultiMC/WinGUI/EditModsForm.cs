@@ -1,4 +1,19 @@
-﻿using System;
+﻿// 
+//  Copyright 2012  Andrew Okin
+// 
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+// 
+//        http://www.apache.org/licenses/LICENSE-2.0
+// 
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
+//
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -27,6 +42,8 @@ namespace MultiMC.WinGUI
 				OSUtils.SetWindowTheme(modView.Handle, "explorer", null);
 				OSUtils.SetWindowTheme(mlModView.Handle, "explorer", null);
 			}
+
+			inst.InstMods.ModFileChanged += (o, args) => LoadModList();
 		}
 
 		private Mod GetLinkedMod(ListViewItem item)
@@ -45,7 +62,7 @@ namespace MultiMC.WinGUI
 
 				ListViewItem item = new ListViewItem(itemLabel);
 				item.Tag = mod;
-				item.Checked = true;
+				//item.Checked = true;
 
 				modView.Items.Add(item);
 			}
@@ -62,7 +79,7 @@ namespace MultiMC.WinGUI
 
 					ListViewItem item = new ListViewItem(itemLabel);
 					item.Tag = new Mod(file);
-					item.Checked = true;
+					//item.Checked = true;
 					mlModView.Items.Add(item);
 				}
 			}
@@ -73,27 +90,27 @@ namespace MultiMC.WinGUI
 			int i = 0;
 			foreach (ListViewItem item in modView.Items)
 			{
-				if (item.Checked)
-				{
+				//if (item.Checked)
+				//{
 					inst.InstMods[GetLinkedMod(item).FileName] = i;
 					i++;
-				}
-				else
-				{
-					File.Delete(GetLinkedMod(item).FileName);
-				}
+				//}
+				//else
+				//{
+				//    File.Delete(GetLinkedMod(item).FileName);
+				//}
 			}
 
-			foreach (ListViewItem item in mlModView.Items)
-			{
-				if (!item.Checked)
-				{
-					if (File.Exists(GetLinkedMod(item).FileName))
-						File.Delete(GetLinkedMod(item).FileName);
-					else if (Directory.Exists(GetLinkedMod(item).FileName))
-						Directory.Delete(GetLinkedMod(item).FileName, true);
-				}
-			}
+			//foreach (ListViewItem item in mlModView.Items)
+			//{
+			//    if (!item.Checked)
+			//    {
+			//        if (File.Exists(GetLinkedMod(item).FileName))
+			//            File.Delete(GetLinkedMod(item).FileName);
+			//        else if (Directory.Exists(GetLinkedMod(item).FileName))
+			//            Directory.Delete(GetLinkedMod(item).FileName, true);
+			//    }
+			//}
 			inst.InstMods.Save();
 		}
 
@@ -204,9 +221,9 @@ namespace MultiMC.WinGUI
 		{
 			foreach (string file in files)
 			{
-				inst.InstMods.InsertMod(file, index);
-				LoadModList();
+				inst.InstMods.RecursiveCopy(file, index);
 			}
+			LoadModList();
 		}
 
 		private void modView_DragOver(object sender, DragEventArgs e)
@@ -319,6 +336,49 @@ namespace MultiMC.WinGUI
 		private void buttonExport_Click(object sender, EventArgs e)
 		{
 
+		}
+
+		private void modView_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyData == Keys.Delete)
+			{
+				List<Mod> removedMods = new List<Mod>();
+				foreach (ListViewItem item in modView.SelectedItems)
+				{
+					removedMods.Add(GetLinkedMod(item));
+				}
+
+				foreach (Mod mod in removedMods)
+				{
+					try
+					{
+						Console.WriteLine("Removing {0}", mod.FileName);
+						if (File.Exists(mod.FileName))
+							File.Delete(mod.FileName);
+						else if (Directory.Exists(mod.FileName))
+							Directory.Delete(mod.FileName);
+					}
+					catch (IOException err)
+					{
+						Console.WriteLine("Failed to remove mod '{0}'. {1}", 
+							mod.Name, err.ToString());
+					}
+				}
+			}
+		}
+
+		private void mlModView_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyData == Keys.Delete)
+			{
+				foreach (ListViewItem item in mlModView.SelectedItems)
+				{
+					if (File.Exists(GetLinkedMod(item).FileName))
+						File.Delete(GetLinkedMod(item).FileName);
+					else if (Directory.Exists(GetLinkedMod(item).FileName))
+						Directory.Delete(GetLinkedMod(item).FileName, true);
+				}
+			}
 		}
 	}
 }
