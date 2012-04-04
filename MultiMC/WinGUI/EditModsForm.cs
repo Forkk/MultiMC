@@ -291,6 +291,7 @@ namespace MultiMC.WinGUI
 						else if (File.Exists(file))
 							File.Copy(file, Path.Combine(inst.ModLoaderDir,
 								Path.GetFileName(file)), true);
+						LoadModList();
 					}
 				}
 				catch (UnauthorizedAccessException)
@@ -330,8 +331,8 @@ namespace MultiMC.WinGUI
 
 		private void UpdateSizes()
 		{
-			modView.Columns[0].Width = modView.Width - 2;
-			mlModView.Columns[0].Width = mlModView.Width - 2;
+			modView.Columns[0].Width = modView.Width - 10;
+			mlModView.Columns[0].Width = mlModView.Width - 10;
 		}
 
 		private void modView_Resize(object sender, EventArgs e)
@@ -389,6 +390,7 @@ namespace MultiMC.WinGUI
 					else if (Directory.Exists(GetLinkedMod(item).FileName))
 						Directory.Delete(GetLinkedMod(item).FileName, true);
 				}
+				LoadModList();
 			}
 		}
 	}

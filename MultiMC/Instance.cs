@@ -777,10 +777,10 @@ namespace MultiMC
 						File.Copy(path, dest);
 						if (!modList.Any(m => m.FileName == path))
 						{
-							if (index <= 0)
-								Add(new Mod(dest), true);
-							else
-								Insert(index, new Mod(dest), true);
+							//if (index <= 0)
+							//    Add(new Mod(dest), true);
+							//else
+							Insert(index, new Mod(dest), true);
 						}
 					}
 					finally
