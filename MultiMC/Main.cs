@@ -101,7 +101,7 @@ Details:
 				else throw;
 			}
 
-			MainWindow.Title = string.Format("MultiMC {0} for {1}", 
+			MainWindow.Title = string.Format("MultiMC Beta {0} for {1}", 
 				AppUtils.GetVersion().ToString(2), OSUtils.OSName);
 
 			MainWindow.DefaultPosition = DefWindowPosition.CenterScreen;
@@ -592,13 +592,7 @@ Details:
 			string password = "";
 			ReadUserInfo(out username, out password);
 
-			ILoginDialog loginDlg = null;
-			switch (Program.Toolkit)
-			{
-			case WindowToolkit.WinForms:
-				loginDlg = new WinGUI.LoginForm(message);
-				break;
-			}
+			ILoginDialog loginDlg = GUIManager.Main.LoginDialog(message);
 			loginDlg.Parent = MainWindow;
 			loginDlg.DefaultPosition = DefWindowPosition.CenterParent;
 

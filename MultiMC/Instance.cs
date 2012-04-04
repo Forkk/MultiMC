@@ -175,7 +175,15 @@ namespace MultiMC
 			{
 				Directory.CreateDirectory(RootDir);
 			}
-			cfgFile.Save(file);
+
+			try
+			{
+				cfgFile.Save(file);
+			}
+			catch (IOException ex)
+			{
+				Console.WriteLine("Instance failed to save: " + ex.Message);
+			}
 		}
 
 		private void AutoSave()
@@ -553,10 +561,16 @@ namespace MultiMC
 	{
 		List<Mod> modList;
 		FileSystemWatcher watcher;
+
+		/// <summary>
+		/// A list of mods the watcher will ignore.
+		/// </summary>
+		List<string> ignoreList;
 		
 		public InstanceMods(Instance inst)
 		{
 			modList = new List<Mod>();
+			ignoreList = new List<string>();
 			Inst = inst;
 			
 			if (!Directory.Exists(Inst.InstModsDir))
@@ -582,6 +596,18 @@ namespace MultiMC
 		
 		void FileChanged(object sender, FileSystemEventArgs e)
 		{
+			foreach (string ignore in ignoreList)
+			{
+				Console.WriteLine(Path.GetFullPath(e.FullPath));
+				Console.WriteLine(Path.GetFullPath(ignore));
+
+				if (Path.GetFullPath(ignore) == 
+					Path.GetFullPath(e.FullPath))
+				{
+					return;
+				}
+			}
+
 			string filePath = 
 				OSUtils.GetRelativePath(e.FullPath, Environment.CurrentDirectory);
 
@@ -689,7 +715,7 @@ namespace MultiMC
 				if (e.Message.ToLower().Contains("in use"))
 				{
 					Console.WriteLine("Failed to save mod list because " +
-					                  "something else was using the file.");
+						"something else was using the file.");
 				}
 				else throw;
 			}
@@ -710,6 +736,7 @@ namespace MultiMC
 				}
 				RecursiveAdd(Inst.InstModsDir);
 			}
+
 			Save();
 		}
 		
@@ -729,46 +756,43 @@ namespace MultiMC
 			{
 				foreach (string modFile in Directory.GetFileSystemEntries(dir))
 				{
-					RecursiveAdd(Path.Combine(dir, Path.GetFileName(modFile)), triggerEvents, index);
-					//if (Directory.Exists(modFile))
-					//{
-					//    RecursiveAdd(Path.Combine(dir, Path.GetFileName(modFile)), triggerEvents, index);
-					//}
-					//else if (File.Exists(modFile))
-					//{
-					//    if (!modList.Any(m => m.FileName == modFile))
-					//    {
-					//        if (index == -1)
-					//            Add(new Mod(modFile), triggerEvents);
-					//        else
-					//            Insert(index, new Mod(modFile), triggerEvents);
-					//    }
-					//}
+					RecursiveAdd(Path.Combine(dir, Path.GetFileName(modFile)), 
+						triggerEvents, index);
 				}
 			}
 		}
 
-		public void RecursiveCopy(string dir, int index = -1)
+		public void RecursiveCopy(string path, int index = -1)
 		{
 			try
 			{
-				if (File.Exists(dir))
+				if (File.Exists(path))
 				{
-					string dest = Path.Combine(Inst.InstModsDir, Path.GetFileName(dir));
-					File.Copy(dir, dest);
-					if (!modList.Any(m => m.FileName == dir))
+					string dest = Path.Combine(Inst.InstModsDir, Path.GetFileName(path));
+
+					try
 					{
-						if (index == -1)
-							Add(new Mod(dest), true);
-						else
-							Insert(index, new Mod(dest), true);
+						ignoreList.Add(dest);
+	
+						File.Copy(path, dest);
+						if (!modList.Any(m => m.FileName == path))
+						{
+							if (index <= 0)
+								Add(new Mod(dest), true);
+							else
+								Insert(index, new Mod(dest), true);
+						}
+					}
+					finally
+					{
+						ignoreList.Remove(dest);
 					}
 				}
-				else if (Directory.Exists(dir))
+				else if (Directory.Exists(path))
 				{
-					foreach (string modFile in Directory.GetFileSystemEntries(dir))
+					foreach (string modFile in Directory.GetFileSystemEntries(path))
 					{
-						RecursiveCopy(Path.Combine(dir, Path.GetFileName(modFile)), index);
+						RecursiveCopy(Path.Combine(path, Path.GetFileName(modFile)), index);
 					}
 				}
 			}
@@ -839,12 +863,12 @@ namespace MultiMC
 		
 		public IEnumerator<Mod> GetEnumerator()
 		{
-			return modList.GetEnumerator();
+			return new List<Mod>(modList).GetEnumerator();
 		}
 		
 		IEnumerator IEnumerable.GetEnumerator()
 		{
-			return modList.GetEnumerator();
+			return new List<Mod>(modList).GetEnumerator();
 		}
 		
 		public void OnModFileChanged(ModFileChangeTypes type, Mod mod)

@@ -84,5 +84,10 @@ namespace MultiMC.WinGUI
 		{
 			return new DeleteConfirmForm();
 		}
+
+		public ILoginDialog LoginDialog(string errMsg)
+		{
+			return new LoginForm(errMsg);
+		}
 	}
 }

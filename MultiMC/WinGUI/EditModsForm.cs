@@ -51,7 +51,7 @@ namespace MultiMC.WinGUI
 
 		void InstMods_ModFileChanged(object sender, ModFileChangedEventArgs e)
 		{
-			this.Invoke((o, args) => LoadModList());
+			LoadModList();
 		}
 
 		private Mod GetLinkedMod(ListViewItem item)
@@ -61,34 +61,39 @@ namespace MultiMC.WinGUI
 
 		public void LoadModList()
 		{
-			modView.Items.Clear();
-			foreach (Mod mod in inst.InstMods)
+			if (InvokeRequired)
 			{
-				string itemLabel = Path.GetFileName(mod.FileName);
-				if (mod.Name != mod.FileName)
-					itemLabel = mod.Name;
-
-				ListViewItem item = new ListViewItem(itemLabel);
-				item.Tag = mod;
-				//item.Checked = true;
-
-				modView.Items.Add(item);
+				this.Invoke((o, args) => LoadModList());
 			}
-
-			mlModView.Items.Clear();
-			if (Directory.Exists(inst.ModLoaderDir))
+			else
 			{
-				foreach (string file in Directory.GetFileSystemEntries(inst.ModLoaderDir))
+				modView.Items.Clear();
+				foreach (Mod mod in inst.InstMods)
 				{
-					Mod mod = new Mod(file);
-					string itemLabel = Path.GetFileName(file);
-					if (mod.Name != mod.FileName)
-						itemLabel = mod.Name;
+					string itemLabel = mod.Name;
 
 					ListViewItem item = new ListViewItem(itemLabel);
-					item.Tag = new Mod(file);
+					item.Tag = mod;
 					//item.Checked = true;
-					mlModView.Items.Add(item);
+
+					modView.Items.Add(item);
+				}
+
+				mlModView.Items.Clear();
+				if (Directory.Exists(inst.ModLoaderDir))
+				{
+					foreach (string file in Directory.GetFileSystemEntries(inst.ModLoaderDir))
+					{
+						Mod mod = new Mod(file);
+						string itemLabel = Path.GetFileName(file);
+						if (mod.Name != mod.FileName)
+							itemLabel = mod.Name;
+
+						ListViewItem item = new ListViewItem(itemLabel);
+						item.Tag = new Mod(file);
+						//item.Checked = true;
+						mlModView.Items.Add(item);
+					}
 				}
 			}
 		}
@@ -231,7 +236,6 @@ namespace MultiMC.WinGUI
 			{
 				inst.InstMods.RecursiveCopy(file, index);
 			}
-			LoadModList();
 		}
 
 		private void modView_DragOver(object sender, DragEventArgs e)
@@ -302,7 +306,6 @@ namespace MultiMC.WinGUI
 						err.Message,
 						"Failed to copy files");
 				}
-				LoadModList();
 			}
 		}
 
@@ -387,7 +390,6 @@ namespace MultiMC.WinGUI
 						Directory.Delete(GetLinkedMod(item).FileName, true);
 				}
 			}
-			LoadModList();
 		}
 	}
 }

@@ -32,38 +32,46 @@ namespace MultiMC
 			FileName = file;
 			modInfo = new ConfigFile();
 
-			if (File.Exists(file))
+			try
 			{
-				using (ZipFile zipFile = ZipFile.Read(file))
+				if (File.Exists(file))
 				{
-					ZipEntry entry = null;
-					try
+					using (ZipFile zipFile = ZipFile.Read(file))
 					{
-						entry = zipFile.First(e => Path.GetExtension(e.FileName) == ".minf");
-					}
-					catch (InvalidOperationException)
-					{
-
-					}
-
-					if (entry != null)
-					{
-						byte[] data = null;
-						using (MemoryStream outStream = new MemoryStream())
+						ZipEntry entry = null;
+						try
 						{
-							entry.Extract(outStream);
-							data = outStream.ToArray();
+							entry = zipFile.First(e => 
+								Path.GetExtension(e.FileName) == ".minf");
+						}
+						catch (InvalidOperationException)
+						{
+
 						}
 
-						if (data != null)
+						if (entry != null)
 						{
-							using (Stream stream = new MemoryStream(data))
+							byte[] data = null;
+							using (MemoryStream outStream = new MemoryStream())
 							{
-								modInfo.Load(stream);
+								entry.Extract(outStream);
+								data = outStream.ToArray();
+							}
+
+							if (data != null)
+							{
+								using (Stream stream = new MemoryStream(data))
+								{
+									modInfo.Load(stream);
+								}
 							}
 						}
 					}
 				}
+			}
+			catch (ZipException)
+			{
+
 			}
 		}
 
