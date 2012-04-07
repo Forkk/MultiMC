@@ -7,6 +7,7 @@ using System.IO;
 using System.Diagnostics;
 
 using MultiMC;
+using MultiMC.Mods;
 
 namespace MultiMC
 {
@@ -421,6 +422,14 @@ namespace MultiMC
 		public string TexturePackDir
 		{
 			get { return Path.Combine(MinecraftDir, "texturepacks"); }
+		}
+
+		/// <summary>
+		/// The resources folder (.minecraft\resources)
+		/// </summary>
+		public string ResourceDir
+		{
+			get { return Path.Combine(MinecraftDir, "resources"); }
 		}
 
 		#endregion

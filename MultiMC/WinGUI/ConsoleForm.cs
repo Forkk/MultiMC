@@ -39,6 +39,7 @@ namespace MultiMC.WinGUI
 
 			trayIcon.Visible = true;
 
+			trayIcon.DoubleClick += (o, args) => ShowConsole = !ShowConsole;
 			showConsoleToolStripMenuItem.Checked = ShowConsole;
 		}
 

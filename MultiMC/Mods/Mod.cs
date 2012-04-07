@@ -21,16 +21,15 @@ using System.IO;
 
 using Ionic.Zip;
 
-namespace MultiMC
+namespace MultiMC.Mods
 {
 	public class Mod
 	{
-		ConfigFile modInfo;
+		ModInfo modInfo;
 
 		public Mod(string file)
 		{
 			FileName = file;
-			modInfo = new ConfigFile();
 
 			try
 			{
@@ -62,7 +61,8 @@ namespace MultiMC
 							{
 								using (Stream stream = new MemoryStream(data))
 								{
-									modInfo.Load(stream);
+									StreamReader reader = new StreamReader(stream);
+									modInfo = ModInfo.FromJSON(reader.ReadToEnd());
 								}
 							}
 						}
@@ -73,11 +73,18 @@ namespace MultiMC
 			{
 
 			}
+
+			if (modInfo == null)
+			{
+				Console.WriteLine("No valid mod info found.");
+				modInfo = new ModInfo();
+				modInfo.Name = Path.GetFileNameWithoutExtension(FileName);
+			}
 		}
 
 		public string Name
 		{
-			get { return modInfo["name", FileName]; }
+			get { return modInfo.Name; }
 		}
 
 		public string FileName
@@ -88,53 +95,17 @@ namespace MultiMC
 
 		public string Description
 		{
-			get { return modInfo["desc", "No description"]; }
+			get { return modInfo.Description; }
 		}
 
 		public string ModVersion
 		{
-			get { return modInfo["mod-version", ""]; }
+			get { return modInfo.ModVersion; }
 		}
 
 		public string MCVersion
 		{
-			get { return modInfo["mc-version", ""]; }
+			get { return modInfo.MCVersion; }
 		}
-
-		public ModType Type
-		{
-			get { return modInfo.ParseEnumSetting<ModType>("type", ModType.MCJar); }
-		}
-	}
-
-	public enum ModType
-	{
-		/// <summary>
-		/// The zip file's contents should be extracted and added to minecraft.jar
-		/// </summary>
-		MCJar,
-
-		/// <summary>
-		/// The zip file should be placed in modloader's mods folder (minecraft/mods)
-		/// </summary>
-		MLMod,
-
-		/// <summary>
-		/// The zip file's contents should be *extracted* into 
-		/// modloader's mods folder (minecraft/mods)
-		/// </summary>
-		MLModUnzip,
-
-		/// <summary>
-		/// The zip file contains multiple folders, each containing 
-		/// files that should go in certain places. For example, 
-		/// the zip  file for Equivalent Exchange contains two 
-		/// folders, "mods" and "resources". All of the files 
-		/// in these two folders would go in the respective 
-		/// folders inside the minecraft folder. Including a 
-		/// folder in the zip called "jar" will install 
-		/// everything in that folder inside minecraft.jar
-		/// </summary>
-		Multiple,
 	}
 }

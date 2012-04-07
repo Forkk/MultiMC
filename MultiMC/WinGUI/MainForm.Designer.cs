@@ -53,11 +53,14 @@
 			this.helpButton = new System.Windows.Forms.ToolStripButton();
 			this.instView = new System.Windows.Forms.ListView();
 			this.toolStripContainer = new System.Windows.Forms.ToolStripContainer();
+			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+			this.DragDropHintLabel = new System.Windows.Forms.ToolStripStatusLabel();
 			this.instanceContextMenu.SuspendLayout();
 			this.menuToolBar.SuspendLayout();
 			this.toolStripContainer.ContentPanel.SuspendLayout();
 			this.toolStripContainer.TopToolStripPanel.SuspendLayout();
 			this.toolStripContainer.SuspendLayout();
+			this.statusStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// instanceContextMenu
@@ -281,11 +284,29 @@
 			// 
 			this.toolStripContainer.TopToolStripPanel.Controls.Add(this.menuToolBar);
 			// 
+			// statusStrip1
+			// 
+			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.DragDropHintLabel});
+			this.statusStrip1.Location = new System.Drawing.Point(0, 339);
+			this.statusStrip1.Name = "statusStrip1";
+			this.statusStrip1.Size = new System.Drawing.Size(604, 22);
+			this.statusStrip1.TabIndex = 4;
+			this.statusStrip1.Text = "statusStrip1";
+			// 
+			// DragDropHintLabel
+			// 
+			this.DragDropHintLabel.Name = "DragDropHintLabel";
+			this.DragDropHintLabel.Size = new System.Drawing.Size(87, 17);
+			this.DragDropHintLabel.Text = "Drag Drop Hint";
+			this.DragDropHintLabel.Visible = false;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(604, 361);
+			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.toolStripContainer);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "MainForm";
@@ -298,7 +319,10 @@
 			this.toolStripContainer.TopToolStripPanel.ResumeLayout(false);
 			this.toolStripContainer.ResumeLayout(false);
 			this.toolStripContainer.PerformLayout();
+			this.statusStrip1.ResumeLayout(false);
+			this.statusStrip1.PerformLayout();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -327,6 +351,8 @@
 		private System.Windows.Forms.ListView instView;
 		private System.Windows.Forms.ToolStripContainer toolStripContainer;
 		private System.Windows.Forms.ToolStripButton importButton;
+		private System.Windows.Forms.StatusStrip statusStrip1;
+		private System.Windows.Forms.ToolStripStatusLabel DragDropHintLabel;
 	}
 }
 

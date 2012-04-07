@@ -59,6 +59,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -90,7 +93,8 @@
     <Compile Include="GUI\ITaskStatus.cs" />
     <Compile Include="GUI\MessageDialog.cs" />
     <Compile Include="MCVersionMap.cs" />
-    <Compile Include="Mod.cs" />
+    <Compile Include="Mods\Mod.cs" />
+    <Compile Include="Mods\ModInfo.cs" />
     <Compile Include="OldInstance.cs" />
     <Compile Include="ProblemDetection\BasicProblem.cs" />
     <Compile Include="ProblemDetection\MinecraftProblem.cs" />
@@ -269,7 +273,7 @@
   <ItemGroup>
     <None Include="Resources\document-import.png" />
     <Content Include="Launcher\MultiMCLauncher.java" />
-    <Content Include="Lib\Ionic.Zip.Reduced.dll" />
+    <EmbeddedResource Include="Lib\Ionic.Zip.Reduced.dll" />
     <None Include="Resources\MultiMC.png" />
     <None Include="Resources\MultiMC64.png" />
     <None Include="Resources\MultiMC32.png" />
@@ -287,6 +291,7 @@
     <None Include="Resources\MultiMC.ico" />
     <None Include="Resources\Logo.ico" />
     <None Include="WinGUI\ToolbarIcons\ImportIcon.png" />
+    <EmbeddedResource Include="Lib\Newtonsoft.Json.dll" />
     <Content Include="WinGUI\ToolbarIcons\AboutIcon.png" />
     <Content Include="WinGUI\ToolbarIcons\CheckUpdateIcon.png" />
     <Content Include="WinGUI\ToolbarIcons\HelpIcon.png" />

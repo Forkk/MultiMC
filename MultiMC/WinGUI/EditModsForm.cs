@@ -24,6 +24,7 @@ using System.IO;
 using System.Windows.Forms;
 
 using MultiMC.GUI;
+using MultiMC.Mods;
 
 namespace MultiMC.WinGUI
 {
@@ -41,6 +42,7 @@ namespace MultiMC.WinGUI
 			{
 				OSUtils.SetWindowTheme(modView.Handle, "explorer", null);
 				OSUtils.SetWindowTheme(mlModView.Handle, "explorer", null);
+				OSUtils.SetWindowTheme(resourceView.Handle, "explorer", null);
 			}
 
 			inst.InstMods.ModFileChanged += InstMods_ModFileChanged;
@@ -49,92 +51,35 @@ namespace MultiMC.WinGUI
 				inst.InstMods.ModFileChanged -= InstMods_ModFileChanged;
 		}
 
-		void InstMods_ModFileChanged(object sender, ModFileChangedEventArgs e)
-		{
-			LoadModList();
-		}
+		#region Jar Mod List
 
-		private Mod GetLinkedMod(ListViewItem item)
+		private void modView_KeyDown(object sender, KeyEventArgs e)
 		{
-			return item.Tag as Mod;
-		}
-
-		public void LoadModList()
-		{
-			if (InvokeRequired)
+			if (e.KeyData == Keys.Delete)
 			{
-				this.Invoke((o, args) => LoadModList());
-			}
-			else
-			{
-				modView.Items.Clear();
-				foreach (Mod mod in inst.InstMods)
+				List<Mod> removedMods = new List<Mod>();
+				foreach (ListViewItem item in modView.SelectedItems)
 				{
-					string itemLabel = mod.Name;
-
-					ListViewItem item = new ListViewItem(itemLabel);
-					item.Tag = mod;
-					//item.Checked = true;
-
-					modView.Items.Add(item);
+					removedMods.Add(GetLinkedMod(item));
 				}
 
-				mlModView.Items.Clear();
-				if (Directory.Exists(inst.ModLoaderDir))
+				foreach (Mod mod in removedMods)
 				{
-					foreach (string file in Directory.GetFileSystemEntries(inst.ModLoaderDir))
+					try
 					{
-						Mod mod = new Mod(file);
-						string itemLabel = Path.GetFileName(file);
-						if (mod.Name != mod.FileName)
-							itemLabel = mod.Name;
-
-						ListViewItem item = new ListViewItem(itemLabel);
-						item.Tag = new Mod(file);
-						//item.Checked = true;
-						mlModView.Items.Add(item);
+						Console.WriteLine("Removing {0}", mod.FileName);
+						if (File.Exists(mod.FileName))
+							File.Delete(mod.FileName);
+						else if (Directory.Exists(mod.FileName))
+							Directory.Delete(mod.FileName);
+					}
+					catch (IOException err)
+					{
+						Console.WriteLine("Failed to remove mod '{0}'. {1}", 
+							mod.Name, err.ToString());
 					}
 				}
 			}
-		}
-
-		public void SaveModList()
-		{
-			int i = 0;
-			foreach (ListViewItem item in modView.Items)
-			{
-				//if (item.Checked)
-				//{
-					inst.InstMods[GetLinkedMod(item).FileName] = i;
-					i++;
-				//}
-				//else
-				//{
-				//    File.Delete(GetLinkedMod(item).FileName);
-				//}
-			}
-
-			//foreach (ListViewItem item in mlModView.Items)
-			//{
-			//    if (!item.Checked)
-			//    {
-			//        if (File.Exists(GetLinkedMod(item).FileName))
-			//            File.Delete(GetLinkedMod(item).FileName);
-			//        else if (Directory.Exists(GetLinkedMod(item).FileName))
-			//            Directory.Delete(GetLinkedMod(item).FileName, true);
-			//    }
-			//}
-			inst.InstMods.Save();
-		}
-
-		private void buttonCancel_Click(object sender, EventArgs e)
-		{
-			OnResponse(DialogResponse.Cancel);
-		}
-
-		private void buttonOk_Click(object sender, EventArgs e)
-		{
-			OnResponse(DialogResponse.OK);
 		}
 
 		private void modView_ItemDrag(object sender, ItemDragEventArgs e)
@@ -230,14 +175,6 @@ namespace MultiMC.WinGUI
 			}
 		}
 
-		private void AddMods(string[] files, int index)
-		{
-			foreach (string file in files)
-			{
-				inst.InstMods.RecursiveCopy(file, index);
-			}
-		}
-
 		private void modView_DragOver(object sender, DragEventArgs e)
 		{
 			// Returns the location of the mouse pointer in the ListView control.
@@ -267,6 +204,28 @@ namespace MultiMC.WinGUI
 			modView.InsertionMark.Index = -1;
 		}
 
+		private void AddMods(string[] files, int index)
+		{
+			foreach (string file in files)
+			{
+				inst.InstMods.RecursiveCopy(file, index);
+			}
+		}
+
+		private void modView_Resize(object sender, EventArgs e)
+		{
+			UpdateSizes();
+		}
+
+		#endregion
+
+		#region Modloader Mod List
+
+		private void mlModView_Resize(object sender, EventArgs e)
+		{
+			UpdateSizes();
+		}
+
 		private void mlModView_DragOver(object sender, DragEventArgs e)
 		{
 			if (e.Data.GetDataPresent("FileDrop"))
@@ -291,8 +250,8 @@ namespace MultiMC.WinGUI
 						else if (File.Exists(file))
 							File.Copy(file, Path.Combine(inst.ModLoaderDir,
 								Path.GetFileName(file)), true);
-						LoadModList();
 					}
+					LoadModList();
 				}
 				catch (UnauthorizedAccessException)
 				{
@@ -308,6 +267,293 @@ namespace MultiMC.WinGUI
 						"Failed to copy files");
 				}
 			}
+		}
+
+		private void mlModView_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyData == Keys.Delete)
+			{
+				foreach (ListViewItem item in mlModView.SelectedItems)
+				{
+					if (File.Exists(GetLinkedMod(item).FileName))
+						File.Delete(GetLinkedMod(item).FileName);
+					else if (Directory.Exists(GetLinkedMod(item).FileName))
+						Directory.Delete(GetLinkedMod(item).FileName, true);
+				}
+				LoadModList();
+			}
+		}
+		
+		#endregion
+
+		#region Resources List
+
+		private void UpdateResourceList()
+		{
+			List<TreeNode> removed = new List<TreeNode>();
+			RemoveRemovedResources(removed);
+
+			foreach (TreeNode node in removed)
+			{
+				resourceView.Nodes.Remove(node);
+			}
+
+			LoadResourceList(inst.ResourceDir);
+		}
+
+		private void RemoveRemovedResources(List<TreeNode> removed, 
+			TreeNode parent = null)
+		{
+			if (parent != null &&
+				!File.Exists(GetLinkedRPath(parent)) &&
+				!Directory.Exists(GetLinkedRPath(parent)))
+			{
+				parent.Remove();
+			}
+			else
+			{
+				TreeNodeCollection nodes = (parent != null? 
+					parent.Nodes : 
+					resourceView.Nodes);
+				foreach (TreeNode node in nodes)
+				{
+					RemoveRemovedResources(removed, node);
+				}
+			}
+		}
+
+		private void LoadResourceList(string path, TreeNode parent = null)
+		{
+			TreeNode node = null;
+			if (resourceView.Nodes.Find(path, true).Length != 0)
+			{
+				node = resourceView.Nodes.Find(path, true)[0];
+			}
+			else
+			{
+				node = (parent != null ?
+					parent.Nodes.Add(path, Path.GetFileName(path)) :
+					resourceView.Nodes.Add(path, Path.GetFileName(path)));
+
+				SetLinkedRPath(node, path);
+			}
+
+			if (File.Exists(path))
+			{
+				// Nothing to do here yet.
+			}
+			else if (Directory.Exists(path))
+			{
+				foreach (string subPath in Directory.GetFileSystemEntries(path))
+				{
+					LoadResourceList(subPath, node);
+				}
+			}
+		}
+
+		private string GetLinkedRPath(TreeNode node)
+		{
+			return node.Name;
+		}
+
+		private void SetLinkedRPath(TreeNode node, string path)
+		{
+			node.Name = path;
+			node.ToolTipText = path;
+		}
+
+		private void AddResources(IEnumerable<string> files, string dest)
+		{
+			foreach (string file in files)
+			{
+				try
+				{
+					AddResource(file, dest, false);
+				}
+				catch (IOException ex)
+				{
+					MessageDialog.Show(this,
+						"Failed to copy resource file: " + ex.Message,
+						"Error");
+				}
+				catch (UnauthorizedAccessException ex)
+				{
+					DialogResponse reply = MessageDialog.Show(this,
+						"Failed to copy resource file: " + ex.Message,
+						"Error", MessageButtons.OkCancel);
+
+					if (reply == DialogResponse.Cancel)
+					{
+						return;
+					}
+				}
+			}
+			UpdateResourceList();
+		}
+
+		private void AddResource(string src, string dest, bool causeReload = true)
+		{
+			if (File.Exists(src))
+			{
+				File.Copy(src, Path.Combine(dest, Path.GetFileName(src)), true);
+			}
+			else if (Directory.Exists(src))
+			{
+				string newDest = Path.Combine(dest, Path.GetFileName(src));
+				if (!Directory.Exists(newDest))
+					Directory.CreateDirectory(newDest);
+				AddResources(Directory.GetFileSystemEntries(src), newDest);
+			}
+
+			if (causeReload)
+				UpdateResourceList();
+		}
+
+		private void resourceView_DragDrop(object sender, DragEventArgs e)
+		{
+			if (e.Data.GetDataPresent("FileDrop"))
+			{
+				TreeNode target = resourceView.GetNodeAt(
+					resourceView.PointToClient(new Point(e.X, e.Y)));
+
+				if (target != null &&
+					Directory.Exists(GetLinkedRPath(target)))
+				{
+					string dest = GetLinkedRPath(target);
+
+					AddResources(e.Data.GetData("FileDrop") as string[], dest);
+				}
+			}
+		}
+
+		private void resourceView_DragLeave(object sender, EventArgs e)
+		{
+			resourceView.SelectedNode = null;
+		}
+
+		private void resourceView_DragEnter(object sender, DragEventArgs e)
+		{
+
+		}
+
+		private void resourceView_DragOver(object sender, DragEventArgs e)
+		{
+			if (e.Data.GetDataPresent("FileDrop"))
+			{
+				TreeNode highlight = resourceView.GetNodeAt(
+					resourceView.PointToClient(new Point(e.X, e.Y)));
+
+				if (highlight != null && 
+					Directory.Exists(GetLinkedRPath(highlight)))
+				{
+					e.Effect = DragDropEffects.Copy;
+					resourceView.SelectedNode = highlight;
+				}
+				else
+				{
+					e.Effect = DragDropEffects.None;
+					resourceView.SelectedNode = null;
+				}
+			}
+		}
+
+		#endregion
+
+		#region Other
+
+		void InstMods_ModFileChanged(object sender, ModFileChangedEventArgs e)
+		{
+			LoadModList();
+		}
+
+		private Mod GetLinkedMod(ListViewItem item)
+		{
+			return item.Tag as Mod;
+		}
+
+		public void LoadModList()
+		{
+			if (InvokeRequired)
+			{
+				this.Invoke((o, args) => LoadModList());
+			}
+			else
+			{
+				modView.Items.Clear();
+				foreach (Mod mod in inst.InstMods)
+				{
+					string itemLabel = mod.Name;
+
+					ListViewItem item = new ListViewItem(itemLabel);
+					item.Tag = mod;
+					//item.Checked = true;
+
+					modView.Items.Add(item);
+				}
+
+				mlModView.Items.Clear();
+				if (Directory.Exists(inst.ModLoaderDir))
+				{
+					foreach (string file in Directory.GetFileSystemEntries(inst.ModLoaderDir))
+					{
+						Mod mod = new Mod(file);
+						string itemLabel = Path.GetFileName(file);
+						if (mod.Name != mod.FileName)
+							itemLabel = mod.Name;
+
+						ListViewItem item = new ListViewItem(itemLabel);
+						item.Tag = new Mod(file);
+						//item.Checked = true;
+						mlModView.Items.Add(item);
+					}
+				}
+
+				UpdateResourceList();
+			}
+		}
+
+		public void SaveModList()
+		{
+			int i = 0;
+			foreach (ListViewItem item in modView.Items)
+			{
+				//if (item.Checked)
+				//{
+					inst.InstMods[GetLinkedMod(item).FileName] = i;
+					i++;
+				//}
+				//else
+				//{
+				//    File.Delete(GetLinkedMod(item).FileName);
+				//}
+			}
+
+			//foreach (ListViewItem item in mlModView.Items)
+			//{
+			//    if (!item.Checked)
+			//    {
+			//        if (File.Exists(GetLinkedMod(item).FileName))
+			//            File.Delete(GetLinkedMod(item).FileName);
+			//        else if (Directory.Exists(GetLinkedMod(item).FileName))
+			//            Directory.Delete(GetLinkedMod(item).FileName, true);
+			//    }
+			//}
+			inst.InstMods.Save();
+		}
+
+		private void buttonCancel_Click(object sender, EventArgs e)
+		{
+			OnResponse(DialogResponse.Cancel);
+		}
+
+		private void buttonOk_Click(object sender, EventArgs e)
+		{
+			OnResponse(DialogResponse.OK);
+		}
+
+		private void buttonExport_Click(object sender, EventArgs e)
+		{
+
 		}
 
 		private void RecursiveCopy(string source, string dest, bool overwrite = false)
@@ -335,63 +581,41 @@ namespace MultiMC.WinGUI
 			mlModView.Columns[0].Width = mlModView.Width - 10;
 		}
 
-		private void modView_Resize(object sender, EventArgs e)
-		{
-			UpdateSizes();
-		}
-
-		private void mlModView_Resize(object sender, EventArgs e)
-		{
-			UpdateSizes();
-		}
-
-		private void buttonExport_Click(object sender, EventArgs e)
-		{
-
-		}
-
-		private void modView_KeyDown(object sender, KeyEventArgs e)
+		private void resourceView_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.KeyData == Keys.Delete)
 			{
-				List<Mod> removedMods = new List<Mod>();
-				foreach (ListViewItem item in modView.SelectedItems)
+				if (resourceView.SelectedNode != null)
 				{
-					removedMods.Add(GetLinkedMod(item));
-				}
+					string path = GetLinkedRPath(resourceView.SelectedNode);
 
-				foreach (Mod mod in removedMods)
-				{
 					try
 					{
-						Console.WriteLine("Removing {0}", mod.FileName);
-						if (File.Exists(mod.FileName))
-							File.Delete(mod.FileName);
-						else if (Directory.Exists(mod.FileName))
-							Directory.Delete(mod.FileName);
+						if (File.Exists(path))
+							File.Delete(path);
+						else if (Directory.Exists(path))
+						{
+							DialogResponse response = MessageDialog.Show(this,
+								"Really delete this resource folder?",
+								"Confirm Deletion", MessageButtons.OkCancel);
+							if (response == DialogResponse.OK)
+							{
+								Directory.Delete(path, true);
+							}
+						}
 					}
-					catch (IOException err)
+					catch (IOException ex)
 					{
-						Console.WriteLine("Failed to remove mod '{0}'. {1}", 
-							mod.Name, err.ToString());
+						MessageDialog.Show(this,
+							"Failed to delete resources: " + ex.Message,
+							"Error");
 					}
+
+					UpdateResourceList();
 				}
 			}
 		}
 
-		private void mlModView_KeyDown(object sender, KeyEventArgs e)
-		{
-			if (e.KeyData == Keys.Delete)
-			{
-				foreach (ListViewItem item in mlModView.SelectedItems)
-				{
-					if (File.Exists(GetLinkedMod(item).FileName))
-						File.Delete(GetLinkedMod(item).FileName);
-					else if (Directory.Exists(GetLinkedMod(item).FileName))
-						Directory.Delete(GetLinkedMod(item).FileName, true);
-				}
-				LoadModList();
-			}
-		}
+		#endregion
 	}
 }
