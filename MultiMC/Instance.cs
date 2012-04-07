@@ -671,7 +671,7 @@ namespace MultiMC
 				if (!modList.Contains(s))
 					throw new KeyNotFoundException("Can't change index of something " +
 					                               "that isn't in the list!");
-				Remove(s);
+				Remove(s, false);
 				modList.Insert(value, s);
 			}
 		}
@@ -685,7 +685,7 @@ namespace MultiMC
 					throw new KeyNotFoundException("Can't change index of something " +
 												   "that isn't in the list!");
 				Mod mod = modList.First(m => m.FileName == s);
-				Remove(mod);
+				Remove(mod, false);
 				modList.Insert(value, mod);
 			}
 		}

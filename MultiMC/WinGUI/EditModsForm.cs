@@ -120,7 +120,7 @@ namespace MultiMC.WinGUI
 
 			if (e.Data.GetDataPresent(
 				"System.Windows.Forms.ListView+SelectedListViewItemCollection") &&
-				dragIndex > 0)
+				dragIndex >= 0)
 			{
 				// Return if the items are not selected in the ListView control.
 				if (modView.SelectedItems.Count == 0)
@@ -130,7 +130,6 @@ namespace MultiMC.WinGUI
 
 				// Returns the location of the mouse pointer in the ListView control.
 				Point cp = modView.PointToClient(new Point(e.X, e.Y));
-
 
 				//if (modView.InsertionMark.AppearsAfterItem)
 				//    dragIndex++;
@@ -148,13 +147,17 @@ namespace MultiMC.WinGUI
 					{
 						return;
 					}
-					if (dragItem.Index < itemIndex)
-						itemIndex++;
-					else
-						itemIndex = dragIndex + i;
+					//if (dragItem.Index < itemIndex)
+					//    itemIndex++;
+					//else
+					//    itemIndex = dragIndex + i;
 
 					// Insert the item at the mouse pointer.
 					ListViewItem insertItem = (ListViewItem)dragItem.Clone();
+
+					if (itemIndex >= modView.Items.Count)
+						itemIndex = modView.Items.Count;
+
 					modView.Items.Insert(itemIndex, insertItem);
 
 					// Removes the item from the initial location while 
@@ -517,27 +520,9 @@ namespace MultiMC.WinGUI
 			int i = 0;
 			foreach (ListViewItem item in modView.Items)
 			{
-				//if (item.Checked)
-				//{
-					inst.InstMods[GetLinkedMod(item).FileName] = i;
-					i++;
-				//}
-				//else
-				//{
-				//    File.Delete(GetLinkedMod(item).FileName);
-				//}
+				inst.InstMods[GetLinkedMod(item)] = i;
+				i++;
 			}
-
-			//foreach (ListViewItem item in mlModView.Items)
-			//{
-			//    if (!item.Checked)
-			//    {
-			//        if (File.Exists(GetLinkedMod(item).FileName))
-			//            File.Delete(GetLinkedMod(item).FileName);
-			//        else if (Directory.Exists(GetLinkedMod(item).FileName))
-			//            Directory.Delete(GetLinkedMod(item).FileName, true);
-			//    }
-			//}
 			inst.InstMods.Save();
 		}
 
