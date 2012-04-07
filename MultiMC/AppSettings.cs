@@ -51,6 +51,7 @@ namespace MultiMC
 					Console.WriteLine("Loading settings...");
 					inst = new AppSettings();
 					inst.Load();
+
 					return inst;
 				}
 			}

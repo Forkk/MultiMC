@@ -61,7 +61,10 @@ namespace MultiMC.WinGUI
 
 		private void buttonOk_Click(object sender, EventArgs e)
 		{
-			OnResponse(DialogResponse.OK);
+			if (iconView.SelectedItems.Count > 0)
+				OnResponse(DialogResponse.OK);
+			else
+				OnResponse(DialogResponse.Cancel);
 		}
 
 		private void buttonCancel_Click(object sender, EventArgs e)

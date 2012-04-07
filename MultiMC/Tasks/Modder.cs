@@ -22,6 +22,7 @@ using System.Threading;
 using System.IO;
 
 using MultiMC.Tasks;
+using MultiMC.Mods;
 
 using Ionic.Zip;
 

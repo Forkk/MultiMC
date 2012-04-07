@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Diagnostics;
+using System.Reflection;
 
 using MultiMC.GUI;
 using MultiMC.ProblemDetection;
@@ -32,6 +33,21 @@ namespace MultiMC
 		[STAThread]
 		static void Main(string[] args)
 		{
+			// Register a callback with AssemblyResolve to load embedded DLLs
+			AppDomain.CurrentDomain.AssemblyResolve += (sender, e) =>
+			{
+				String resourceName = "AssemblyLoadingAndReflection." +
+					new AssemblyName(e.Name).Name + ".dll";
+
+				using (var stream = Assembly.GetExecutingAssembly().
+					GetManifestResourceStream(resourceName))
+				{
+					Byte[] assemblyData = new Byte[stream.Length];
+					stream.Read(assemblyData, 0, assemblyData.Length);
+					return Assembly.Load(assemblyData);
+				}
+			};
+
 			if (!args.Contains("-v"))
 				Console.WriteLine("Operating System: {0}", OSUtils.OS.ToString());
 
@@ -70,6 +86,21 @@ namespace MultiMC
 				else
 				{
 					Console.WriteLine("Unknown argument: " + args[0]);
+				}
+			}
+
+			if (!File.Exists(AppSettings.Main.JavaPath) ||
+				AppSettings.Main.JavaPath == "java")
+			{
+				Console.WriteLine("Detecting Java path.");
+				try
+				{
+					AppSettings.Main.AutoDetectJavaPath();
+					AppSettings.Main.Save();
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.ToString());
 				}
 			}
 

@@ -24,6 +24,7 @@ using System.Threading;
 
 using MultiMC.GUI;
 using MultiMC.Tasks;
+using MultiMC.Mods;
 
 namespace MultiMC
 {

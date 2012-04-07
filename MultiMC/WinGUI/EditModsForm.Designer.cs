@@ -29,14 +29,26 @@
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditModsForm));
+			System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Test Node 1");
+			System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Child Node 1");
+			System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Child Node 2");
+			System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Test Node 2", new System.Windows.Forms.TreeNode[] {
+            treeNode2,
+            treeNode3});
+			System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Root", new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode4});
 			this.labelHelp = new System.Windows.Forms.Label();
 			this.modTabControl = new System.Windows.Forms.TabControl();
 			this.tabPageJar = new System.Windows.Forms.TabPage();
 			this.modView = new System.Windows.Forms.ListView();
 			this.columnModName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.columnMCVersion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.tabPageMLMods = new System.Windows.Forms.TabPage();
 			this.mlModView = new System.Windows.Forms.ListView();
 			this.modColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.tabPageResources = new System.Windows.Forms.TabPage();
+			this.resourceView = new System.Windows.Forms.TreeView();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.buttonExport = new System.Windows.Forms.Button();
@@ -46,6 +58,7 @@
 			this.modTabControl.SuspendLayout();
 			this.tabPageJar.SuspendLayout();
 			this.tabPageMLMods.SuspendLayout();
+			this.tabPageResources.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.flowLayoutPanel1.SuspendLayout();
 			this.rButtonPanel.SuspendLayout();
@@ -68,6 +81,7 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.modTabControl.Controls.Add(this.tabPageJar);
 			this.modTabControl.Controls.Add(this.tabPageMLMods);
+			this.modTabControl.Controls.Add(this.tabPageResources);
 			this.modTabControl.Location = new System.Drawing.Point(12, 53);
 			this.modTabControl.Name = "modTabControl";
 			this.modTabControl.SelectedIndex = 0;
@@ -89,9 +103,10 @@
 			// 
 			this.modView.AllowDrop = true;
 			this.modView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnModName});
+            this.columnModName,
+            this.columnMCVersion});
 			this.modView.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.modView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+			this.modView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
 			this.modView.Location = new System.Drawing.Point(3, 3);
 			this.modView.Name = "modView";
 			this.modView.Size = new System.Drawing.Size(546, 288);
@@ -110,6 +125,10 @@
 			// 
 			this.columnModName.Text = "Mod Name";
 			this.columnModName.Width = 440;
+			// 
+			// columnMCVersion
+			// 
+			this.columnMCVersion.Text = "Minecraft Version";
 			// 
 			// tabPageMLMods
 			// 
@@ -144,6 +163,50 @@
 			// 
 			this.modColumn.Text = "Mod Name";
 			this.modColumn.Width = 440;
+			// 
+			// tabPageResources
+			// 
+			this.tabPageResources.Controls.Add(this.resourceView);
+			this.tabPageResources.Location = new System.Drawing.Point(4, 22);
+			this.tabPageResources.Name = "tabPageResources";
+			this.tabPageResources.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPageResources.Size = new System.Drawing.Size(552, 294);
+			this.tabPageResources.TabIndex = 2;
+			this.tabPageResources.Text = "minecraft/resources";
+			this.tabPageResources.UseVisualStyleBackColor = true;
+			// 
+			// resourceView
+			// 
+			this.resourceView.AllowDrop = true;
+			this.resourceView.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.resourceView.HideSelection = false;
+			this.resourceView.HotTracking = true;
+			this.resourceView.Location = new System.Drawing.Point(3, 3);
+			this.resourceView.Name = "resourceView";
+			treeNode1.Name = "TNode1";
+			treeNode1.Text = "Test Node 1";
+			treeNode1.ToolTipText = "Test";
+			treeNode2.Name = "TN2Child1";
+			treeNode2.Text = "Child Node 1";
+			treeNode3.Name = "TN2Child2";
+			treeNode3.Text = "Child Node 2";
+			treeNode4.Name = "TNode2";
+			treeNode4.Text = "Test Node 2";
+			treeNode5.Name = "TestNode";
+			treeNode5.Text = "Root";
+			treeNode5.ToolTipText = "Test";
+			this.resourceView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode5});
+			this.resourceView.PathSeparator = "/";
+			this.resourceView.ShowLines = false;
+			this.resourceView.ShowNodeToolTips = true;
+			this.resourceView.Size = new System.Drawing.Size(546, 288);
+			this.resourceView.TabIndex = 0;
+			this.resourceView.DragDrop += new System.Windows.Forms.DragEventHandler(this.resourceView_DragDrop);
+			this.resourceView.DragEnter += new System.Windows.Forms.DragEventHandler(this.resourceView_DragEnter);
+			this.resourceView.DragOver += new System.Windows.Forms.DragEventHandler(this.resourceView_DragOver);
+			this.resourceView.DragLeave += new System.EventHandler(this.resourceView_DragLeave);
+			this.resourceView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.resourceView_KeyDown);
 			// 
 			// tableLayoutPanel1
 			// 
@@ -239,6 +302,7 @@
 			this.modTabControl.ResumeLayout(false);
 			this.tabPageJar.ResumeLayout(false);
 			this.tabPageMLMods.ResumeLayout(false);
+			this.tabPageResources.ResumeLayout(false);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.flowLayoutPanel1.ResumeLayout(false);
@@ -263,5 +327,8 @@
 		private System.Windows.Forms.Button buttonCancel;
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
 		private System.Windows.Forms.Button buttonExport;
+		private System.Windows.Forms.TabPage tabPageResources;
+		private System.Windows.Forms.TreeView resourceView;
+		private System.Windows.Forms.ColumnHeader columnMCVersion;
 	}
 }
