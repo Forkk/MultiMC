@@ -48,59 +48,10 @@ namespace MultiMC
 		public Main()
 		{
 			GUIManager.Create();
-			try
-			{
-				GUIManager.Main.Initialize();
+			GUIManager.Main.Initialize();
 
-				MainWindow = GUIManager.Main.MainWindow();
-				InstIconList = GUIManager.Main.LoadInstIcons();
-			}
-			catch (FileNotFoundException e)
-			{
-				if (e.Message.ToLower().Contains("system.windows.forms"))
-				{
-					string helpMsg =
-						"You're missing the System.Windows.Forms assembly. (version 4.0)";
-					string errorFileMsg = string.Format(
-@"Oh no!
-
-You seem to be missing one of MultiMC's prerequisites. 
-Please make sure you have System.Windows.Forms (version 4.0) installed correctly and then try again.
-
-Details:
-{0}
-", e.ToString());
-					if (OSUtils.OS == OSEnum.Linux)
-					{
-						helpMsg =
-							"Try installing the 'libmono-system-windows-forms4.0-cil' " +
-							"package. " +
-							"(sudo apt-get install libmono-system-windows-forms4.0-cil)";
-						errorFileMsg = string.Format(
-@"Oh no!
-
-You seem to be missing one of MultiMC's prerequisites. 
-Please make sure you've installed the 'libmono-system-windows-forms4.0-cil' package.
-
-To do this, simply run this command in terminal:
-	sudo apt-get install libmono-system-windows-forms4.0-cil
-
-Details:
-{0}
-", e.ToString());
-					}
-					string errorMsg = string.Format("Couldn't load WinForms.\n{0}", helpMsg);
-
-					Console.WriteLine(errorMsg);
-					DebugUtils.WriteError(errorFileMsg);
-
-					DebugUtils.FatalErrorDialog("MultiMC requires the package " +
-						"'libmono-system-windows-forms4.0-cil'");
-
-					Environment.Exit(1);
-				}
-				else throw;
-			}
+			MainWindow = GUIManager.Main.MainWindow();
+			InstIconList = GUIManager.Main.LoadInstIcons();
 
 			MainWindow.Title = string.Format("MultiMC Beta {0} for {1}", 
 				AppUtils.GetVersion().ToString(2), OSUtils.OSName);

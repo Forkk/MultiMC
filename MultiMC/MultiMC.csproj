@@ -55,12 +55,40 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\atk-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\gdk-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\glade-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\glib-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="gtk-dotnet, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\gtk-dotnet.dll</HintPath>
+    </Reference>
+    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\gtk-sharp.dll</HintPath>
+    </Reference>
     <Reference Include="Ionic.Zip.Reduced, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\pango-sharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -82,6 +110,10 @@
     <Compile Include="DataUtils.cs" />
     <Compile Include="DebugUtils.cs" />
     <Compile Include="EventfulList.cs" />
+    <Compile Include="GTKGUI\GTKGUIManager.cs" />
+    <Compile Include="GTKGUI\GTKImageList.cs" />
+    <Compile Include="GTKGUI\GTKWindow.cs" />
+    <Compile Include="GTKGUI\MainWindow.cs" />
     <Compile Include="GUI\IAddInstDialog.cs" />
     <Compile Include="GUI\IChangeIconDialog.cs" />
     <Compile Include="GUI\IConsoleWindow.cs" />
@@ -238,6 +270,7 @@
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Launcher\MultiMCLauncher.class" />
+    <EmbeddedResource Include="GTKGUI\gui.glade" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -271,7 +304,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\document-import.png" />
+    <EmbeddedResource Include="Resources\document-import.png" />
     <Content Include="Launcher\MultiMCLauncher.java" />
     <EmbeddedResource Include="Lib\Ionic.Zip.Reduced.dll" />
     <None Include="Resources\MultiMC.png" />
@@ -279,15 +312,15 @@
     <None Include="Resources\MultiMC32.png" />
     <None Include="Resources\MultiMC128.png" />
     <None Include="Resources\License.txt" />
-    <None Include="Resources\tnt.png" />
-    <None Include="Resources\brick.png" />
-    <None Include="Resources\diamond.png" />
-    <None Include="Resources\dirt.png" />
-    <None Include="Resources\gold.png" />
-    <None Include="Resources\grass.png" />
-    <None Include="Resources\iron.png" />
-    <None Include="Resources\planks.png" />
-    <None Include="Resources\stone.png" />
+    <EmbeddedResource Include="Resources\tnt.png" />
+    <EmbeddedResource Include="Resources\brick.png" />
+    <EmbeddedResource Include="Resources\diamond.png" />
+    <EmbeddedResource Include="Resources\dirt.png" />
+    <EmbeddedResource Include="Resources\gold.png" />
+    <EmbeddedResource Include="Resources\grass.png" />
+    <EmbeddedResource Include="Resources\iron.png" />
+    <EmbeddedResource Include="Resources\planks.png" />
+    <EmbeddedResource Include="Resources\stone.png" />
     <None Include="Resources\MultiMC.ico" />
     <None Include="Resources\Logo.ico" />
     <None Include="WinGUI\ToolbarIcons\ImportIcon.png" />

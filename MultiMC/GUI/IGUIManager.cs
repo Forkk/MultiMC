@@ -56,6 +56,14 @@ namespace MultiMC.GUI
 			case WindowToolkit.WinForms:
 				_guiManager = new WinGUI.WinFormsGUIManager();
 				break;
+
+			case WindowToolkit.GtkSharp:
+				_guiManager = new GTKGUI.GTKGUIManager();
+				break;
+
+			default:
+				throw new NotImplementedException("No GUI manager found " +
+					" for toolkit '" + Program.Toolkit.ToString() + "'");
 			}
 		}
 	}

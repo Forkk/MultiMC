@@ -107,7 +107,7 @@ namespace MultiMC
 			if (OSUtils.OS == OSEnum.Windows)
 				Toolkit = WindowToolkit.WinForms;
 			else
-				Toolkit = WindowToolkit.WinForms;
+				Toolkit = WindowToolkit.GtkSharp;
 
 			if (args.Contains("--gtk"))
 				Toolkit = WindowToolkit.GtkSharp;
