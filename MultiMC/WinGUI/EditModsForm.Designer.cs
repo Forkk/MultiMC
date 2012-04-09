@@ -38,6 +38,15 @@
 			System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Root", new System.Windows.Forms.TreeNode[] {
             treeNode16,
             treeNode19});
+			System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Test Node 1");
+			System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Child Node 1");
+			System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Child Node 2");
+			System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Test Node 2", new System.Windows.Forms.TreeNode[] {
+            treeNode2,
+            treeNode3});
+			System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Root", new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode4});
 			this.labelHelp = new System.Windows.Forms.Label();
 			this.modTabControl = new System.Windows.Forms.TabControl();
 			this.tabPageJar = new System.Windows.Forms.TabPage();
@@ -197,6 +206,20 @@
 			treeNode20.ToolTipText = "Test";
 			this.resourceView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode20});
+			treeNode1.Name = "TNode1";
+			treeNode1.Text = "Test Node 1";
+			treeNode1.ToolTipText = "Test";
+			treeNode2.Name = "TN2Child1";
+			treeNode2.Text = "Child Node 1";
+			treeNode3.Name = "TN2Child2";
+			treeNode3.Text = "Child Node 2";
+			treeNode4.Name = "TNode2";
+			treeNode4.Text = "Test Node 2";
+			treeNode5.Name = "TestNode";
+			treeNode5.Text = "Root";
+			treeNode5.ToolTipText = "Test";
+			this.resourceView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode5});
 			this.resourceView.PathSeparator = "/";
 			this.resourceView.ShowLines = false;
 			this.resourceView.ShowNodeToolTips = true;
