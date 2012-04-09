@@ -146,7 +146,7 @@ namespace MultiMC.Tasks
 		{
 			running = false;
 			if (Completed != null)
-				Completed(this, new TaskCompleteEventArgs(cancelled));
+				Completed(this, new TaskCompleteEventArgs(this, cancelled));
 		}
 
 		/// <summary>
@@ -158,7 +158,7 @@ namespace MultiMC.Tasks
 		protected virtual void OnException(Exception e)
 		{
 			if (ExceptionThrown != null)
-				ExceptionThrown(this, new TaskExceptionEventArgs(e));
+				ExceptionThrown(this, new TaskExceptionEventArgs(this, e));
 		}
 
 		/// <summary>
@@ -170,7 +170,7 @@ namespace MultiMC.Tasks
 		protected virtual void OnProgressChange(int NewValue)
 		{
 			if (ProgressChange != null)
-				ProgressChange(this, new ProgressChangeEventArgs(NewValue));
+				ProgressChange(this, new ProgressChangeEventArgs(this, NewValue));
 		}
 
 		/// <summary>
@@ -182,7 +182,7 @@ namespace MultiMC.Tasks
 		protected virtual void OnStatusChange(string NewValue)
 		{
 			if (StatusChange != null)
-				StatusChange(this, new TaskStatusEventArgs(NewValue));
+				StatusChange(this, new TaskStatusEventArgs(this, NewValue));
 		}
 
 		/// <summary>
@@ -194,17 +194,32 @@ namespace MultiMC.Tasks
 		protected virtual void OnErrorMessage(string message)
 		{
 			if (ErrorMessage != null)
-				ErrorMessage(this, new ErrorMessageEventArgs(message));
+				ErrorMessage(this, new ErrorMessageEventArgs(this, message));
 		}
 
 		#endregion
 
 		#region Classes
+
+		public class TaskEventArgs : EventArgs
+		{
+			public TaskEventArgs(Task task)
+			{
+				this.TaskID = task.TaskID;
+			}
+
+			public int TaskID
+			{
+				get;
+				protected set;
+			}
+		}
 		
 		// Event Args Classes
-		public class TaskExceptionEventArgs : EventArgs
+		public class TaskExceptionEventArgs : TaskEventArgs
 		{
-			public TaskExceptionEventArgs(Exception e)
+			public TaskExceptionEventArgs(Task t, Exception e)
+				: base(t)
 			{
 				this.exception = e;
 			}
@@ -235,9 +250,10 @@ namespace MultiMC.Tasks
 			#endregion
 		}
 
-		public class ProgressChangeEventArgs : EventArgs
+		public class ProgressChangeEventArgs : TaskEventArgs
 		{
-			public ProgressChangeEventArgs(int progress)
+			public ProgressChangeEventArgs(Task t, int progress)
+				: base(t)
 			{
 				this.progress = progress;
 			}
@@ -254,9 +270,10 @@ namespace MultiMC.Tasks
 			#endregion
 		}
 
-		public class TaskStatusEventArgs : EventArgs
+		public class TaskStatusEventArgs : TaskEventArgs
 		{
-			public TaskStatusEventArgs(string status)
+			public TaskStatusEventArgs(Task t, string status)
+				: base(t)
 			{
 				this.status = status;
 			}
@@ -276,9 +293,10 @@ namespace MultiMC.Tasks
 		/// <summary>
 		/// Event arguments for error messages.
 		/// </summary>
-		public class ErrorMessageEventArgs : EventArgs
+		public class ErrorMessageEventArgs : TaskEventArgs
 		{
-			public ErrorMessageEventArgs(string message)
+			public ErrorMessageEventArgs(Task t, string message)
+				: base(t)
 			{
 				this.message = message;
 			}
@@ -298,9 +316,10 @@ namespace MultiMC.Tasks
 			#endregion
 		}
 		
-		public class TaskCompleteEventArgs : EventArgs
+		public class TaskCompleteEventArgs : TaskEventArgs
 		{
-			public TaskCompleteEventArgs(bool cancelled = false)
+			public TaskCompleteEventArgs(Task t, bool cancelled = false)
+				: base(t)
 			{
 				this.Cancelled = cancelled;
 			}

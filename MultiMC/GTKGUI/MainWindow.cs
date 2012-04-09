@@ -95,12 +95,6 @@ namespace MultiMC.GTKGUI
 			} while (instListStore.IterNext(ref iter));
 		}
 
-		void TaskRemoved(object sender, ItemAddRemoveEventArgs<Task> e)
-		{
-			mainVBox.Remove(taskProgBars[e.Item.TaskID]);
-			taskProgBars.Remove(e.Item.TaskID);
-		}
-
 		void TaskAdded(object sender, ItemAddRemoveEventArgs<Task> e)
 		{
 			if (IsTaskIDTaken(e.Item.TaskID))
@@ -115,19 +109,41 @@ namespace MultiMC.GTKGUI
 			taskProgBars.Add(task.TaskID, tProgBar);
 			progBarVBox.PackEnd(tProgBar, false, true, 0);
 
-			task.StatusChange += (o, args) =>
-				Invoke((o2, args2) => { tProgBar.Text = args.Status; });
+			task.StatusChange += new Task.StatusChangeEventHandler(TaskStatusChange);
 
-			task.ProgressChange += (o, args) =>
-				Invoke((o2, args2) => { tProgBar.Fraction = args.Progress / 100; });
-
-			task.Completed += (o, args) => 
-				Invoke((o2, args2) =>
-			{
-				Console.WriteLine("Task {0} complete.", task.TaskID);
-			});
+			task.ProgressChange += new Task.ProgressChangeEventHandler(TaskProgressChange);
 
 			tProgBar.Visible = true;
+		}
+
+		void TaskProgressChange(object sender, Task.ProgressChangeEventArgs e)
+		{
+			Invoke((o, args) => 
+				{
+					double pbarFraction = (float)e.Progress / 100f;
+					if (pbarFraction > 1.0)
+						pbarFraction = 1;
+
+					taskProgBars[e.TaskID].Fraction = pbarFraction;
+				});
+			
+		}
+
+		void TaskStatusChange(object sender, Task.TaskStatusEventArgs e)
+		{
+			Invoke((o, args) =>
+				{
+					taskProgBars[e.TaskID].Text = e.Status;
+				});
+		}
+
+		void TaskRemoved(object sender, ItemAddRemoveEventArgs<Task> e)
+		{
+			Invoke((o, args) =>
+			{
+				//mainVBox.Remove(taskProgBars[e.Item.TaskID]);
+				taskProgBars.Remove(e.Item.TaskID);
+			});
 		}
 
 		#region Glade Handlers

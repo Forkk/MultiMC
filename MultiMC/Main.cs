@@ -531,7 +531,10 @@ namespace MultiMC
 		public void StartInstance(Instance inst)
 		{
 			string message = "";
-			DoLogin(LoginComplete, inst, message, inst.CanPlayOffline);
+			DoLogin(
+				(LoginInfo info, Instance instance) =>
+					MainWindow.Invoke((o, args) => LoginComplete(info, instance)), 
+				inst, message, inst.CanPlayOffline);
 		}
 
 		/// <summary>

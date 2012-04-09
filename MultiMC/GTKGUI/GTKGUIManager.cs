@@ -58,7 +58,7 @@ namespace MultiMC.GTKGUI
 
 		public IConsoleWindow ConsoleWindow(Instance inst)
 		{
-			throw new NotImplementedException();
+			return new ConsoleWindow(inst);
 		}
 
 		public IAddInstDialog AddInstDialog()

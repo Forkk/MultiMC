@@ -127,6 +127,7 @@
     <Compile Include="DebugUtils.cs" />
     <Compile Include="EventfulList.cs" />
     <Compile Include="GTKGUI\AddInstDialog.cs" />
+    <Compile Include="GTKGUI\ConsoleWindow.cs" />
     <Compile Include="GTKGUI\GTKAboutDialog.cs" />
     <Compile Include="GTKGUI\GTKDialog.cs" />
     <Compile Include="GTKGUI\GTKGUIManager.cs" />
@@ -235,7 +236,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WinGUI\WinFormsMessageBox.cs" />
-    <Compile Include="TaskStatus.cs" />
     <Compile Include="WinGUI\WinFormsWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -331,7 +331,6 @@
     <EmbeddedResource Include="Resources\document-import.png" />
     <Content Include="Launcher\MultiMCLauncher.java" />
     <EmbeddedResource Include="Lib\Ionic.Zip.Reduced.dll" />
-    <None Include="Resources\MultiMC.png" />
     <None Include="Resources\MultiMC64.png" />
     <EmbeddedResource Include="Resources\MultiMC32.png" />
     <None Include="Resources\MultiMC128.png" />

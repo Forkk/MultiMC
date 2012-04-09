@@ -6,16 +6,57 @@
     <property name="visible">True</property>
     <property name="orientation">vertical</property>
     <child>
-      <widget class="GtkTextView" id="consoleTextViewsw">
+      <widget class="GtkTextView" id="consoleView">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
+        <property name="editable">False</property>
+        <property name="wrap_mode">word</property>
       </widget>
       <packing>
         <property name="position">0</property>
       </packing>
     </child>
     <child>
-      <placeholder/>
+      <widget class="GtkHButtonBox" id="consoleButtonBox">
+        <property name="visible">True</property>
+        <property name="spacing">6</property>
+        <property name="layout_style">end</property>
+        <child>
+          <widget class="GtkButton" id="buttonHide">
+            <property name="label" translatable="yes">_Hide</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="use_underline">True</property>
+            <signal name="activate" handler="OnHideClicked"/>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkButton" id="buttonClose">
+            <property name="label" translatable="yes">_Close</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="use_underline">True</property>
+            <signal name="activate" handler="OnCloseClicked"/>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </widget>
+      <packing>
+        <property name="expand">False</property>
+        <property name="padding">4</property>
+        <property name="position">1</property>
+      </packing>
     </child>
   </widget>
 </glade-interface>
