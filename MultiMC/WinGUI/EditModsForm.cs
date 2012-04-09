@@ -243,6 +243,9 @@ namespace MultiMC.WinGUI
 			{
 				try
 				{
+					if (!Directory.Exists(inst.ModLoaderDir))
+						Directory.CreateDirectory(inst.ModLoaderDir);
+
 					foreach (string file in e.Data.GetData("FileDrop") as string[])
 					{
 						if (Directory.Exists(file))

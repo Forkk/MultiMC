@@ -295,10 +295,18 @@ namespace MultiMC
 						}
 						catch (IOException)
 						{
-							Directory.Delete(SelectedInst.RootDir, true);
+							try
+							{
+								Directory.Delete(SelectedInst.RootDir, true);
+							}
+							catch (UnauthorizedAccessException)
+							{
+
+							}
 						}
 						catch (UnauthorizedAccessException)
 						{
+
 						}
 						MainWindow.LoadInstances();
 					}

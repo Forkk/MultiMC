@@ -6,7 +6,13 @@
     <property name="visible">True</property>
     <property name="orientation">vertical</property>
     <child>
-      <placeholder/>
+      <widget class="GtkTextView" id="consoleTextViewsw">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+      </widget>
+      <packing>
+        <property name="position">0</property>
+      </packing>
     </child>
     <child>
       <placeholder/>
