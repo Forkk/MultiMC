@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<glade-interface>
+  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-naming-policy project-wide -->
+  <widget class="GtkVBox" id="mainVBox">
+    <property name="visible">True</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <widget class="GtkToolbar" id="menuToolBar">
+        <property name="visible">True</property>
+        <property name="toolbar_style">icons</property>
+        <property name="show_arrow">False</property>
+        <child>
+          <widget class="GtkToolButton" id="newInstButton">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">New Instance</property>
+            <property name="use_underline">True</property>
+            <property name="stock_id">gtk-new</property>
+            <signal name="clicked" handler="OnNewInstanceClicked"/>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="homogeneous">True</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkToolButton" id="viewInstFolderButton">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">View Instances Folder</property>
+            <property name="use_underline">True</property>
+            <property name="stock_id">gtk-open</property>
+            <signal name="clicked" handler="OnViewFolderClicked"/>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="homogeneous">True</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkToolButton" id="refreshButton">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Refresh</property>
+            <property name="use_underline">True</property>
+            <property name="stock_id">gtk-refresh</property>
+            <signal name="clicked" handler="OnRefreshClicked"/>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="homogeneous">True</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkSeparatorToolItem" id="separator3">
+            <property name="visible">True</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkToolButton" id="settingsButton">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Settings</property>
+            <property name="use_underline">True</property>
+            <property name="stock_id">gtk-preferences</property>
+            <signal name="clicked" handler="OnSettingsClicked"/>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="homogeneous">True</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkToolButton" id="updateButton">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Check for updates...</property>
+            <property name="use_underline">True</property>
+            <property name="icon_name">gtk-harddisk</property>
+            <signal name="clicked" handler="OnCheckUpdatesClicked"/>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="homogeneous">True</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkSeparatorToolItem" id="separator4">
+            <property name="visible">True</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkToolButton" id="helpButton">
+            <property name="visible">True</property>
+            <property name="is_important">True</property>
+            <property name="label" translatable="yes">Help</property>
+            <property name="use_underline">True</property>
+            <property name="stock_id">gtk-help</property>
+            <signal name="clicked" handler="OnHelpClicked"/>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="homogeneous">True</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkToolButton" id="aboutButton">
+            <property name="visible">True</property>
+            <property name="is_important">True</property>
+            <property name="label" translatable="yes">About</property>
+            <property name="use_underline">True</property>
+            <property name="stock_id">gtk-about</property>
+            <signal name="clicked" handler="OnAboutClicked"/>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="homogeneous">True</property>
+          </packing>
+        </child>
+      </widget>
+      <packing>
+        <property name="expand">False</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkIconView" id="instView">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <signal name="item_activated" handler="OnItemActivated"/>
+      </widget>
+      <packing>
+        <property name="position">2</property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkVBox" id="progBarVBox">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <placeholder/>
+        </child>
+      </widget>
+      <packing>
+        <property name="expand">False</property>
+        <property name="pack_type">end</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+  </widget>
+</glade-interface>

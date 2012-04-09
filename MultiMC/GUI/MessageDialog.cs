@@ -18,6 +18,9 @@ namespace MultiMC.GUI
 			case WindowToolkit.WinForms:
 				return WinGUI.WinFormsMessageBox.Show(parent, text, title, buttons); 
 
+			case WindowToolkit.GtkSharp:
+				return GTKGUI.GTKMessageBox.Show(parent, text, title, buttons);
+
 			default:
 				throw new NotImplementedException();
 			}
@@ -29,8 +32,6 @@ namespace MultiMC.GUI
 		Ok,
 		OkCancel,
 		YesNo,
-		YesNoCancel,
-		AbortRetryIgnore,
 		RetryCancel
 	}
 }

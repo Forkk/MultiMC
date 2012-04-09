@@ -5,10 +5,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiMC", "MultiMC\MultiMC.
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug - GTK|x86 = Debug - GTK|x86
 		Debug|x86 = Debug|x86
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{966392C0-2CC5-4885-A3A6-DEB77026530F}.Debug - GTK|x86.ActiveCfg = Debug-GTK|x86
+		{966392C0-2CC5-4885-A3A6-DEB77026530F}.Debug - GTK|x86.Build.0 = Debug-GTK|x86
 		{966392C0-2CC5-4885-A3A6-DEB77026530F}.Debug|x86.ActiveCfg = Debug|x86
 		{966392C0-2CC5-4885-A3A6-DEB77026530F}.Debug|x86.Build.0 = Debug|x86
 		{966392C0-2CC5-4885-A3A6-DEB77026530F}.Release|x86.ActiveCfg = Release|x86

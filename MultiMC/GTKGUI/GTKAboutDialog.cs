@@ -9,13 +9,50 @@ using MultiMC.GUI;
 
 namespace MultiMC.GTKGUI
 {
-	public class GTKWindow : Window, IWindow
+	public class GTKAboutDialog : AboutDialog, IDialog
 	{
-		public GTKWindow(string title = "")
-			: base(title)
+		public GTKAboutDialog()
+			: base()
 		{
+			Authors = new string[] { "Andrew Okin", "ShaRose" };
+			License = Properties.Resources.License;
+			Logo = Gdk.Pixbuf.LoadFromResource("MultiMC.Resources.MultiMC32.png");
+			this.ProgramName = "MultiMC";
+			this.Version = AppUtils.GetVersion().ToString();
+
 			DeleteEvent += WindowDestroyed;
+			base.Response += OnResponse;
+
 			base.Shown += (o, args) => MoveToDefPosition();
+		}
+
+		void OnResponse(object o, ResponseArgs args)
+		{
+			DialogResponse response = DialogResponse.Other;
+
+			switch (args.ResponseId)
+			{
+			case ResponseType.Ok:
+				response = DialogResponse.OK;
+				break;
+
+			case ResponseType.Cancel:
+				response = DialogResponse.Cancel;
+				break;
+
+			case ResponseType.Yes:
+				response = DialogResponse.Yes;
+				break;
+
+			case ResponseType.No:
+				response = DialogResponse.No;
+				break;
+			}
+
+			if (Response != null)
+				Response(this, new DialogResponseEventArgs(response));
+
+			Close();
 		}
 
 		void WindowDestroyed(object o, EventArgs args)
@@ -103,7 +140,7 @@ namespace MultiMC.GTKGUI
 				{
 				case WindowPosition.Center:
 					return DefWindowPosition.CenterScreen;
-					
+
 				case WindowPosition.CenterOnParent:
 					return DefWindowPosition.CenterParent;
 
@@ -132,7 +169,7 @@ namespace MultiMC.GTKGUI
 
 		public void MoveToDefPosition()
 		{
-			base.SetPosition(base.WindowPosition);
+			// TODO movetodefposition
 		}
 
 
@@ -142,7 +179,15 @@ namespace MultiMC.GTKGUI
 			set
 			{
 				if (value is Window)
+				{
 					_parent = value;
+					base.ParentWindow = (value as Window).GdkWindow;
+				}
+				else if (value is Dialog)
+				{
+					_parent = value;
+					base.ParentWindow = (value as Dialog).GdkWindow;
+				}
 				else
 					throw new InvalidOperationException("Parent window must be " +
 						"a GTK window!");
@@ -156,7 +201,7 @@ namespace MultiMC.GTKGUI
 			get { return _parent != null; }
 		}
 
-		public void Close()
+		public new void Close()
 		{
 			base.Destroy();
 		}
@@ -167,5 +212,18 @@ namespace MultiMC.GTKGUI
 		}
 
 		public event EventHandler Closed;
+
+		public bool IsModal
+		{
+			get { return base.Modal; }
+			set { base.Modal = value; }
+		}
+
+		public new void Run()
+		{
+			base.Run();
+		}
+
+		public new event EventHandler<DialogResponseEventArgs> Response;
 	}
 }

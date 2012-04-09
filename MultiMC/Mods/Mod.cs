@@ -73,6 +73,10 @@ namespace MultiMC.Mods
 			{
 
 			}
+			catch (IOException)
+			{
+
+			}
 
 			if (modInfo == null)
 			{

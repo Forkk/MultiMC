@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<glade-interface>
+  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-naming-policy project-wide -->
+  <widget class="GtkMenu" id="instContextMenu">
+    <property name="visible">True</property>
+    <child>
+      <widget class="GtkMenuItem" id="playMenuItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Play</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="OnPlayClicked"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkSeparatorMenuItem" id="separatormenuitem1">
+        <property name="visible">True</property>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="changeIconMenuItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Change Icon</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="OnChangeIconClicked"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="editNotesMenuItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Notes</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="OnEditNotesClicked"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkSeparatorMenuItem" id="separatormenuitem2">
+        <property name="visible">True</property>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="editModsMenuItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Edit Mods</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="OnEditModsClicked"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="rebuildMenuItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Rebuild Jar</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="OnRebuildClicked"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="viewFolderMenuItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">View Folder</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="OnViewInstFolderClicked"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkSeparatorMenuItem" id="separatormenuitem3">
+        <property name="visible">True</property>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="deleteMenuItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Delete</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="OnDeleteClicked"/>
+      </widget>
+    </child>
+  </widget>
+</glade-interface>

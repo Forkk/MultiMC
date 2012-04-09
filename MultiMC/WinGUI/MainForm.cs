@@ -302,6 +302,7 @@ namespace MultiMC.WinGUI
 		public void LoadInstances()
 		{
 			instView.Items.Clear();
+			InstanceList.Clear();
 			foreach (Instance inst in Instance.LoadInstances(AppSettings.Main.InstanceDir))
 			{
 				InstanceList.Add(inst);

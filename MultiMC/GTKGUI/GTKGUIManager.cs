@@ -9,11 +9,14 @@ using Gtk;
 using Glade;
 
 using MultiMC.GUI;
+using Gdk;
 
 namespace MultiMC.GTKGUI
 {
 	public class GTKGUIManager : IGUIManager
 	{
+		GTKWindow mainWindow;
+
 		public GTKGUIManager()
 		{
 
@@ -33,16 +36,16 @@ namespace MultiMC.GTKGUI
 		{
 			Assembly ass = Assembly.GetExecutingAssembly();
 
-			Dictionary<string, Image> imgDict =
-				   new Dictionary<string, Image>();
-			imgDict.Add("grass", new Image(ass, "MultiMC.Resources.grass.png"));
-			imgDict.Add("brick", new Image(ass, "MultiMC.Resources.brick.png"));
-			imgDict.Add("diamond", new Image(ass, "MultiMC.Resources.diamond.png"));
-			imgDict.Add("dirt", new Image(ass, "MultiMC.Resources.dirt.png"));
-			imgDict.Add("gold", new Image(ass, "MultiMC.Resources.gold.png"));
-			imgDict.Add("iron", new Image(ass, "MultiMC.Resources.iron.png"));
-			imgDict.Add("planks", new Image(ass, "MultiMC.Resources.planks.png"));
-			imgDict.Add("tnt", new Image(ass, "MultiMC.Resources.tnt.png"));
+			Dictionary<string, Pixbuf> imgDict =
+				   new Dictionary<string, Pixbuf>();
+			imgDict.Add("grass", new Pixbuf(ass, "MultiMC.Resources.grass.png"));
+			imgDict.Add("brick", new Pixbuf(ass, "MultiMC.Resources.brick.png"));
+			imgDict.Add("diamond", new Pixbuf(ass, "MultiMC.Resources.diamond.png"));
+			imgDict.Add("dirt", new Pixbuf(ass, "MultiMC.Resources.dirt.png"));
+			imgDict.Add("gold", new Pixbuf(ass, "MultiMC.Resources.gold.png"));
+			imgDict.Add("iron", new Pixbuf(ass, "MultiMC.Resources.iron.png"));
+			imgDict.Add("planks", new Pixbuf(ass, "MultiMC.Resources.planks.png"));
+			imgDict.Add("tnt", new Pixbuf(ass, "MultiMC.Resources.tnt.png"));
 
 			return new GTKImageList(Properties.Resources.UserIconDir,
 				imgDict, imgDict["grass"]);
@@ -60,7 +63,7 @@ namespace MultiMC.GTKGUI
 
 		public IAddInstDialog AddInstDialog()
 		{
-			throw new NotImplementedException();
+			return new AddInstDialog(mainWindow);
 		}
 
 		public IDialog SettingsWindow()
@@ -85,7 +88,7 @@ namespace MultiMC.GTKGUI
 
 		public ILoginDialog LoginDialog(string errMsg = null)
 		{
-			throw new NotImplementedException();
+			return new LoginDialog(mainWindow, errMsg);
 		}
 
 		public IDialog DeleteDialog()
@@ -95,7 +98,8 @@ namespace MultiMC.GTKGUI
 
 		public void Run(IMainWindow mainWindow)
 		{
-			(mainWindow as GTKWindow).ShowAll();
+			this.mainWindow = (mainWindow as GTKWindow);
+			mainWindow.Show();
 
 			Application.Run();
 		}

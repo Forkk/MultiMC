@@ -13,29 +13,92 @@ namespace MultiMC.GTKGUI
 {
 	public class MainWindow : GTKWindow, IMainWindow
 	{
+		ListStore instListStore;
+
 		Dictionary<int, ProgressBar> taskProgBars;
 
 		public MainWindow()
 		{
-			XML gxml = gxml = new XML(null, "MultiMC.GTKGUI.gui.glade", 
+			XML gxml = new XML(null, "MultiMC.GTKGUI.MainWindow.glade", 
 				"mainVBox", null);
 			gxml.Toplevel = this;
 			gxml.Autoconnect(this);
+
+			XML gxml2 = new XML(null, "MultiMC.GTKGUI.InstContextMenu.glade",
+				"instContextMenu", null);
+			gxml2.Autoconnect(this);
 
 			this.Add(mainVBox);
 
 			ShowAll();
 
 			this.WidthRequest = 620;
-			this.HeightRequest = 400;
+			this.HeightRequest = 380;
 
 			DeleteEvent += (o, args) => Application.Quit();
 
+			// Set up the instance icon view
+			instListStore = new ListStore(
+				typeof(string), typeof(Gdk.Pixbuf), typeof(Instance));
+
+			instView.Model = instListStore;
+			instView.TextColumn = 0;
+			instView.PixbufColumn = 1;
+
+			instView.ButtonPressEvent += (o, args) =>
+				{
+					if (args.Event.Button == 3 &&
+						instView.GetPathAtPos((int)args.Event.X,
+											  (int)args.Event.Y) != null)
+					{
+						instView.SelectPath(instView.GetPathAtPos(
+							(int)args.Event.X, (int)args.Event.Y));
+						instContextMenu.Popup();
+					}
+				};
+
+			// Set up the task list
 			EventfulList<Task> tList = new EventfulList<Task>();
-			tList.Added += new EventHandler<ItemAddRemoveEventArgs<Task>>(TaskAdded);
+			tList.Added += TaskAdded;
+			tList.Removed += TaskRemoved;
 
 			TaskList = tList;
 			taskProgBars = new Dictionary<int, ProgressBar>();
+
+			// Set up the instance list
+			EventfulList<Instance> iList = new EventfulList<Instance>();
+			iList.Added += InstAdded;
+			iList.Removed += InstRemoved;
+
+			InstanceList = iList;
+		}
+
+		void InstAdded(object sender, ItemAddRemoveEventArgs<Instance> e)
+		{
+			Instance inst = e.Item;
+			instListStore.AppendValues(
+				inst.Name, _imageList.ImgList[inst.IconKey], inst);
+		}
+
+		void InstRemoved(object sender, ItemAddRemoveEventArgs<Instance> e)
+		{
+			TreeIter iter;
+			instListStore.GetIterFirst(out iter);
+
+			do
+			{
+				if (e.Item == instListStore.GetValue(iter, 2))
+				{
+					instListStore.Remove(ref iter);
+					return;
+				}
+			} while (instListStore.IterNext(ref iter));
+		}
+
+		void TaskRemoved(object sender, ItemAddRemoveEventArgs<Task> e)
+		{
+			mainVBox.Remove(taskProgBars[e.Item.TaskID]);
+			taskProgBars.Remove(e.Item.TaskID);
 		}
 
 		void TaskAdded(object sender, ItemAddRemoveEventArgs<Task> e)
@@ -50,7 +113,7 @@ namespace MultiMC.GTKGUI
 			ProgressBar tProgBar = new ProgressBar();
 			tProgBar.Text = task.Status;
 			taskProgBars.Add(task.TaskID, tProgBar);
-			mainVBox.PackEnd(tProgBar, false, true, 0);
+			progBarVBox.PackEnd(tProgBar, false, true, 0);
 
 			task.StatusChange += (o, args) =>
 				Invoke((o2, args2) => { tProgBar.Text = args.Status; });
@@ -62,14 +125,13 @@ namespace MultiMC.GTKGUI
 				Invoke((o2, args2) =>
 			{
 				Console.WriteLine("Task {0} complete.", task.TaskID);
-				taskProgBars.Remove(task.TaskID);
-				mainVBox.Remove(tProgBar);
 			});
 
 			tProgBar.Visible = true;
 		}
 
 		#region Glade Handlers
+		// Menu Bar
 		void OnNewInstanceClicked(object sender, EventArgs e)
 		{
 			if (NewInstClicked != null)
@@ -113,40 +175,101 @@ namespace MultiMC.GTKGUI
 			if (AboutClicked != null)
 				AboutClicked(this, EventArgs.Empty);
 		}
+
+
+		// Instance Menu
+		void OnPlayClicked(object sender, EventArgs e)
+		{
+			if (InstanceLaunched != null)
+				InstanceLaunched(this, new InstActionEventArgs(SelectedInst));
+		}
+
+		void OnChangeIconClicked(object sender, EventArgs e)
+		{
+			if (ChangeIconClicked != null)
+				ChangeIconClicked(this, new InstActionEventArgs(SelectedInst));
+		}
+
+		void OnEditNotesClicked(object sender, EventArgs e)
+		{
+			if (EditNotesClicked != null)
+				EditNotesClicked(this, new InstActionEventArgs(SelectedInst));
+		}
+
+		void OnEditModsClicked(object sender, EventArgs e)
+		{
+			if (EditModsClicked != null)
+				EditModsClicked(this, new InstActionEventArgs(SelectedInst));
+		}
+
+		void OnRebuildClicked(object sender, EventArgs e)
+		{
+			if (RebuildJarClicked != null)
+				RebuildJarClicked(this, new InstActionEventArgs(SelectedInst));
+		}
+
+		void OnViewInstFolderClicked(object sender, EventArgs e)
+		{
+			if (ViewInstFolderClicked != null)
+				ViewInstFolderClicked(this, new InstActionEventArgs(SelectedInst));
+		}
+
+		void OnDeleteClicked(object sender, EventArgs e)
+		{
+			if (DeleteInstClicked != null)
+				DeleteInstClicked(this, new InstActionEventArgs(SelectedInst));
+		}
+
+
+		// Other
+		void OnItemActivated(object sender, ItemActivatedArgs e)
+		{
+			OnPlayClicked(sender, e);
+		}
 		#endregion
 
 		#region Glade Widgets
-		[Widget]
-		ToolButton newInstButton;
+		//[Widget]
+		//ToolButton newInstButton = null;
 
-		[Widget]
-		ToolButton viewInstFolderButton;
+		//[Widget]
+		//ToolButton viewInstFolderButton = null;
 
-		[Widget]
-		ToolButton refreshButton;
+		//[Widget]
+		//ToolButton refreshButton = null;
 
-		[Widget]
-		ToolButton settingsButton;
+		//[Widget]
+		//ToolButton settingsButton = null;
 		
-		[Widget]
-		ToolButton updateButton;
+		//[Widget]
+		//ToolButton updateButton = null;
 
-		[Widget]
-		ToolButton helpButton;
+		//[Widget]
+		//ToolButton helpButton = null;
 		
-		[Widget]
-		ToolButton aboutButton;
+		//[Widget]
+		//ToolButton aboutButton = null;
 
 		[Widget]
-		IconView instView;
+		IconView instView = null;
 
 		[Widget]
-		VBox mainVBox;
+		VBox mainVBox = null;
+
+		[Widget]
+		VBox progBarVBox = null;
+
+		[Widget]
+		Menu instContextMenu = null;
 		#endregion
 
 		public void LoadInstances()
 		{
-			//throw new NotImplementedException();
+			InstanceList.Clear();
+			foreach (Instance inst in Instance.LoadInstances(AppSettings.Main.InstanceDir))
+			{
+				InstanceList.Add(inst);
+			}
 		}
 
 		public IList<Task> TaskList
@@ -208,7 +331,15 @@ namespace MultiMC.GTKGUI
 
 		public Instance SelectedInst
 		{
-			get { throw new NotImplementedException(); }
+			get
+			{
+				if (instView.SelectedItems.Length <= 0)
+					return null;
+
+				TreeIter iter;
+				instListStore.GetIter(out iter, instView.SelectedItems[0]);
+				return instListStore.GetValue(iter, 2) as Instance;
+			}
 		}
 
 		public Tasks.Task GetTaskByID(int taskID)

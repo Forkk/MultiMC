@@ -170,8 +170,9 @@ namespace MultiMC
 		{
 			IAddInstDialog addInstDlg = GUIManager.Main.AddInstDialog();
 
-			addInstDlg.DefaultPosition = DefWindowPosition.CenterParent;
 			addInstDlg.Parent = MainWindow;
+			addInstDlg.DefaultPosition = DefWindowPosition.CenterParent;
+			addInstDlg.MoveToDefPosition();
 			addInstDlg.Response += (o, args) =>
 			{
 				if (args.Response == DialogResponse.OK)
@@ -358,8 +359,11 @@ namespace MultiMC
 				instVersion);
 			foreach (Mod mod in inst.InstMods)
 			{
-				string modVersion = MCVersionMap.VersionMap[mod.MCVersion];
-				if (modVersion == null)
+				string modVersion = null;
+				if (mod.MCVersion != null)
+					modVersion = MCVersionMap.VersionMap[mod.MCVersion];
+
+				if (string.IsNullOrEmpty(modVersion))
 				{
 					if (!string.IsNullOrEmpty(mod.MCVersion))
 					{

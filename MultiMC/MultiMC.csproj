@@ -54,6 +54,22 @@
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-GTK|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug-GTK\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Debug\MultiMC.exe.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <SpecificVersion>False</SpecificVersion>
@@ -110,9 +126,14 @@
     <Compile Include="DataUtils.cs" />
     <Compile Include="DebugUtils.cs" />
     <Compile Include="EventfulList.cs" />
+    <Compile Include="GTKGUI\AddInstDialog.cs" />
+    <Compile Include="GTKGUI\GTKAboutDialog.cs" />
+    <Compile Include="GTKGUI\GTKDialog.cs" />
     <Compile Include="GTKGUI\GTKGUIManager.cs" />
     <Compile Include="GTKGUI\GTKImageList.cs" />
+    <Compile Include="GTKGUI\GTKMessageBox.cs" />
     <Compile Include="GTKGUI\GTKWindow.cs" />
+    <Compile Include="GTKGUI\LoginDialog.cs" />
     <Compile Include="GTKGUI\MainWindow.cs" />
     <Compile Include="GUI\IAddInstDialog.cs" />
     <Compile Include="GUI\IChangeIconDialog.cs" />
@@ -270,7 +291,10 @@
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Launcher\MultiMCLauncher.class" />
-    <EmbeddedResource Include="GTKGUI\gui.glade" />
+    <EmbeddedResource Include="GTKGUI\MainWindow.glade" />
+    <EmbeddedResource Include="GTKGUI\AddInstDialog.glade" />
+    <EmbeddedResource Include="GTKGUI\InstContextMenu.glade" />
+    <EmbeddedResource Include="GTKGUI\LoginDialog.glade" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -309,7 +333,7 @@
     <EmbeddedResource Include="Lib\Ionic.Zip.Reduced.dll" />
     <None Include="Resources\MultiMC.png" />
     <None Include="Resources\MultiMC64.png" />
-    <None Include="Resources\MultiMC32.png" />
+    <EmbeddedResource Include="Resources\MultiMC32.png" />
     <None Include="Resources\MultiMC128.png" />
     <None Include="Resources\License.txt" />
     <EmbeddedResource Include="Resources\tnt.png" />
@@ -322,7 +346,6 @@
     <EmbeddedResource Include="Resources\planks.png" />
     <EmbeddedResource Include="Resources\stone.png" />
     <None Include="Resources\MultiMC.ico" />
-    <None Include="Resources\Logo.ico" />
     <None Include="WinGUI\ToolbarIcons\ImportIcon.png" />
     <EmbeddedResource Include="Lib\Newtonsoft.Json.dll" />
     <Content Include="WinGUI\ToolbarIcons\AboutIcon.png" />
@@ -337,8 +360,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>"C:\Program Files\Java\jdk1.6.0_27\bin\javac" -d $(ProjectDir)Launcher $(ProjectDir)Launcher\MultiMCLauncher.java
-del $(TargetDir)$(TargetFileName)</PreBuildEvent>
+    <PreBuildEvent>"C:\Program Files\Java\jdk1.6.0_27\bin\javac" -d $(ProjectDir)Launcher $(ProjectDir)Launcher\MultiMCLauncher.java</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) C:\Users\Andrew\Dropbox\Public\MultiMC.exe</PostBuildEvent>

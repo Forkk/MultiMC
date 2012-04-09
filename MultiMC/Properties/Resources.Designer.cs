@@ -192,6 +192,15 @@ namespace MultiMC.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MultiMCLauncher.
+        /// </summary>
+        internal static string LauncherClassName {
+            get {
+                return ResourceManager.GetString("LauncherClassName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copyright 2012 Andrew Okin
         ///
         ///Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);

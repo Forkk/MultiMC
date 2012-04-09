@@ -47,12 +47,14 @@ namespace MultiMC
 				lines[i++] = kv.Key + "=" + kv.Value;
 			}
 
-			StreamWriter writer = new StreamWriter(stream);
-			foreach (string line in lines)
+			using (StreamWriter writer = new StreamWriter(stream))
 			{
-				writer.WriteLine(line);
+				foreach (string line in lines)
+				{
+					writer.WriteLine(line);
+				}
+				writer.Flush();
 			}
-			writer.Flush();
 		}
 
 		public virtual void Load(string path)
@@ -72,19 +74,21 @@ namespace MultiMC
 
 		public virtual void Load(Stream stream)
 		{
-			StreamReader reader = new StreamReader(stream);
-			dict.Clear();
-			string[] lines = reader.ReadToEnd().Split('\n').
-				Select(l => l.TrimEnd('\n', '\r')).ToArray();
-			foreach (string line in lines)
+			using (StreamReader reader = new StreamReader(stream))
 			{
-				if (!line.StartsWith("#"))
+				dict.Clear();
+				string[] lines = reader.ReadToEnd().Split('\n').
+					Select(l => l.TrimEnd('\n', '\r')).ToArray();
+				foreach (string line in lines)
 				{
-					string[] lineData = line.Split('=');
-					if (lineData.Length >= 2)
+					if (!line.StartsWith("#"))
 					{
-						//Console.WriteLine("{0} = {1}", lineData[0], lineData[1]);
-						dict[lineData[0]] = lineData[1];
+						string[] lineData = line.Split('=');
+						if (lineData.Length >= 2)
+						{
+							//Console.WriteLine("{0} = {1}", lineData[0], lineData[1]);
+							dict[lineData[0]] = lineData[1];
+						}
 					}
 				}
 			}

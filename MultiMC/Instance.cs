@@ -237,10 +237,11 @@ namespace MultiMC
 			//mcProcStart.FileName = "cmd";
 			mcProcStart.FileName = javaPath;
 			mcProcStart.Arguments = string.Format(
-				"-Xmx{4}m -Xms{5}m " +
+				"-Xmx{4}m -Xms{5}m -cp \"{6}\" " +
 				"{0} \"{1}\" \"{2}\" {3}",
-				"MultiMCLauncher", Path.GetFullPath(MinecraftDir), username, sessionID,
-				xmx, xms);
+				Properties.Resources.LauncherClassName, 
+				Path.GetFullPath(MinecraftDir), username, sessionID,
+				xmx, xms, Environment.CurrentDirectory);
 
 			instProc.EnableRaisingEvents = true;
 			mcProcStart.CreateNoWindow = true;

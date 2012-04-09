@@ -60,6 +60,8 @@ namespace MultiMC.Tasks
 
 		#endregion
 
+		Dictionary<string, int> modFileIndices;
+
 		public Modder(Instance target)
 		{
 			this._Target = target;
@@ -85,10 +87,10 @@ namespace MultiMC.Tasks
 		private void InstallMods()
 		{
 			OnStart();
-			modFileIndices = new Hashtable();
+			modFileIndices = new Dictionary<string, int>();
 			foreach (Mod mod in Target.InstMods)
 			{
-				modFileIndices[mod] = Target.InstMods[mod];
+				modFileIndices[mod.FileName] = Target.InstMods[mod];
 			}
 
 			string mcBin = Target.BinDir;
@@ -152,7 +154,6 @@ namespace MultiMC.Tasks
 		}
 
 		const string MODTEMP_DIR_NAME = "modTemp";
-		Hashtable modFileIndices;
 
 		/// <summary>
 		/// Recursively adds files from the given directory into the given jar
@@ -171,36 +172,46 @@ namespace MultiMC.Tasks
 					if (Path.GetFileName(f) == "WorldEdit.jar")
 					{
 						File.Copy(f, 
-							Path.Combine(Target.RootDir, ".minecraft", "bin", "WorldEdit.jar"), true);
+							Path.Combine(Target.RootDir, ".minecraft", 
+								"bin", "WorldEdit.jar"), true);
 						continue;
 					}
 
 					string existing = Path.Combine(pathInJar, Path.GetFileName(f));
-					int index;
+					int index = 0;
+
 					if (jarFile[existing] != null &&
-//						jarFile[existing].CreationTime.CompareTo(File.GetCreationTimeUtc(f)) > 0
-					    Int32.TryParse(jarFile[existing].Comment, out index) &&
+						!string.IsNullOrEmpty(jarFile[existing].Comment) &&
+						!Int32.TryParse(jarFile[existing].Comment, out index))
+					{
+						Console.WriteLine("Can't parse index: {0}", jarFile[existing].Comment);
+					}
+
+					if (jarFile[existing] != null &&
 					    index > (int)modFileIndices[f])
 					{
 						DebugUtils.Print("File conflict between {0} in jar ({2}) and {1} ({3}) " + 
 						    "being added, " + "not overwriting.", existing, f, 
 						    jarFile[existing].Comment, 
-						    (modFileIndices[f] != null ? modFileIndices[f].ToString() : "none"));
+						    (modFileIndices.ContainsKey(f) ? 
+								modFileIndices[f].ToString() : "none"));
 					}
 					else
 					{
 						if (jarFile[existing] != null)
 						{
-							DebugUtils.Print("File conflict between {0} in jar ({2}) and {1} ({3}) " +
-							    "being added, " + " overwriting.", existing, f,
+							DebugUtils.Print("File conflict between {0} " + 
+								"in jar ({2}) and {1} ({3}) " + 
+								"being added, " + " overwriting.", existing, f,
 							    jarFile[existing].Comment,
-							    (modFileIndices[f] != null ? modFileIndices[f].ToString() : "none"));
+								(modFileIndices.ContainsKey(f) ? 
+									modFileIndices[f].ToString() : "none"));
 						}
 
 						ZipEntry fEntry = jarFile.UpdateFile(f, pathInJar);
 						fEntry.SetEntryTimes(File.GetCreationTime(f),
 							fEntry.AccessedTime, fEntry.ModifiedTime);
-						if (modFileIndices[f] != null)
+						if (modFileIndices.ContainsKey(f))
 							fEntry.Comment = modFileIndices[f].ToString();
 					}
 				}
@@ -237,10 +248,10 @@ namespace MultiMC.Tasks
 						{
 							entry.Extract(tmpDir);
 							string extractedFile = Path.Combine(tmpDir, 
-								entry.FileName.Replace('/', Path.PathSeparator));
+								entry.FileName.Replace('/', Path.DirectorySeparatorChar));
 
-							if (modFileIndices[f] == null)
-								continue;
+							//if (modFileIndices.ContainsKey(f))
+							//    continue;
 							RecursiveSetIndex(extractedFile, (int) modFileIndices[f]);
 
 							// If it's a file

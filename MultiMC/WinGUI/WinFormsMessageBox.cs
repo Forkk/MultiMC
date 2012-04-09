@@ -47,12 +47,6 @@ namespace MultiMC.WinGUI
 			case MessageButtons.YesNo:
 				return MessageBoxButtons.YesNo;
 
-			case MessageButtons.YesNoCancel:
-				return MessageBoxButtons.YesNoCancel;
-
-			case MessageButtons.AbortRetryIgnore:
-				return MessageBoxButtons.AbortRetryIgnore;
-
 			default:
 				return MessageBoxButtons.OK;
 			}

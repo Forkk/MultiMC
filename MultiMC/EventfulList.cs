@@ -66,9 +66,15 @@ namespace MultiMC
 
 		public new void Clear()
 		{
+			List<T> removed = new List<T>();
 			foreach (T item in this)
 			{
-				Remove(item);
+				removed.Add(item);
+			}
+
+			foreach (T item in removed)
+			{
+				this.Remove(item);
 			}
 		}
 

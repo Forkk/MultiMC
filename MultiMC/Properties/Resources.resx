@@ -253,4 +253,7 @@
   <data name="MCVersionFile" xml:space="preserve">
     <value>mc-versions.cfg</value>
   </data>
+  <data name="LauncherClassName" xml:space="preserve">
+    <value>MultiMCLauncher</value>
+  </data>
 </root>

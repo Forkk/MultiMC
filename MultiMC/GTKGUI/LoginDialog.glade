@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<glade-interface>
+  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-naming-policy project-wide -->
+  <widget class="GtkTable" id="loginTable">
+    <property name="visible">True</property>
+    <property name="n_rows">4</property>
+    <property name="n_columns">2</property>
+    <child>
+      <widget class="GtkLabel" id="labelUsername">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">_Username:</property>
+        <property name="use_underline">True</property>
+        <property name="mnemonic_widget">entryUsername</property>
+      </widget>
+      <packing>
+        <property name="top_attach">1</property>
+        <property name="bottom_attach">2</property>
+        <property name="x_options">GTK_FILL</property>
+        <property name="y_options">GTK_FILL</property>
+        <property name="x_padding">4</property>
+        <property name="y_padding">6</property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkEntry" id="entryUsername">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="invisible_char">&#x25CF;</property>
+        <signal name="activate" handler="OnUsernameFieldActivated"/>
+      </widget>
+      <packing>
+        <property name="left_attach">1</property>
+        <property name="right_attach">2</property>
+        <property name="top_attach">1</property>
+        <property name="bottom_attach">2</property>
+        <property name="y_options">GTK_FILL</property>
+        <property name="x_padding">4</property>
+        <property name="y_padding">4</property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkLabel" id="labelPassword">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">_Password:</property>
+        <property name="use_underline">True</property>
+        <property name="mnemonic_widget">entryPassword</property>
+      </widget>
+      <packing>
+        <property name="top_attach">2</property>
+        <property name="bottom_attach">3</property>
+        <property name="x_options">GTK_FILL</property>
+        <property name="y_options">GTK_FILL</property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkEntry" id="entryPassword">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="invisible_char">&#x25CF;</property>
+        <signal name="activate" handler="OnPasswordFieldActivated"/>
+      </widget>
+      <packing>
+        <property name="left_attach">1</property>
+        <property name="right_attach">2</property>
+        <property name="top_attach">2</property>
+        <property name="bottom_attach">3</property>
+        <property name="y_options">GTK_FILL</property>
+        <property name="x_padding">4</property>
+        <property name="y_padding">4</property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkHBox" id="hboxCheckBoxes">
+        <property name="visible">True</property>
+        <property name="spacing">4</property>
+        <child>
+          <widget class="GtkToggleButton" id="toggleForceUpdate">
+            <property name="label" translatable="yes">_Force Update</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="use_underline">True</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkCheckButton" id="checkRememberUsername">
+            <property name="label" translatable="yes">_Remember Username</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="use_underline">True</property>
+            <property name="draw_indicator">True</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkCheckButton" id="checkRememberPassword">
+            <property name="label" translatable="yes">R_emember Password</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="use_underline">True</property>
+            <property name="draw_indicator">True</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </widget>
+      <packing>
+        <property name="right_attach">2</property>
+        <property name="top_attach">3</property>
+        <property name="bottom_attach">4</property>
+        <property name="y_options">GTK_FILL</property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkLabel" id="labelErrorMsg">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Error</property>
+        <property name="use_markup">True</property>
+      </widget>
+      <packing>
+        <property name="right_attach">2</property>
+      </packing>
+    </child>
+  </widget>
+</glade-interface>

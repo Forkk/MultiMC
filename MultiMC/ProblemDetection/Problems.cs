@@ -106,11 +106,19 @@ namespace MultiMC.ProblemDetection
 		public static void InitProblems()
 		{
 			
-			LoadProblemsFromAssembly(Assembly.GetExecutingAssembly());
+			try
+			{
+				LoadProblemsFromAssembly(Assembly.GetExecutingAssembly());
+			}
+			catch (ReflectionTypeLoadException ex)
+			{
+				Console.WriteLine("Failed to load problem detection from " +
+					" assembly: " + ex.Message);
+			}
 			
 			RegisterProblem(new BasicProblem(
 				"MultiMC has detected an error. This might be because you are using the wrong " +
-				"version of your mods. Try redownloading and then reinstalling them.",
+				"version of your mods. Try re-downloading and then reinstalling them.",
 				true, 0,
 				"java.lang.VerifyError"));
 			

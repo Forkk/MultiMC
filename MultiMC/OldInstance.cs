@@ -11,7 +11,7 @@ using MultiMC;
 
 namespace MultiMC
 {
-	public sealed class OldInstance : IDisposable
+	public sealed class OldInstance
 	{
 		#region Fields
 
@@ -39,11 +39,6 @@ namespace MultiMC
 		/// If true, XML values are saved when changed.
 		/// </summary>
 		bool autosave;
-
-		/// <summary>
-		/// The process the instance is running in. If the instance isn't running, this will be null.
-		/// </summary>
-		Process instProc;
 
 		#endregion
 
@@ -218,15 +213,6 @@ namespace MultiMC
 			return GetXmlElement(name, null, parent);
 		}
 
-		public void Dispose()
-		{
-			if (this.Running)
-				throw new InvalidOperationException("Cannot dispose an instance that is running!");
-			InstMods.Dispose();
-			if (instProc != null)
-				instProc.Dispose();
-		}
-
 		#endregion
 
 		#region Properties
@@ -386,29 +372,6 @@ namespace MultiMC
 
 		#endregion
 
-		/// <summary>
-		/// The process the instance is running in
-		/// </summary>
-		public Process InstProcess
-		{
-			get
-			{
-				if (Running)
-				{
-					return instProc;
-				}
-				else
-				{
-					return null;
-				}
-			}
-		}
-
-		public bool Running
-		{
-			get { return !(instProc == null || ProcessDisposed || instProc.HasExited); }
-		}
-
 		public bool CanPlayOffline
 		{
 			get
@@ -438,12 +401,6 @@ namespace MultiMC
 		/// Occurrs when the instance quits.
 		/// </summary>
 		public event EventHandler<InstQuitEventArgs> InstQuit;
-
-		/// <summary>
-		/// Occurs when the instance launches.
-		/// </summary>
-		public event EventHandler InstLaunch;
-
 
 		#endregion
 

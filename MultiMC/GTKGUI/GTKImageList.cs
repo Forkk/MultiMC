@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 
 using Gtk;
+using Gdk;
 
 using MultiMC.GUI;
 
@@ -14,23 +15,23 @@ namespace MultiMC.GTKGUI
 	{
 		string userImageDir;
 
-		Dictionary<string, Image> defaultImages;
+		Dictionary<string, Pixbuf> defaultImages;
 
 		/// <summary>
 		/// Maps an image's key to its filename.
 		/// </summary>
 		Dictionary<string, string> keyFileDict;
 
-		Image defImage;
+		Pixbuf defImage;
 
-		public GTKImageList(string userImageDir, Dictionary<string, Image> defImages,
-			Image defaultImage)
+		public GTKImageList(string userImageDir, Dictionary<string, Pixbuf> defImages,
+			Pixbuf defaultImage)
 		{
 			keyFileDict = new Dictionary<string, string>();
 
 			this.defImage = defaultImage;
 			this.defaultImages = defImages;
-			this.ImgList = new Dictionary<string, Image>();
+			this.ImgList = new Dictionary<string, Pixbuf>();
 
 			this.userImageDir = userImageDir;
 
@@ -44,7 +45,7 @@ namespace MultiMC.GTKGUI
 
 			ImgList.Add("default", defImage);
 
-			foreach (KeyValuePair<string, Image> image in defaultImages)
+			foreach (KeyValuePair<string, Pixbuf> image in defaultImages)
 			{
 				ImgList.Add(image.Key, image.Value);
 			}
@@ -53,7 +54,7 @@ namespace MultiMC.GTKGUI
 			{
 				foreach (string f in Directory.GetFiles("icons"))
 				{
-					using (Image img = new Image(f))
+					using (Pixbuf img = new Pixbuf(f))
 					{
 						string imgKey = Path.GetFileNameWithoutExtension(f);
 						if (ImgList.ContainsKey(imgKey))
@@ -67,7 +68,18 @@ namespace MultiMC.GTKGUI
 			}
 		}
 
-		public Dictionary<string, Image> ImgList
+		public Pixbuf this[string key]
+		{
+			get
+			{
+				if (ImgList.ContainsKey(key))
+					return ImgList[key];
+				else
+					return defImage;
+			}
+		}
+
+		public Dictionary<string, Pixbuf> ImgList
 		{
 			get;
 			protected set;
