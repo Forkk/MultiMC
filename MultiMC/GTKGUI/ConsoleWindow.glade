@@ -6,20 +6,32 @@
     <property name="visible">True</property>
     <property name="orientation">vertical</property>
     <child>
-      <widget class="GtkTextView" id="consoleView">
+      <widget class="GtkScrolledWindow" id="consoleViewScroll">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
-        <property name="editable">False</property>
-        <property name="wrap_mode">word</property>
+        <property name="hscrollbar_policy">never</property>
+        <property name="vscrollbar_policy">automatic</property>
+        <child>
+          <widget class="GtkTextView" id="consoleView">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="editable">False</property>
+            <property name="wrap_mode">word</property>
+            <property name="left_margin">4</property>
+            <property name="right_margin">4</property>
+          </widget>
+        </child>
       </widget>
       <packing>
+        <property name="padding">4</property>
         <property name="position">0</property>
       </packing>
     </child>
     <child>
       <widget class="GtkHButtonBox" id="consoleButtonBox">
         <property name="visible">True</property>
-        <property name="spacing">6</property>
+        <property name="border_width">6</property>
+        <property name="spacing">4</property>
         <property name="layout_style">end</property>
         <child>
           <widget class="GtkButton" id="buttonHide">
@@ -28,7 +40,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="use_underline">True</property>
-            <signal name="activate" handler="OnHideClicked"/>
+            <signal name="clicked" handler="OnHideButtonClicked"/>
           </widget>
           <packing>
             <property name="expand">False</property>
@@ -43,7 +55,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="use_underline">True</property>
-            <signal name="activate" handler="OnCloseClicked"/>
+            <signal name="clicked" handler="OnCloseButtonClicked"/>
           </widget>
           <packing>
             <property name="expand">False</property>
@@ -54,7 +66,6 @@
       </widget>
       <packing>
         <property name="expand">False</property>
-        <property name="padding">4</property>
         <property name="position">1</property>
       </packing>
     </child>

@@ -129,6 +129,7 @@
       <widget class="GtkIconView" id="instView">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
+        <property name="has_focus">True</property>
         <signal name="item_activated" handler="OnItemActivated"/>
       </widget>
       <packing>

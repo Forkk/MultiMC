@@ -97,23 +97,52 @@ namespace MultiMC.GTKGUI
 
 		void TaskAdded(object sender, ItemAddRemoveEventArgs<Task> e)
 		{
-			if (IsTaskIDTaken(e.Item.TaskID))
-				e.Item.TaskID = GetAvailableTaskID();
-			TaskAdded(e.Item);
+			Invoke((o, args) =>
+				{
+					TaskAdded(e.Item);
+				});
 		}
 
 		void TaskAdded(Task task)
 		{
+			if (taskProgBars.ContainsKey(task.TaskID))
+				task.TaskID = GetAvailableTaskID();
+
 			ProgressBar tProgBar = new ProgressBar();
 			tProgBar.Text = task.Status;
-			taskProgBars.Add(task.TaskID, tProgBar);
 			progBarVBox.PackEnd(tProgBar, false, true, 0);
 
-			task.StatusChange += new Task.StatusChangeEventHandler(TaskStatusChange);
+			task.StatusChange += TaskStatusChange;
 
-			task.ProgressChange += new Task.ProgressChangeEventHandler(TaskProgressChange);
+			task.ProgressChange += TaskProgressChange;
 
 			tProgBar.Visible = true;
+
+			lock (this)
+			{
+				taskProgBars.Add(task.TaskID, tProgBar);
+			}
+		}
+
+		void TaskRemoved(object sender, ItemAddRemoveEventArgs<Task> e)
+		{
+			Invoke((o, args) => TaskRemoved(e.Item));
+		}
+
+		void TaskRemoved(Task task)
+		{
+			if (!taskProgBars.ContainsKey(task.TaskID))
+				return;
+
+			ProgressBar pbar = taskProgBars[task.TaskID];
+			pbar.Fraction = 1;
+			pbar.Hide();
+			mainVBox.Remove(pbar);
+
+			lock (this)
+			{
+				taskProgBars.Remove(task.TaskID);
+			}
 		}
 
 		void TaskProgressChange(object sender, Task.ProgressChangeEventArgs e)
@@ -135,15 +164,6 @@ namespace MultiMC.GTKGUI
 				{
 					taskProgBars[e.TaskID].Text = e.Status;
 				});
-		}
-
-		void TaskRemoved(object sender, ItemAddRemoveEventArgs<Task> e)
-		{
-			Invoke((o, args) =>
-			{
-				//mainVBox.Remove(taskProgBars[e.Item.TaskID]);
-				taskProgBars.Remove(e.Item.TaskID);
-			});
 		}
 
 		#region Glade Handlers

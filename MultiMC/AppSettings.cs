@@ -171,5 +171,11 @@ namespace MultiMC
 			get { return ParseSetting<bool>(this["EnableHints"], true); }
 			set { this["EnableHints"] = value.ToString(); }
 		}
+
+		public bool QuitIfProblem
+		{
+			get { return ParseSetting<bool>(this["QuitIfProblem"], true); }
+			set { this["QuitIfProblem"] = value.ToString(); }
+		}
 	}
 }

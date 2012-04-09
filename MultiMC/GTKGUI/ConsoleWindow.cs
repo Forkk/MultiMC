@@ -24,16 +24,30 @@ namespace MultiMC.GTKGUI
 		StatusIcon statusIcon;
 
 		[Widget]
-		TextView consoleView;
+		VBox vboxConsole = null;
 
 		[Widget]
-		Button closeButton;
+		TextView consoleView = null;
 
-		public ConsoleWindow(Instance inst) :
-			base("MultiMC Console")
+		[Widget]
+		Button buttonClose = null;
+
+		public ConsoleWindow(Instance inst)
+			: base("MultiMC Console")
 		{
 			// Build the GUI
+			XML gxml = new XML(null, "MultiMC.GTKGUI.ConsoleWindow.glade", 
+				"vboxConsole", null);
+			gxml.Autoconnect(this);
+
+			this.Add(vboxConsole);
+			vboxConsole.ShowAll();
 			this.Deletable = false;
+
+			this.WidthRequest = 600;
+			this.HeightRequest = 300;
+
+			DeleteEvent += (o, args) => OnDeleteEvent(this, EventArgs.Empty);
 
 			// If the user has show console on, show the window
 			this.Visible = AppSettings.Main.ShowConsole;
@@ -142,6 +156,14 @@ namespace MultiMC.GTKGUI
 				Message("Instance started");
 		}
 
+		void OnDeleteEvent(object o, EventArgs args)
+		{
+			if (ConsoleClosed != null)
+				ConsoleClosed(this, EventArgs.Empty);
+
+			statusIcon.Visible = false;
+		}
+
 		void AttachOutputListeners()
 		{
 			// Attach to the instance's process to listen for output
@@ -201,7 +223,7 @@ namespace MultiMC.GTKGUI
 							prob.GetErrorMessage(mcOutput),
 							"You dun goofed!");
 					});
-				killMC = prob.ShouldTerminate(mcOutput);
+				killMC = prob.ShouldTerminate(mcOutput) && AppSettings.Main.QuitIfProblem;
 				ErrorOccurred = killMC;
 			}
 
@@ -221,20 +243,20 @@ namespace MultiMC.GTKGUI
 		/// Maximum number of characters to be kept in the console at any time.
 		/// When the console text is truncated, it will be shortened to this length.
 		/// </summary>
-		const int ConsoleTruncateLength = 10000;
+		const int ConsoleTruncateLength = 50000;
 
 		/// <summary>
 		/// Threshold for console truncation, when the length of the text in the console
 		/// is greater than or equal to this value, it will be truncated.
 		/// </summary>
-		const int ConsoleTruncateThreshold = ConsoleTruncateLength + 1000;
+		const int ConsoleTruncateThreshold = ConsoleTruncateLength + 10000;
 
 		public void Message(string msg)
 		{
-			Message(msg);
+			Message(msg, "etc");
 		}
 
-		public void Message(string msg, string tagName = "etc", bool appendNewLine = true)
+		public void Message(string msg, string tagName, bool appendNewLine = true)
 		{
 			Application.Invoke(
 				(sender, e) =>
@@ -270,29 +292,37 @@ namespace MultiMC.GTKGUI
 
 		void OnInstQuit(object sender, InstQuitEventArgs e)
 		{
-			Application.Invoke(
-				(sender2, e2) =>
+			Invoke((sender2, e2) =>
 				{
 					Message("Instance quit");
 
+					if (e.ExitCode != 0)
+					{
+						ErrorOccurred = true;
+					}
+
 					this.Deletable = true;
-					closeButton.Sensitive = true;
-					if (AppSettings.Main.AutoCloseConsole || (!ShowConsole && !ErrorOccurred))
+					if ((AppSettings.Main.AutoCloseConsole || !Visible) && 
+						!ErrorOccurred)
 					{
 						CloseConsole();
+					}
+					else if (ErrorOccurred)
+					{
+						this.Visible = true;
 					}
 				});
 		}
 
-		protected void OnCloseButtonClicked(object sender, System.EventArgs e)
+		void OnCloseButtonClicked(object sender, System.EventArgs e)
 		{
 			if (!Inst.Running)
 				CloseConsole();
 			else
-				DebugUtils.Print("Can't close console because instance is still running!");
+				Console.WriteLine("Can't close console because instance is still running!");
 		}
 
-		protected void OnHideButtonClicked(object sender, System.EventArgs e)
+		void OnHideButtonClicked(object sender, System.EventArgs e)
 		{
 			ShowConsole = false;
 			if (!Inst.Running)
@@ -304,8 +334,8 @@ namespace MultiMC.GTKGUI
 			statusIcon.Visible = false;
 
 			Destroy();
-			if (ConsoleClosed != null)
-				ConsoleClosed(this, EventArgs.Empty);
+
+			OnDeleteEvent(this, EventArgs.Empty);
 		}
 
 		public bool ShowConsole
@@ -328,15 +358,5 @@ namespace MultiMC.GTKGUI
 		}
 
 		public event EventHandler ConsoleClosed;
-
-		void OnHideClicked(object sender, EventArgs e)
-		{
-
-		}
-
-		void OnCloseClicked(object sender, EventArgs args)
-		{
-
-		}
 	}
 }

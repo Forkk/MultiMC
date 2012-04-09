@@ -700,12 +700,12 @@ namespace MultiMC
 
 						IConsoleWindow cwin = GUIManager.Main.ConsoleWindow(inst);
 
-						cwin.Parent = MainWindow;
-						cwin.DefaultPosition = DefWindowPosition.CenterParent;
+						cwin.DefaultPosition = DefWindowPosition.CenterScreen;
 
 						cwin.ConsoleClosed += (e2, args2) =>
 							{
-								MainWindow.Visible = true;
+								MainWindow.Invoke((e3, args3) => 
+									MainWindow.Visible = true);
 							};
 
 						cwin.Show();
