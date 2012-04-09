@@ -109,7 +109,7 @@ namespace MultiMC.WinGUI
 			StatusStrip taskStatusStrip = new StatusStrip();
 			statusStrips[task.TaskID] = taskStatusStrip;
 			taskStatusStrip.Anchor = AnchorStyles.Top | AnchorStyles.Left |
-				AnchorStyles.Right | AnchorStyles.Bottom;
+				AnchorStyles.Right;
 			taskStatusStrip.AutoSize = true;
 			taskStatusStrip.LayoutStyle = ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			taskStatusStrip.SizingGrip = false;
@@ -120,6 +120,7 @@ namespace MultiMC.WinGUI
 			statusLabel.AutoSize = true;
 			task.StatusChange += (o, args) => UpdateStatusLabel(statusLabel, args.Status);
 			statusLabel.Text = task.Status;
+			statusLabel.Visible = true;
 			taskStatusStrip.Items.Add(statusLabel);
 
 			// Progress bar
@@ -128,6 +129,7 @@ namespace MultiMC.WinGUI
 			progBar.Size = new Size(100, 16);
 			task.ProgressChange += (o, args) => UpdateProgBar(progBar, args.Progress);
 			UpdateProgBar(progBar, task.Progress);
+			progBar.Visible = true;
 			taskStatusStrip.Items.Add(progBar);
 
 			// Add the status bar
