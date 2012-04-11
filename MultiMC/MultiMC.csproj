@@ -127,7 +127,11 @@
     <Compile Include="DebugUtils.cs" />
     <Compile Include="EventfulList.cs" />
     <Compile Include="GTKGUI\AddInstDialog.cs" />
+    <Compile Include="GTKGUI\ChangeIconDialog.cs" />
     <Compile Include="GTKGUI\ConsoleWindow.cs" />
+    <Compile Include="GTKGUI\DeleteDialog.cs" />
+    <Compile Include="GTKGUI\EditModsDialog.cs" />
+    <Compile Include="GTKGUI\EditNotesDialog.cs" />
     <Compile Include="GTKGUI\GTKAboutDialog.cs" />
     <Compile Include="GTKGUI\GTKDialog.cs" />
     <Compile Include="GTKGUI\GTKGUIManager.cs" />
@@ -136,6 +140,7 @@
     <Compile Include="GTKGUI\GTKWindow.cs" />
     <Compile Include="GTKGUI\LoginDialog.cs" />
     <Compile Include="GTKGUI\MainWindow.cs" />
+    <Compile Include="GTKGUI\SettingsDialog.cs" />
     <Compile Include="GUI\IAddInstDialog.cs" />
     <Compile Include="GUI\IChangeIconDialog.cs" />
     <Compile Include="GUI\IConsoleWindow.cs" />
@@ -296,6 +301,11 @@
     <EmbeddedResource Include="GTKGUI\InstContextMenu.glade" />
     <EmbeddedResource Include="GTKGUI\LoginDialog.glade" />
     <EmbeddedResource Include="GTKGUI\ConsoleWindow.glade" />
+    <EmbeddedResource Include="GTKGUI\SettingsDialog.glade" />
+    <EmbeddedResource Include="GTKGUI\ChangeIconDialog.glade" />
+    <EmbeddedResource Include="GTKGUI\EditModsDialog.glade" />
+    <EmbeddedResource Include="GTKGUI\EditNotesDialog.glade" />
+    <EmbeddedResource Include="GTKGUI\DeleteDialog.glade" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

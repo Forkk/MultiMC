@@ -45,6 +45,9 @@ namespace MultiMC.GTKGUI
 			instView.TextColumn = 0;
 			instView.PixbufColumn = 1;
 
+			instView.ItemWidth = -1;
+			instView.Orientation = Orientation.Vertical;
+
 			instView.ButtonPressEvent += (o, args) =>
 				{
 					if (args.Event.Button == 3 &&

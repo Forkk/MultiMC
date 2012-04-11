@@ -53,7 +53,7 @@ namespace MultiMC.GTKGUI
 
 		public IDialog AboutDialog()
 		{
-			throw new NotImplementedException();
+			return new GTKAboutDialog();
 		}
 
 		public IConsoleWindow ConsoleWindow(Instance inst)
@@ -68,22 +68,22 @@ namespace MultiMC.GTKGUI
 
 		public IDialog SettingsWindow()
 		{
-			throw new NotImplementedException();
+			return new SettingsDialog(mainWindow);
 		}
 
 		public IChangeIconDialog ChangeIconDialog()
 		{
-			throw new NotImplementedException();
+			return new ChangeIconDialog(mainWindow);
 		}
 
 		public INotesDialog NotesDialog()
 		{
-			throw new NotImplementedException();
+			return new EditNotesDialog(mainWindow);
 		}
 
 		public IEditModsDialog EditModsDialog(Instance inst)
 		{
-			throw new NotImplementedException();
+			return new EditModsDialog(mainWindow, inst);
 		}
 
 		public ILoginDialog LoginDialog(string errMsg = null)
@@ -93,7 +93,7 @@ namespace MultiMC.GTKGUI
 
 		public IDialog DeleteDialog()
 		{
-			throw new NotImplementedException();
+			return new DeleteDialog(mainWindow);
 		}
 
 		public void Run(IMainWindow mainWindow)

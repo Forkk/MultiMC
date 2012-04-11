@@ -1,0 +1,335 @@
+<?xml version="1.0"?>
+<glade-interface>
+  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-naming-policy project-wide -->
+  <widget class="GtkNotebook" id="settingsNotebook">
+    <property name="visible">True</property>
+    <property name="can_focus">True</property>
+    <child>
+      <widget class="GtkVBox" id="vboxGeneral">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <widget class="GtkFrame" id="frameConsoleSettings">
+            <property name="visible">True</property>
+            <property name="label_xalign">0</property>
+            <property name="shadow_type">none</property>
+            <child>
+              <widget class="GtkAlignment" id="alignmentConsoleSettings">
+                <property name="visible">True</property>
+                <property name="left_padding">12</property>
+                <child>
+                  <widget class="GtkVBox" id="vboxConsoleSettings">
+                    <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <widget class="GtkCheckButton" id="checkShowConsole">
+                        <property name="label" translatable="yes">Show console</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="draw_indicator">True</property>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkCheckButton" id="checkAutoCloseConsole">
+                        <property name="label" translatable="yes">Close console when minecraft quits</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="draw_indicator">True</property>
+                      </widget>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="labelConsoleSettings">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">&lt;b&gt;Console&lt;/b&gt;</property>
+                <property name="use_markup">True</property>
+              </widget>
+              <packing>
+                <property name="type">label_item</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkFrame" id="frameUpdateSettings">
+            <property name="visible">True</property>
+            <property name="label_xalign">0</property>
+            <property name="shadow_type">none</property>
+            <child>
+              <widget class="GtkAlignment" id="alignmentUpdateSettings">
+                <property name="visible">True</property>
+                <property name="left_padding">12</property>
+                <child>
+                  <widget class="GtkVBox" id="vboxUpdateSettings">
+                    <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <widget class="GtkCheckButton" id="checkAutoUpdate">
+                        <property name="label" translatable="yes">Check for updates when MultiMC starts.</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="draw_indicator">True</property>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkToggleButton" id="toggleForceUpdate">
+                        <property name="label" translatable="yes">Force update MultiMC</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="labelUpdateSettings">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">&lt;b&gt;Update Settings&lt;/b&gt;</property>
+                <property name="use_markup">True</property>
+              </widget>
+              <packing>
+                <property name="type">label_item</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkLabel" id="generalTabLabel">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">_General</property>
+        <property name="use_underline">True</property>
+      </widget>
+      <packing>
+        <property name="tab_fill">False</property>
+        <property name="type">tab</property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkVBox" id="vboxAdvanced">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <widget class="GtkFrame" id="frameMemorySettings">
+            <property name="visible">True</property>
+            <property name="label_xalign">0</property>
+            <property name="shadow_type">none</property>
+            <child>
+              <widget class="GtkAlignment" id="alignmentMemorySettings">
+                <property name="visible">True</property>
+                <property name="left_padding">12</property>
+                <child>
+                  <widget class="GtkVBox" id="vboxMemorySettings">
+                    <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <widget class="GtkHBox" id="hboxMinMemAlloc">
+                        <property name="visible">True</property>
+                        <property name="spacing">4</property>
+                        <child>
+                          <widget class="GtkLabel" id="labelMinMemAlloc">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Initial Memory Allocation: </property>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkSpinButton" id="spinMinMemAlloc">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="invisible_char">&#x25CF;</property>
+                            <property name="adjustment">512 512 65536 512 1024 10</property>
+                            <property name="numeric">True</property>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkHBox" id="hboxMaxMemAlloc">
+                        <property name="visible">True</property>
+                        <property name="spacing">4</property>
+                        <child>
+                          <widget class="GtkLabel" id="labelMaxMemAlloc">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Initial Memory Allocation: </property>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkSpinButton" id="spinMaxMemAlloc">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="invisible_char">&#x25CF;</property>
+                            <property name="adjustment">1024 1024 65536 512 1024 10</property>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="labelMemorySettings">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">&lt;b&gt;Memory&lt;/b&gt;</property>
+                <property name="use_markup">True</property>
+              </widget>
+              <packing>
+                <property name="type">label_item</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkFrame" id="frameJavaSettings">
+            <property name="visible">True</property>
+            <property name="label_xalign">0</property>
+            <property name="shadow_type">none</property>
+            <child>
+              <widget class="GtkAlignment" id="alignmentJavaSettings">
+                <property name="visible">True</property>
+                <property name="left_padding">12</property>
+                <child>
+                  <widget class="GtkVBox" id="vboxJavaSettings">
+                    <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <widget class="GtkHBox" id="hboxJavaPath">
+                        <property name="visible">True</property>
+                        <child>
+                          <widget class="GtkLabel" id="labelJavaPath">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Java Path: </property>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="padding">2</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkEntry" id="entryJavaPath">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="invisible_char">&#x25CF;</property>
+                          </widget>
+                          <packing>
+                            <property name="padding">4</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkButton" id="buttonAutoDetect">
+                            <property name="label" translatable="yes">Auto-detect</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="padding">4</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="labelJavaSettings">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">&lt;b&gt;Java&lt;/b&gt;</property>
+                <property name="use_markup">True</property>
+              </widget>
+              <packing>
+                <property name="type">label_item</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </widget>
+      <packing>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkLabel" id="advancedTabLabel">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">_Advanced</property>
+        <property name="use_underline">True</property>
+      </widget>
+      <packing>
+        <property name="position">1</property>
+        <property name="tab_fill">False</property>
+        <property name="type">tab</property>
+      </packing>
+    </child>
+  </widget>
+</glade-interface>

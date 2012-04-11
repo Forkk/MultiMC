@@ -130,6 +130,7 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="has_focus">True</property>
+        <property name="item_width">64</property>
         <signal name="item_activated" handler="OnItemActivated"/>
       </widget>
       <packing>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<glade-interface>
+  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-naming-policy project-wide -->
+  <widget class="GtkVBox" id="vboxDeleteConf">
+    <property name="visible">True</property>
+    <property name="border_width">12</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <widget class="GtkLabel" id="labelConfirm">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Deleting an instance is permanent, are you sure you want to do this?</property>
+      </widget>
+      <packing>
+        <property name="position">0</property>
+      </packing>
+    </child>
+  </widget>
+</glade-interface>
