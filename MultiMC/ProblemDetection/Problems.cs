@@ -115,6 +115,11 @@ namespace MultiMC.ProblemDetection
 				Console.WriteLine("Failed to load problem detection from " +
 					" assembly: " + ex.Message);
 			}
+			catch (NullReferenceException ex)
+			{
+				Console.WriteLine("Failed to load problem detection from " +
+					" assembly: " + ex.Message);
+			}
 			
 			RegisterProblem(new BasicProblem(
 				"MultiMC has detected an error. This might be because you are using the wrong " +
