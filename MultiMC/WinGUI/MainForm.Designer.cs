@@ -240,6 +240,7 @@
 			// helpButton
 			// 
 			this.helpButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.helpButton.Enabled = false;
 			this.helpButton.Image = global::MultiMC.Properties.Resources.HelpIcon;
 			this.helpButton.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.helpButton.Name = "helpButton";

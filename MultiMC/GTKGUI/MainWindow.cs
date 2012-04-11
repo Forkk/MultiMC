@@ -74,6 +74,8 @@ namespace MultiMC.GTKGUI
 			iList.Removed += InstRemoved;
 
 			InstanceList = iList;
+
+			helpButton.Sensitive = false;
 		}
 
 		void InstAdded(object sender, ItemAddRemoveEventArgs<Instance> e)
@@ -283,8 +285,8 @@ namespace MultiMC.GTKGUI
 		//[Widget]
 		//ToolButton updateButton = null;
 
-		//[Widget]
-		//ToolButton helpButton = null;
+		[Widget]
+		ToolButton helpButton = null;
 		
 		//[Widget]
 		//ToolButton aboutButton = null;

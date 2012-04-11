@@ -1,3 +1,6 @@
-﻿Version 3.0.1.0:
+﻿Version 3.0.1.1:
+	- Disabled help button until the help menu is done.
+
+Version 3.0.1.0:
 	- Finished GTK GUI.
 	- Added changelog.
