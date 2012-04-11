@@ -340,6 +340,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\document-import.png" />
+    <Content Include="Changelog.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Launcher\MultiMCLauncher.java" />
     <EmbeddedResource Include="Lib\Ionic.Zip.Reduced.dll" />
     <None Include="Resources\MultiMC64.png" />
