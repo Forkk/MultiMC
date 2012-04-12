@@ -47,6 +47,20 @@ namespace MultiMC
 			}
 		}
 
+		public static Runtime Runtime
+		{
+			get
+			{
+				// If Mono.Runtime is defined, then we're running in Mono.
+				bool monoRuntime = Type.GetType("Mono.Runtime") != null;
+
+				if (monoRuntime)
+					return Runtime.Mono;
+				else
+					return Runtime.DotNet;
+			}
+		}
+
 		[Obsolete("Use the OS property instead.")]
 		public static bool Windows
 		{
@@ -117,5 +131,14 @@ namespace MultiMC
 		Linux,
 		OSX,
 		Other,
+	}
+
+	/// <summary>
+	/// An enumeration of the different runtimes MultiMC supports.
+	/// </summary>
+	public enum Runtime
+	{
+		DotNet,
+		Mono,
 	}
 }

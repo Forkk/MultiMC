@@ -15,7 +15,7 @@ namespace MultiMC.GTKGUI
 	{
 		ListStore instListStore;
 
-		Dictionary<int, ProgressBar> taskProgBars;
+		Dictionary<int, Box> taskProgBars;
 
 		public MainWindow()
 		{
@@ -66,7 +66,7 @@ namespace MultiMC.GTKGUI
 			tList.Removed += TaskRemoved;
 
 			TaskList = tList;
-			taskProgBars = new Dictionary<int, ProgressBar>();
+			taskProgBars = new Dictionary<int, Box>();
 
 			// Set up the instance list
 			EventfulList<Instance> iList = new EventfulList<Instance>();
@@ -113,20 +113,23 @@ namespace MultiMC.GTKGUI
 			if (taskProgBars.ContainsKey(task.TaskID))
 				task.TaskID = GetAvailableTaskID();
 
+			HBox tHBox = new HBox();
+
 			ProgressBar tProgBar = new ProgressBar();
 			tProgBar.Text = task.Status;
-			progBarVBox.PackEnd(tProgBar, false, true, 0);
+			tProgBar.HeightRequest = 22;
+
+			tHBox.PackStart(tProgBar, true, true, 0);
 
 			task.StatusChange += TaskStatusChange;
-
 			task.ProgressChange += TaskProgressChange;
-
-			tProgBar.Visible = true;
 
 			lock (this)
 			{
-				taskProgBars.Add(task.TaskID, tProgBar);
+				taskProgBars.Add(task.TaskID, tHBox);
 			}
+			progBarVBox.PackEnd(tHBox, false, true, 0);
+			tHBox.ShowAll();
 		}
 
 		void TaskRemoved(object sender, ItemAddRemoveEventArgs<Task> e)
@@ -139,10 +142,10 @@ namespace MultiMC.GTKGUI
 			if (!taskProgBars.ContainsKey(task.TaskID))
 				return;
 
-			ProgressBar pbar = taskProgBars[task.TaskID];
+			ProgressBar pbar = taskProgBars[task.TaskID].Children[0] as ProgressBar;
 			pbar.Fraction = 1;
 			pbar.Hide();
-			mainVBox.Remove(pbar);
+			mainVBox.Remove(taskProgBars[task.TaskID]);
 
 			lock (this)
 			{
@@ -158,7 +161,8 @@ namespace MultiMC.GTKGUI
 					if (pbarFraction > 1.0)
 						pbarFraction = 1;
 
-					taskProgBars[e.TaskID].Fraction = pbarFraction;
+					(taskProgBars[e.TaskID].Children[0] as ProgressBar).
+						Fraction = pbarFraction;
 				});
 			
 		}
@@ -167,7 +171,8 @@ namespace MultiMC.GTKGUI
 		{
 			Invoke((o, args) =>
 				{
-					taskProgBars[e.TaskID].Text = e.Status;
+					(taskProgBars[e.TaskID].Children[0] as ProgressBar).
+						Text = e.Status;
 				});
 		}
 

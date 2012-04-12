@@ -43,16 +43,16 @@ namespace MultiMC.WinGUI
 			EventfulList<Instance> instList = new EventfulList<Instance>();
 			InstanceList = instList;
 
-			instList.Added += new EventHandler<ItemAddRemoveEventArgs<Instance>>(instList_Added);
-			instList.Removed += new EventHandler<ItemAddRemoveEventArgs<Instance>>(instList_Removed);
+			instList.Added += InstAdded;
+			instList.Removed += InstRemoved;
 
 			// If on windows, set the theme for our instance list.
 			if (OSUtils.OS == OSEnum.Windows)
 				OSUtils.SetWindowTheme(instView.Handle, "explorer", null);
 
 			EventfulList<Task> tList = new EventfulList<Task>();
-			tList.Added += new EventHandler<ItemAddRemoveEventArgs<Task>>(TaskAdded);
-			tList.Removed += new EventHandler<ItemAddRemoveEventArgs<Task>>(TaskRemoved);
+			tList.Added += TaskAdded;
+			tList.Removed += TaskRemoved;
 			TaskList = tList;
 
 			//mainLayoutPanel.
@@ -227,7 +227,7 @@ namespace MultiMC.WinGUI
 		//    }
 		//}
 
-		void instList_Removed(object sender, ItemAddRemoveEventArgs<Instance> e)
+		void InstRemoved(object sender, ItemAddRemoveEventArgs<Instance> e)
 		{
 			foreach (ListViewItem item in instView.Items.Where<ListViewItem>(
 				item => item.Tag == e.Item))
@@ -236,7 +236,7 @@ namespace MultiMC.WinGUI
 			}
 		}
 
-		void instList_Added(object sender, ItemAddRemoveEventArgs<Instance> e)
+		void InstAdded(object sender, ItemAddRemoveEventArgs<Instance> e)
 		{
 			ListViewItem item = new ListViewItem(e.Item.Name);
 			item.Tag = e.Item;
@@ -320,7 +320,6 @@ namespace MultiMC.WinGUI
 				{
 					_imageList = value as WinFormsImageList;
 					instView.LargeImageList = _imageList.ImgList;
-					//instView.SmallImageList = _imageList.ImgList;
 				}
 				else if (value != null)
 					throw new InvalidOperationException("WinForms needs a WinFormsImageList.");

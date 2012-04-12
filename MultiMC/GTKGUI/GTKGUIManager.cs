@@ -32,7 +32,7 @@ namespace MultiMC.GTKGUI
 			return new MainWindow();
 		}
 
-		public IImageList LoadInstIcons()
+		public IImageList LoadInstIcons(bool loadCustomIcons)
 		{
 			Assembly ass = Assembly.GetExecutingAssembly();
 
@@ -48,7 +48,7 @@ namespace MultiMC.GTKGUI
 			imgDict.Add("tnt", new Pixbuf(ass, "MultiMC.Resources.tnt.png"));
 
 			return new GTKImageList(Properties.Resources.UserIconDir,
-				imgDict, imgDict["grass"]);
+				imgDict, imgDict["grass"], loadCustomIcons);
 		}
 
 		public IDialog AboutDialog()

@@ -33,6 +33,8 @@ namespace MultiMC
 	/// </summary>
 	public class Main
 	{
+		bool customIconLoadError;
+
 		public IMainWindow MainWindow
 		{
 			get;
@@ -51,46 +53,60 @@ namespace MultiMC
 			GUIManager.Main.Initialize();
 
 			MainWindow = GUIManager.Main.MainWindow();
-			InstIconList = GUIManager.Main.LoadInstIcons();
 
 			MainWindow.Title = string.Format("MultiMC Beta {0} for {1}", 
 				AppUtils.GetVersion().ToString(2), OSUtils.OSName);
 
 			MainWindow.DefaultPosition = DefWindowPosition.CenterScreen;
 
-			MainWindow.NewInstClicked += new EventHandler(NewInstClicked);
+			// Main toolbar
+			MainWindow.NewInstClicked += NewInstClicked;
 			MainWindow.RefreshClicked += (o, args) => MainWindow.LoadInstances();
-			MainWindow.ViewFolderClicked += new EventHandler(ViewFolderClicked);
+			MainWindow.ViewFolderClicked += ViewFolderClicked;
 
-			MainWindow.SettingsClicked += new EventHandler(SettingsClicked);
-			MainWindow.CheckUpdatesClicked += new EventHandler(UpdateClicked);
+			MainWindow.SettingsClicked += SettingsClicked;
+			MainWindow.CheckUpdatesClicked += UpdateClicked;
 
-			MainWindow.AboutClicked += new EventHandler(AboutClicked);
+			MainWindow.AboutClicked += AboutClicked;
 
+			// Instance context menu
+			MainWindow.InstanceLaunched += LaunchInstance;
 
-			MainWindow.InstanceLaunched += 
-				new EventHandler<InstActionEventArgs>(LaunchInstance);
+			MainWindow.ChangeIconClicked += ChangeIconClicked;
+			MainWindow.EditNotesClicked += EditNotesClicked;
 
-			MainWindow.ChangeIconClicked += 
-				new EventHandler<InstActionEventArgs>(ChangeIconClicked);
-			MainWindow.EditNotesClicked += 
-				new EventHandler<InstActionEventArgs>(EditNotesClicked);
+			MainWindow.EditModsClicked += EditModsClicked;
+			MainWindow.RebuildJarClicked += RebuildClicked;
+			MainWindow.ViewInstFolderClicked += ViewInstFolderClicked;
 
-			MainWindow.EditModsClicked += 
-				new EventHandler<InstActionEventArgs>(EditModsClicked);
-			MainWindow.RebuildJarClicked += 
-				new EventHandler<InstActionEventArgs>(RebuildClicked);
-			MainWindow.ViewInstFolderClicked += 
-				new EventHandler<InstActionEventArgs>(ViewInstFolderClicked);
+			MainWindow.DeleteInstClicked += DeleteInstClicked;
 
-			MainWindow.DeleteInstClicked += 
-				new EventHandler<InstActionEventArgs>(DeleteInstClicked);
+			// Try to load the icon list.
+			int tries = 0;
+			bool keepTryingToLoadIcons = true;
+			customIconLoadError = false;
+			while (tries < 2 && keepTryingToLoadIcons)
+			{
+				try
+				{
+					InstIconList = GUIManager.Main.LoadInstIcons(tries == 0);
+					MainWindow.ImageList = InstIconList;
 
-			MainWindow.ImageList = InstIconList;
+					// If none of the above return false, stop trying to load icons.
+					keepTryingToLoadIcons = false;
+				}
+				catch (ArgumentException)
+				{
+					keepTryingToLoadIcons = true;
+					customIconLoadError = true;
+				}
+				finally
+				{
+					tries++;
+				}
+			}
 
 			MainWindow.LoadInstances();
-
-			MainWindow.Shown += new EventHandler(MainWindow_Shown);
 
 			MainWindow.Closed += new EventHandler(MainWindow_Closed);
 
@@ -108,14 +124,18 @@ namespace MultiMC
 
 		void MainWindow_Closed(object sender, EventArgs e)
 		{
-			foreach (Task task in MainWindow.TaskList)
+			Task[] killTasks = new Task[MainWindow.TaskList.Count];
+			MainWindow.TaskList.CopyTo(killTasks, 0);
+			foreach (Task task in killTasks)
 			{
 				task.Cancel();
 			}
 		}
 
-		void MainWindow_Shown(object sender, EventArgs e)
+		void OnStartup()
 		{
+			Console.WriteLine("Running startup tasks.");
+
 			if (!File.Exists("Ionic.Zip.Reduced.dll"))
 			{
 				Downloader dotNetZipDL = new Downloader(
@@ -321,6 +341,27 @@ namespace MultiMC
 
 		public void Run()
 		{
+			MainWindow.Invoke((o, args) =>
+				{
+					OnStartup();
+
+					if (customIconLoadError)
+					{
+						DialogResponse reply = MessageDialog.Show(MainWindow,
+							"Couldn't load your custom icons because one or more " +
+							"of them are invalid or corrupt. This can be " +
+							"fixed by deleting them, however you will lose " +
+							"all custom icons that you've added.\nWould you " +
+							"like to delete all custom icons?",
+							"Failed to load icons.", MessageButtons.YesNo);
+
+						if (reply == DialogResponse.Yes)
+						{
+							Directory.Delete("icons", true);
+						}
+					}
+				});
+
 			GUIManager.Main.Run(MainWindow);
 		}
 

@@ -7,7 +7,7 @@ namespace MultiMC.GUI
 {
 	public interface IImageList
 	{
-		void LoadImages();
+		void LoadImages(bool loadCustomIcons = true);
 
 		void DeleteImage(string key);
 

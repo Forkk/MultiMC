@@ -25,7 +25,7 @@ namespace MultiMC.GTKGUI
 		Pixbuf defImage;
 
 		public GTKImageList(string userImageDir, Dictionary<string, Pixbuf> defImages,
-			Pixbuf defaultImage)
+			Pixbuf defaultImage, bool loadCustomIcons = true)
 		{
 			keyFileDict = new Dictionary<string, string>();
 
@@ -35,10 +35,10 @@ namespace MultiMC.GTKGUI
 
 			this.userImageDir = userImageDir;
 
-			LoadImages();
+			LoadImages(loadCustomIcons);
 		}
 
-		public void LoadImages()
+		public void LoadImages(bool loadCustomIcons)
 		{
 			ImgList.Clear();
 			keyFileDict.Clear();
@@ -50,7 +50,7 @@ namespace MultiMC.GTKGUI
 				ImgList.Add(image.Key, image.Value);
 			}
 
-			if (Directory.Exists("icons"))
+			if (Directory.Exists("icons") && loadCustomIcons)
 			{
 				foreach (string f in Directory.GetFiles("icons"))
 				{

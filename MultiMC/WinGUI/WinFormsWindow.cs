@@ -150,7 +150,14 @@ namespace MultiMC.WinGUI
 
 		public void Invoke(EventHandler d)
 		{
-			base.BeginInvoke(d);
+			if (IsHandleCreated)
+			{
+				base.BeginInvoke(d);
+			}
+			else
+			{
+				HandleCreated += (o, args) => base.BeginInvoke(d);
+			}
 		}
 	}
 }

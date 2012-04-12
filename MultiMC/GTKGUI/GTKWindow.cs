@@ -15,7 +15,12 @@ namespace MultiMC.GTKGUI
 			: base(title)
 		{
 			DeleteEvent += WindowDestroyed;
-			base.Shown += (o, args) => MoveToDefPosition();
+			base.Shown += (o, args) =>
+				{
+					MoveToDefPosition();
+					if (Shown != null)
+						Shown(this, EventArgs.Empty);
+				};
 		}
 
 		void WindowDestroyed(object o, EventArgs args)
@@ -167,5 +172,6 @@ namespace MultiMC.GTKGUI
 		}
 
 		public event EventHandler Closed;
+		public new event EventHandler Shown;
 	}
 }

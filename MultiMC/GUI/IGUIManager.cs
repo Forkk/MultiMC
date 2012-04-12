@@ -14,7 +14,7 @@ namespace MultiMC.GUI
 
 		IMainWindow MainWindow();
 
-		IImageList LoadInstIcons();
+		IImageList LoadInstIcons(bool loadCustomIcons = true);
 
 		IDialog AboutDialog();
 

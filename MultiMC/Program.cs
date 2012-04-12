@@ -104,10 +104,12 @@ namespace MultiMC
 				}
 			}
 
-			if (OSUtils.OS == OSEnum.Windows)
-				Toolkit = WindowToolkit.WinForms;
-			else
+			// If we're not on Windows or not using Mono, use GTK#.
+			if (OSUtils.OS != OSEnum.Windows || 
+				OSUtils.Runtime == Runtime.Mono)
 				Toolkit = WindowToolkit.GtkSharp;
+			else
+				Toolkit = WindowToolkit.WinForms;
 
 			if (args.Contains("--gtk"))
 				Toolkit = WindowToolkit.GtkSharp;

@@ -22,7 +22,7 @@ namespace MultiMC.WinGUI
 		}
 
 
-		public IImageList LoadInstIcons()
+		public IImageList LoadInstIcons(bool loadCustomIcons)
 		{
 			Dictionary<string, System.Drawing.Image> imgDict =
 				   new Dictionary<string, System.Drawing.Image>();
@@ -37,7 +37,7 @@ namespace MultiMC.WinGUI
 
 			return new WinFormsImageList(
 				Properties.Resources.UserIconDir,
-				imgDict, Properties.Resources.grass);
+				imgDict, Properties.Resources.grass, loadCustomIcons);
 		}
 
 		public IDialog AboutDialog()

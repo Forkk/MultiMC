@@ -87,7 +87,8 @@ namespace MultiMC.ProblemDetection
 						{
 							try
 							{
-								IMinecraftProblem problem = (IMinecraftProblem)Activator.CreateInstance(type);
+								IMinecraftProblem problem = (IMinecraftProblem)
+									Activator.CreateInstance(type);
 								RegisterProblem(problem);
 							} catch
 							{

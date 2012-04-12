@@ -172,8 +172,7 @@ namespace MultiMC.Tasks
 					if (Path.GetFileName(f) == "WorldEdit.jar")
 					{
 						File.Copy(f, 
-							Path.Combine(Target.RootDir, ".minecraft", 
-								"bin", "WorldEdit.jar"), true);
+							Path.Combine(Target.BinDir, "WorldEdit.jar"), true);
 						continue;
 					}
 

@@ -25,7 +25,7 @@ namespace MultiMC.WinGUI
 		Image defImage;
 
 		public WinFormsImageList(string userImageDir, Dictionary<string, Image> defImages,
-			Image defaultImage)
+			Image defaultImage, bool loadCustomIcons = true)
 		{
 			keyFileDict = new Dictionary<string, string>();
 
@@ -38,10 +38,10 @@ namespace MultiMC.WinGUI
 
 			this.userImageDir = userImageDir;
 
-			LoadImages();
+			LoadImages(loadCustomIcons);
 		}
 
-		public void LoadImages()
+		public void LoadImages(bool loadCustomIcons)
 		{
 			ImgList.Images.Clear();
 			keyFileDict.Clear();
@@ -53,7 +53,7 @@ namespace MultiMC.WinGUI
 				ImgList.Images.Add(image.Key, image.Value);
 			}
 
-			if (Directory.Exists("icons"))
+			if (Directory.Exists("icons") && loadCustomIcons)
 			{
 				foreach (string f in Directory.GetFiles("icons"))
 				{
