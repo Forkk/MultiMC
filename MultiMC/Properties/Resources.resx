@@ -142,7 +142,7 @@
     <comment>The config file where settings are saved.</comment>
   </data>
   <data name="SettingsIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\wingui\toolbaricons\settingsicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\WinGUI\ToolbarIcons\SettingsIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="planks" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\planks.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -152,10 +152,10 @@
     <comment>URL to get updates for Linux from.</comment>
   </data>
   <data name="document_import" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\document-import.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\Resources\document-import.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="RenameIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\wingui\toolbaricons\renameicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\WinGUI\ToolbarIcons\RenameIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="DotNetZipURL" xml:space="preserve">
     <value>http://forkk.net/MultiMC/download/Ionic.Zip.Reduced.dll</value>
@@ -168,7 +168,7 @@
     <value>..\Resources\MultiMC.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="AboutIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\wingui\toolbaricons\abouticon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\WinGUI\ToolbarIcons\AboutIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="UpdateTimeoutMessage" xml:space="preserve">
     <value>Failed to install updates because the operation timed out. This may be due to MultiMC not closing properly.</value>
@@ -182,7 +182,7 @@
     <value>..\Resources\stone.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ReportBugIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\wingui\toolbaricons\reportbugicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\WinGUI\ToolbarIcons\ReportBugIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="dirt" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\dirt.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -198,7 +198,7 @@
     <comment>The file name of mod lists.</comment>
   </data>
   <data name="RefreshInstIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\wingui\toolbaricons\refreshinsticon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\WinGUI\ToolbarIcons\RefreshInstIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="iron" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\iron.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -215,7 +215,7 @@
     <comment>URL to get updates for windows and Mac from.</comment>
   </data>
   <data name="HelpIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\wingui\toolbaricons\helpicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\WinGUI\ToolbarIcons\HelpIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="DownloadSiteURL" xml:space="preserve">
     <value>http://forkk.net/MultiMC/download/</value>
@@ -229,17 +229,17 @@
     <comment>Filename of the lastlogin file.</comment>
   </data>
   <data name="ViewFolderIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\wingui\toolbaricons\viewfoldericon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\WinGUI\ToolbarIcons\ViewFolderIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="NewVersionFileName" xml:space="preserve">
     <value>MultiMCUpdate.exe</value>
     <comment>Path to download new versions to.</comment>
   </data>
   <data name="NewInstIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\wingui\toolbaricons\newinsticon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\WinGUI\ToolbarIcons\NewInstIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="CheckUpdateIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\wingui\toolbaricons\checkupdateicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\WinGUI\ToolbarIcons\CheckUpdateIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="gold" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\gold.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
