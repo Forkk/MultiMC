@@ -256,4 +256,7 @@
   <data name="LauncherClassName" xml:space="preserve">
     <value>MultiMCLauncher</value>
   </data>
+  <data name="ChangelogURL" xml:space="preserve">
+    <value>http://forkk.net/MultiMC/download/Changelog.txt</value>
+  </data>
 </root>

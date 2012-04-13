@@ -69,7 +69,8 @@ namespace MultiMC.WinGUI
 			{
 				string errorMsg = prob.GetErrorMessage(e.Data);
 
-				MultiMC.GUI.MessageDialog.Show(this, errorMsg, "Error Detected");
+				Invoke((o, args) =>
+					MultiMC.GUI.MessageDialog.Show(this, errorMsg, "Error Detected"));
 				if (prob.ShouldTerminate(e.Data) && AppSettings.Main.QuitIfProblem)
 				{
 					KillMinecraft(false);

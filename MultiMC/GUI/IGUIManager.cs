@@ -16,7 +16,7 @@ namespace MultiMC.GUI
 
 		IImageList LoadInstIcons(bool loadCustomIcons = true);
 
-		IDialog AboutDialog();
+		IAboutDialog AboutDialog();
 
 		IConsoleWindow ConsoleWindow(Instance inst);
 
@@ -33,6 +33,8 @@ namespace MultiMC.GUI
 		ILoginDialog LoginDialog(string errMsg = null);
 
 		IDialog DeleteDialog();
+
+		IDialog ChangelogDialog();
 
 		void Run(IMainWindow mainWindow);
 	}

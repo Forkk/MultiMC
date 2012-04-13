@@ -9,7 +9,7 @@ using MultiMC.GUI;
 
 namespace MultiMC.GTKGUI
 {
-	public class GTKAboutDialog : AboutDialog, IDialog
+	public class GTKAboutDialog : AboutDialog, IAboutDialog
 	{
 		public GTKAboutDialog()
 			: base()
@@ -225,5 +225,7 @@ namespace MultiMC.GTKGUI
 		}
 
 		public new event EventHandler<DialogResponseEventArgs> Response;
+
+		public event EventHandler ChangelogClicked;
 	}
 }

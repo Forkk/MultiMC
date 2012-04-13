@@ -51,7 +51,7 @@ namespace MultiMC.GTKGUI
 				imgDict, imgDict["grass"], loadCustomIcons);
 		}
 
-		public IDialog AboutDialog()
+		public IAboutDialog AboutDialog()
 		{
 			return new GTKAboutDialog();
 		}
@@ -102,6 +102,11 @@ namespace MultiMC.GTKGUI
 			mainWindow.Show();
 
 			Application.Run();
+		}
+
+		public IDialog ChangelogDialog()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

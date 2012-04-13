@@ -40,7 +40,7 @@ namespace MultiMC.WinGUI
 				imgDict, Properties.Resources.grass, loadCustomIcons);
 		}
 
-		public IDialog AboutDialog()
+		public IAboutDialog AboutDialog()
 		{
 			return new AboutForm();
 		}
@@ -88,6 +88,12 @@ namespace MultiMC.WinGUI
 		public ILoginDialog LoginDialog(string errMsg)
 		{
 			return new LoginForm(errMsg);
+		}
+
+
+		public IDialog ChangelogDialog()
+		{
+			return new ChangelogDialog();
 		}
 	}
 }

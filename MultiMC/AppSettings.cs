@@ -166,15 +166,9 @@ namespace MultiMC
 			set { this["AutoUpdate"] = value.ToString(); }
 		}
 
-		public bool EnableHints
-		{
-			get { return ParseSetting<bool>(this["EnableHints"], true); }
-			set { this["EnableHints"] = value.ToString(); }
-		}
-
 		public bool QuitIfProblem
 		{
-			get { return ParseSetting<bool>(this["QuitIfProblem"], true); }
+			get { return ParseSetting<bool>("QuitIfProblem", true); }
 			set { this["QuitIfProblem"] = value.ToString(); }
 		}
 	}

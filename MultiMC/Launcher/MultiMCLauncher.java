@@ -50,7 +50,9 @@ public class MultiMCLauncher
 			
 			System.setProperty("org.lwjgl.librarypath", nativesDir);
 			System.setProperty("net.java.games.input.librarypath", nativesDir);
-			
+
+			System.setProperty("user.home", new File(args[0]).getParent());
+
 			URLClassLoader cl = 
 					new URLClassLoader(urls, MultiMCLauncher.class.getClassLoader());
 			
@@ -81,6 +83,10 @@ public class MultiMCLauncher
 			String[] mcArgs = new String[2];
 			mcArgs[0] = args[1];
 			mcArgs[1] = args[2];
+
+			String mcDir = 	mc.getMethod("a", String.class).invoke(null, (Object) "minecraft").toString();
+
+			System.out.println("MCDIR: " + mcDir);
 			
 			mc.getMethod("main", String[].class).invoke(null, (Object) mcArgs);
 		} catch (ClassNotFoundException e)

@@ -6,9 +6,11 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
+using MultiMC.GUI;
+
 namespace MultiMC.WinGUI
 {
-	partial class AboutForm : WinFormsDialog
+	partial class AboutForm : WinFormsDialog, IAboutDialog
 	{
 		public AboutForm()
 		{
@@ -100,5 +102,13 @@ namespace MultiMC.WinGUI
 			}
 		}
 		#endregion
+
+		private void buttonChangelog_Click(object sender, EventArgs e)
+		{
+			if (ChangelogClicked != null)
+				ChangelogClicked(this, EventArgs.Empty);
+		}
+
+		public event EventHandler ChangelogClicked;
 	}
 }

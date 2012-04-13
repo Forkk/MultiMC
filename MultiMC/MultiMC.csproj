@@ -141,6 +141,7 @@
     <Compile Include="GTKGUI\LoginDialog.cs" />
     <Compile Include="GTKGUI\MainWindow.cs" />
     <Compile Include="GTKGUI\SettingsDialog.cs" />
+    <Compile Include="GUI\IAboutDialog.cs" />
     <Compile Include="GUI\IAddInstDialog.cs" />
     <Compile Include="GUI\IChangeIconDialog.cs" />
     <Compile Include="GUI\IConsoleWindow.cs" />
@@ -186,6 +187,12 @@
     </Compile>
     <Compile Include="WinGUI\ChangeIconForm.Designer.cs">
       <DependentUpon>ChangeIconForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinGUI\ChangelogDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\ChangelogDialog.Designer.cs">
+      <DependentUpon>ChangelogDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="WinGUI\ConsoleForm.cs">
       <SubType>Form</SubType>
@@ -267,6 +274,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinGUI\ChangeIconForm.resx">
       <DependentUpon>ChangeIconForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinGUI\ChangelogDialog.resx">
+      <DependentUpon>ChangelogDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinGUI\ConsoleForm.resx">
       <DependentUpon>ConsoleForm.cs</DependentUpon>

@@ -124,9 +124,12 @@ namespace MultiMC
 			this.RootDir = rootDir;
 
 			this.autosave = autosave;
-			
+
 			InstMods = new InstanceMods(this);
 			InstMods.Update();
+
+			Console.WriteLine(MinecraftDir);
+
 			AutoSave();
 		}
 
@@ -144,6 +147,8 @@ namespace MultiMC
 			
 			InstMods = new InstanceMods(this);
 			InstMods.Update();
+
+			Console.WriteLine(MinecraftDir);
 		}
 
 		public Instance(OldInstance oldInst)
@@ -159,6 +164,8 @@ namespace MultiMC
 			this.IconKey = oldInst.IconKey;
 			this.Name = oldInst.Name;
 			this.NeedsRebuild = oldInst.NeedsRebuild;
+
+			Console.WriteLine(MinecraftDir);
 			//this.Notes = oldInst.Notes;
 		}
 
@@ -242,6 +249,11 @@ namespace MultiMC
 				Properties.Resources.LauncherClassName, 
 				Path.GetFullPath(MinecraftDir), username, sessionID,
 				xmx, xms, Environment.CurrentDirectory);
+
+			if (OSUtils.OS == OSEnum.Windows)
+			{
+				mcProcStart.EnvironmentVariables.Remove("appdata");
+			}
 
 			instProc.EnableRaisingEvents = true;
 			mcProcStart.CreateNoWindow = true;
@@ -385,11 +397,27 @@ namespace MultiMC
 		{
 			get
 			{
-				if (Directory.Exists(Path.Combine(RootDir, ".minecraft")) &&
-				    !Directory.Exists(Path.Combine(RootDir, "minecraft")))
-					return Path.Combine(RootDir, ".minecraft");
-				else
-					return Path.Combine(RootDir, "minecraft");
+				string dotMC = Path.Combine(RootDir, ".minecraft");
+				string normMC = Path.Combine(RootDir, "minecraft");
+
+				if (Directory.Exists(dotMC))
+				{
+					return dotMC;
+				}
+				else if (Directory.Exists(normMC) && OSUtils.OS != OSEnum.OSX)
+				{
+					try
+					{
+						Directory.Move(normMC, dotMC);
+						return dotMC;
+					}
+					catch (IOException)
+					{
+						goto NoDot;
+					}
+				}
+			NoDot:
+				return normMC;
 			}
 		}
 

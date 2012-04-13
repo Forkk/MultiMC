@@ -163,10 +163,19 @@ namespace MultiMC
 
 		void AboutClicked(object sender, EventArgs e)
 		{
-			IDialog aboutDlg = GUIManager.Main.AboutDialog();
+			IAboutDialog aboutDlg = GUIManager.Main.AboutDialog();
 			
 			aboutDlg.Parent = MainWindow;
 			aboutDlg.DefaultPosition = DefWindowPosition.CenterParent;
+
+			aboutDlg.ChangelogClicked += (o, args) =>
+				{
+					IDialog changelogDlg = GUIManager.Main.ChangelogDialog();
+					changelogDlg.Parent = this.MainWindow;
+					changelogDlg.DefaultPosition = DefWindowPosition.CenterParent;
+
+					changelogDlg.Run();
+				};
 
 			aboutDlg.Run();
 		}

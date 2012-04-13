@@ -22,7 +22,14 @@ namespace MultiMC.Mods
 
 		public static ModInfo FromJSON(string json)
 		{
-			return JsonConvert.DeserializeObject<ModInfo>(json);
+			try
+			{
+				return JsonConvert.DeserializeObject<ModInfo>(json);
+			}
+			catch (JsonReaderException)
+			{
+				return null;
+			}
 		}
 
 		public string Name { get; set; }

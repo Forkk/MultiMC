@@ -74,6 +74,15 @@ namespace MultiMC.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to http://forkk.net/MultiMC/download/Changelog.txt.
+        /// </summary>
+        internal static string ChangelogURL {
+            get {
+                return ResourceManager.GetString("ChangelogURL", resourceCulture);
+            }
+        }
+        
         internal static System.Drawing.Bitmap CheckUpdateIcon {
             get {
                 object obj = ResourceManager.GetObject("CheckUpdateIcon", resourceCulture);
