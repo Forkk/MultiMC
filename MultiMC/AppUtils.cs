@@ -99,39 +99,23 @@ namespace MultiMC
 									  X509Chain chain,
 									  SslPolicyErrors error)
 		{
-			if (cert == null)
+			switch(error)
 			{
-				Console.WriteLine("Warning: Certificate is null!");
+			case SslPolicyErrors.None:
+				return true;
+			case SslPolicyErrors.RemoteCertificateChainErrors:
+				// check hash of cert. will eventually fail when it changes
+				if("94512DCE63E389DEFC9506F84B272EB8A2A335D5" == cert.GetCertHashString())
+					return true;
+				return false;
+			case SslPolicyErrors.RemoteCertificateNameMismatch:
+				// The cert is not for the URL used!
+				return false;
+			case SslPolicyErrors.RemoteCertificateNotAvailable:
+				// Can't get cert. Too bad.
 				return false;
 			}
-#if BYPASS_SSL_CHECK
-			else
-				return true;
-#else
-			using (Stream stream =
-				Assembly.GetExecutingAssembly().GetManifestResourceStream("sslcert"))
-			{
-				if (stream == null)
-				{
-					Console.WriteLine("Warning: Public key resource is null!");
-					return false;
-				}
-				byte[] bytes = new byte[stream.Length];
-				stream.Read(bytes, 0, bytes.Length);
-
-				if (bytes.Length < cert.GetPublicKey().Length)
-					return false;
-
-				for (int i = 0; i < bytes.Length; i++)
-				{
-					if (bytes[i] != cert.GetPublicKey()[i])
-					{
-						return false;
-					}
-				}
-				return true;
-			}
-#endif
+			return false;
 		}
 
 		/// <summary>
