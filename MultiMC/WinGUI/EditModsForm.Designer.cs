@@ -29,15 +29,6 @@
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditModsForm));
-			System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Test Node 1");
-			System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Child Node 1");
-			System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Child Node 2");
-			System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Test Node 2", new System.Windows.Forms.TreeNode[] {
-            treeNode17,
-            treeNode18});
-			System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Root", new System.Windows.Forms.TreeNode[] {
-            treeNode16,
-            treeNode19});
 			System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Test Node 1");
 			System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Child Node 1");
 			System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Child Node 2");
@@ -47,15 +38,32 @@
 			System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Root", new System.Windows.Forms.TreeNode[] {
             treeNode1,
             treeNode4});
+			System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Test Node 1");
+			System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Child Node 1");
+			System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Child Node 2");
+			System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Test Node 2", new System.Windows.Forms.TreeNode[] {
+            treeNode7,
+            treeNode8});
+			System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Root", new System.Windows.Forms.TreeNode[] {
+            treeNode6,
+            treeNode9});
 			this.labelHelp = new System.Windows.Forms.Label();
 			this.modTabControl = new System.Windows.Forms.TabControl();
 			this.tabPageJar = new System.Windows.Forms.TabPage();
 			this.modView = new System.Windows.Forms.ListView();
 			this.columnModName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnMCVersion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.jarModButtonPanel = new System.Windows.Forms.TableLayoutPanel();
+			this.buttonAddJarMod = new System.Windows.Forms.Button();
+			this.buttonRemoveJarMod = new System.Windows.Forms.Button();
+			this.buttonMoveUp = new System.Windows.Forms.Button();
+			this.buttonMoveDown = new System.Windows.Forms.Button();
 			this.tabPageMLMods = new System.Windows.Forms.TabPage();
 			this.mlModView = new System.Windows.Forms.ListView();
 			this.modColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+			this.buttonAddMLMod = new System.Windows.Forms.Button();
+			this.buttonRemoveMLMod = new System.Windows.Forms.Button();
 			this.tabPageResources = new System.Windows.Forms.TabPage();
 			this.resourceView = new System.Windows.Forms.TreeView();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -66,7 +74,9 @@
 			this.buttonCancel = new System.Windows.Forms.Button();
 			this.modTabControl.SuspendLayout();
 			this.tabPageJar.SuspendLayout();
+			this.jarModButtonPanel.SuspendLayout();
 			this.tabPageMLMods.SuspendLayout();
+			this.tableLayoutPanel2.SuspendLayout();
 			this.tabPageResources.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.flowLayoutPanel1.SuspendLayout();
@@ -100,6 +110,7 @@
 			// tabPageJar
 			// 
 			this.tabPageJar.Controls.Add(this.modView);
+			this.tabPageJar.Controls.Add(this.jarModButtonPanel);
 			this.tabPageJar.Location = new System.Drawing.Point(4, 22);
 			this.tabPageJar.Name = "tabPageJar";
 			this.tabPageJar.Padding = new System.Windows.Forms.Padding(3);
@@ -118,8 +129,8 @@
 			this.modView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
 			this.modView.Location = new System.Drawing.Point(3, 3);
 			this.modView.Name = "modView";
-			this.modView.Size = new System.Drawing.Size(546, 288);
-			this.modView.TabIndex = 1;
+			this.modView.Size = new System.Drawing.Size(466, 288);
+			this.modView.TabIndex = 3;
 			this.modView.UseCompatibleStateImageBehavior = false;
 			this.modView.View = System.Windows.Forms.View.Details;
 			this.modView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.modView_ItemDrag);
@@ -137,11 +148,92 @@
 			// 
 			// columnMCVersion
 			// 
-			this.columnMCVersion.Text = "Minecraft Version";
+			this.columnMCVersion.Text = "MC Version";
+			// 
+			// jarModButtonPanel
+			// 
+			this.jarModButtonPanel.ColumnCount = 1;
+			this.jarModButtonPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.jarModButtonPanel.Controls.Add(this.buttonAddJarMod, 0, 0);
+			this.jarModButtonPanel.Controls.Add(this.buttonRemoveJarMod, 0, 1);
+			this.jarModButtonPanel.Controls.Add(this.buttonMoveUp, 0, 3);
+			this.jarModButtonPanel.Controls.Add(this.buttonMoveDown, 0, 4);
+			this.jarModButtonPanel.Dock = System.Windows.Forms.DockStyle.Right;
+			this.jarModButtonPanel.Location = new System.Drawing.Point(469, 3);
+			this.jarModButtonPanel.Name = "jarModButtonPanel";
+			this.jarModButtonPanel.RowCount = 5;
+			this.jarModButtonPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.jarModButtonPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.jarModButtonPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.jarModButtonPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.jarModButtonPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.jarModButtonPanel.Size = new System.Drawing.Size(80, 288);
+			this.jarModButtonPanel.TabIndex = 2;
+			// 
+			// buttonAddJarMod
+			// 
+			this.buttonAddJarMod.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonAddJarMod.AutoSize = true;
+			this.buttonAddJarMod.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.buttonAddJarMod.Location = new System.Drawing.Point(3, 3);
+			this.buttonAddJarMod.Name = "buttonAddJarMod";
+			this.buttonAddJarMod.Size = new System.Drawing.Size(74, 23);
+			this.buttonAddJarMod.TabIndex = 0;
+			this.buttonAddJarMod.Text = "&Add";
+			this.buttonAddJarMod.UseVisualStyleBackColor = true;
+			this.buttonAddJarMod.Click += new System.EventHandler(this.buttonAddJarMod_Click);
+			// 
+			// buttonRemoveJarMod
+			// 
+			this.buttonRemoveJarMod.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonRemoveJarMod.AutoSize = true;
+			this.buttonRemoveJarMod.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.buttonRemoveJarMod.Location = new System.Drawing.Point(3, 32);
+			this.buttonRemoveJarMod.Name = "buttonRemoveJarMod";
+			this.buttonRemoveJarMod.Size = new System.Drawing.Size(74, 23);
+			this.buttonRemoveJarMod.TabIndex = 1;
+			this.buttonRemoveJarMod.Text = "&Remove";
+			this.buttonRemoveJarMod.UseVisualStyleBackColor = true;
+			this.buttonRemoveJarMod.Click += new System.EventHandler(this.buttonRemoveJarMod_Click);
+			// 
+			// buttonMoveUp
+			// 
+			this.buttonMoveUp.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonMoveUp.AutoSize = true;
+			this.buttonMoveUp.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.buttonMoveUp.Location = new System.Drawing.Point(3, 233);
+			this.buttonMoveUp.Name = "buttonMoveUp";
+			this.buttonMoveUp.Size = new System.Drawing.Size(74, 23);
+			this.buttonMoveUp.TabIndex = 2;
+			this.buttonMoveUp.Text = "Move &Up";
+			this.buttonMoveUp.UseVisualStyleBackColor = true;
+			this.buttonMoveUp.Click += new System.EventHandler(this.buttonMoveUp_Click);
+			// 
+			// buttonMoveDown
+			// 
+			this.buttonMoveDown.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonMoveDown.AutoSize = true;
+			this.buttonMoveDown.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.buttonMoveDown.Location = new System.Drawing.Point(3, 262);
+			this.buttonMoveDown.Name = "buttonMoveDown";
+			this.buttonMoveDown.Size = new System.Drawing.Size(74, 23);
+			this.buttonMoveDown.TabIndex = 3;
+			this.buttonMoveDown.Text = "Move &Down";
+			this.buttonMoveDown.UseVisualStyleBackColor = true;
+			this.buttonMoveDown.Click += new System.EventHandler(this.buttonMoveDown_Click);
 			// 
 			// tabPageMLMods
 			// 
 			this.tabPageMLMods.Controls.Add(this.mlModView);
+			this.tabPageMLMods.Controls.Add(this.tableLayoutPanel2);
 			this.tabPageMLMods.Location = new System.Drawing.Point(4, 22);
 			this.tabPageMLMods.Name = "tabPageMLMods";
 			this.tabPageMLMods.Padding = new System.Windows.Forms.Padding(3);
@@ -159,8 +251,8 @@
 			this.mlModView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
 			this.mlModView.Location = new System.Drawing.Point(3, 3);
 			this.mlModView.Name = "mlModView";
-			this.mlModView.Size = new System.Drawing.Size(546, 288);
-			this.mlModView.TabIndex = 2;
+			this.mlModView.Size = new System.Drawing.Size(466, 288);
+			this.mlModView.TabIndex = 4;
 			this.mlModView.UseCompatibleStateImageBehavior = false;
 			this.mlModView.View = System.Windows.Forms.View.Details;
 			this.mlModView.DragDrop += new System.Windows.Forms.DragEventHandler(this.mlModView_DragDrop);
@@ -172,6 +264,54 @@
 			// 
 			this.modColumn.Text = "Mod Name";
 			this.modColumn.Width = 440;
+			// 
+			// tableLayoutPanel2
+			// 
+			this.tableLayoutPanel2.ColumnCount = 1;
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel2.Controls.Add(this.buttonAddMLMod, 0, 0);
+			this.tableLayoutPanel2.Controls.Add(this.buttonRemoveMLMod, 0, 1);
+			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Right;
+			this.tableLayoutPanel2.Location = new System.Drawing.Point(469, 3);
+			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+			this.tableLayoutPanel2.RowCount = 3;
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(80, 288);
+			this.tableLayoutPanel2.TabIndex = 3;
+			// 
+			// buttonAddMLMod
+			// 
+			this.buttonAddMLMod.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonAddMLMod.AutoSize = true;
+			this.buttonAddMLMod.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.buttonAddMLMod.Location = new System.Drawing.Point(3, 3);
+			this.buttonAddMLMod.Name = "buttonAddMLMod";
+			this.buttonAddMLMod.Size = new System.Drawing.Size(74, 23);
+			this.buttonAddMLMod.TabIndex = 0;
+			this.buttonAddMLMod.Text = "&Add";
+			this.buttonAddMLMod.UseVisualStyleBackColor = true;
+			this.buttonAddMLMod.Click += new System.EventHandler(this.buttonAddMLMod_Click);
+			// 
+			// buttonRemoveMLMod
+			// 
+			this.buttonRemoveMLMod.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonRemoveMLMod.AutoSize = true;
+			this.buttonRemoveMLMod.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.buttonRemoveMLMod.Location = new System.Drawing.Point(3, 32);
+			this.buttonRemoveMLMod.Name = "buttonRemoveMLMod";
+			this.buttonRemoveMLMod.Size = new System.Drawing.Size(74, 23);
+			this.buttonRemoveMLMod.TabIndex = 1;
+			this.buttonRemoveMLMod.Text = "&Remove";
+			this.buttonRemoveMLMod.UseVisualStyleBackColor = true;
+			this.buttonRemoveMLMod.Click += new System.EventHandler(this.buttonRemoveMLMod_Click);
 			// 
 			// tabPageResources
 			// 
@@ -192,20 +332,6 @@
 			this.resourceView.HotTracking = true;
 			this.resourceView.Location = new System.Drawing.Point(3, 3);
 			this.resourceView.Name = "resourceView";
-			treeNode16.Name = "TNode1";
-			treeNode16.Text = "Test Node 1";
-			treeNode16.ToolTipText = "Test";
-			treeNode17.Name = "TN2Child1";
-			treeNode17.Text = "Child Node 1";
-			treeNode18.Name = "TN2Child2";
-			treeNode18.Text = "Child Node 2";
-			treeNode19.Name = "TNode2";
-			treeNode19.Text = "Test Node 2";
-			treeNode20.Name = "TestNode";
-			treeNode20.Text = "Root";
-			treeNode20.ToolTipText = "Test";
-			this.resourceView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode20});
 			treeNode1.Name = "TNode1";
 			treeNode1.Text = "Test Node 1";
 			treeNode1.ToolTipText = "Test";
@@ -218,8 +344,21 @@
 			treeNode5.Name = "TestNode";
 			treeNode5.Text = "Root";
 			treeNode5.ToolTipText = "Test";
+			treeNode6.Name = "TNode1";
+			treeNode6.Text = "Test Node 1";
+			treeNode6.ToolTipText = "Test";
+			treeNode7.Name = "TN2Child1";
+			treeNode7.Text = "Child Node 1";
+			treeNode8.Name = "TN2Child2";
+			treeNode8.Text = "Child Node 2";
+			treeNode9.Name = "TNode2";
+			treeNode9.Text = "Test Node 2";
+			treeNode10.Name = "TestNode";
+			treeNode10.Text = "Root";
+			treeNode10.ToolTipText = "Test";
 			this.resourceView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode5});
+            treeNode5,
+            treeNode10});
 			this.resourceView.PathSeparator = "/";
 			this.resourceView.ShowLines = false;
 			this.resourceView.ShowNodeToolTips = true;
@@ -326,7 +465,11 @@
 			this.Title = "Edit mods";
 			this.modTabControl.ResumeLayout(false);
 			this.tabPageJar.ResumeLayout(false);
+			this.jarModButtonPanel.ResumeLayout(false);
+			this.jarModButtonPanel.PerformLayout();
 			this.tabPageMLMods.ResumeLayout(false);
+			this.tableLayoutPanel2.ResumeLayout(false);
+			this.tableLayoutPanel2.PerformLayout();
 			this.tabPageResources.ResumeLayout(false);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
@@ -341,11 +484,7 @@
 		private System.Windows.Forms.Label labelHelp;
 		private System.Windows.Forms.TabControl modTabControl;
 		private System.Windows.Forms.TabPage tabPageJar;
-		private System.Windows.Forms.ListView modView;
-		private System.Windows.Forms.ColumnHeader columnModName;
 		private System.Windows.Forms.TabPage tabPageMLMods;
-		private System.Windows.Forms.ListView mlModView;
-		private System.Windows.Forms.ColumnHeader modColumn;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
 		private System.Windows.Forms.FlowLayoutPanel rButtonPanel;
 		private System.Windows.Forms.Button buttonOk;
@@ -354,6 +493,18 @@
 		private System.Windows.Forms.Button buttonExport;
 		private System.Windows.Forms.TabPage tabPageResources;
 		private System.Windows.Forms.TreeView resourceView;
+		private System.Windows.Forms.TableLayoutPanel jarModButtonPanel;
+		private System.Windows.Forms.ListView modView;
+		private System.Windows.Forms.ColumnHeader columnModName;
 		private System.Windows.Forms.ColumnHeader columnMCVersion;
+		private System.Windows.Forms.Button buttonAddJarMod;
+		private System.Windows.Forms.Button buttonRemoveJarMod;
+		private System.Windows.Forms.Button buttonMoveUp;
+		private System.Windows.Forms.Button buttonMoveDown;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+		private System.Windows.Forms.Button buttonAddMLMod;
+		private System.Windows.Forms.Button buttonRemoveMLMod;
+		private System.Windows.Forms.ListView mlModView;
+		private System.Windows.Forms.ColumnHeader modColumn;
 	}
 }

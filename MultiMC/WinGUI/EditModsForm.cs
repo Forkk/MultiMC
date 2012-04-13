@@ -38,7 +38,7 @@ namespace MultiMC.WinGUI
 
 			this.inst = inst;
 
-			if (OSUtils.OS == OSEnum.Windows)
+			if (OSUtils.OS == OSEnum.Windows && OSUtils.Runtime != Runtime.Mono)
 			{
 				OSUtils.SetWindowTheme(modView.Handle, "explorer", null);
 				OSUtils.SetWindowTheme(mlModView.Handle, "explorer", null);
@@ -63,21 +63,36 @@ namespace MultiMC.WinGUI
 					removedMods.Add(GetLinkedMod(item));
 				}
 
-				foreach (Mod mod in removedMods)
+				DeleteMods(removedMods);
+			}
+		}
+
+		private void buttonRemoveJarMod_Click(object sender, EventArgs e)
+		{
+			List<Mod> removed = new List<Mod>();
+			foreach (ListViewItem item in modView.SelectedItems)
+			{
+				removed.Add(GetLinkedMod(item));
+			}
+
+			DeleteMods(removed);
+		}
+		private void DeleteMods(List<Mod> removedMods)
+		{
+			foreach (Mod mod in removedMods)
+			{
+				try
 				{
-					try
-					{
-						Console.WriteLine("Removing {0}", mod.FileName);
-						if (File.Exists(mod.FileName))
-							File.Delete(mod.FileName);
-						else if (Directory.Exists(mod.FileName))
-							Directory.Delete(mod.FileName);
-					}
-					catch (IOException err)
-					{
-						Console.WriteLine("Failed to remove mod '{0}'. {1}", 
-							mod.Name, err.ToString());
-					}
+					Console.WriteLine("Removing {0}", mod.FileName);
+					if (File.Exists(mod.FileName))
+						File.Delete(mod.FileName);
+					else if (Directory.Exists(mod.FileName))
+						Directory.Delete(mod.FileName);
+				}
+				catch (IOException err)
+				{
+					Console.WriteLine("Failed to remove mod '{0}'. {1}",
+						mod.Name, err.ToString());
 				}
 			}
 		}
@@ -207,8 +222,11 @@ namespace MultiMC.WinGUI
 			modView.InsertionMark.Index = -1;
 		}
 
-		private void AddMods(string[] files, int index)
+		private void AddMods(string[] files, int index = -1)
 		{
+			if (index == -1)
+				index = inst.InstMods.Count();
+
 			foreach (string file in files)
 			{
 				inst.InstMods.RecursiveCopy(file, index);
@@ -218,6 +236,60 @@ namespace MultiMC.WinGUI
 		private void modView_Resize(object sender, EventArgs e)
 		{
 			UpdateSizes();
+		}
+
+		private void buttonMoveUp_Click(object sender, EventArgs e)
+		{
+			if (modView.SelectedItems.Count == 0)
+				return;
+
+			int newIndex = modView.SelectedItems[0].Index - 1;
+			if (newIndex < 0)
+				return;
+
+			List<ListViewItem> moved = new List<ListViewItem>();
+			foreach (ListViewItem item in modView.SelectedItems)
+			{
+				moved.Add(item);
+			}
+
+			foreach (ListViewItem item in moved)
+			{
+				int oldIndex = item.Index;
+				modView.Items.Remove(item);
+				modView.Items.Insert(oldIndex - 1, item);
+			}
+		}
+
+		private void buttonMoveDown_Click(object sender, EventArgs e)
+		{
+			if (modView.SelectedItems.Count == 0)
+				return;
+
+			int newIndex = 
+				modView.SelectedItems[modView.SelectedItems.Count - 1].Index + 1;
+			if (newIndex >= modView.Items.Count)
+				return;
+
+			List<ListViewItem> moved = new List<ListViewItem>();
+			foreach (ListViewItem item in modView.SelectedItems)
+			{
+				moved.Add(item);
+			}
+
+			for (int i = moved.Count - 1; i >= 0; i--)
+			{
+				ListViewItem item = moved[i];
+
+				int oldIndex = item.Index;
+				modView.Items.Remove(item);
+				modView.Items.Insert(oldIndex + 1, item);
+			}
+		}
+
+		private void buttonAddJarMod_Click(object sender, EventArgs e)
+		{
+			AddMods(AddModDialog("Add mod to minecraft.jar"));
 		}
 
 		#endregion
@@ -246,17 +318,8 @@ namespace MultiMC.WinGUI
 					if (!Directory.Exists(inst.ModLoaderDir))
 						Directory.CreateDirectory(inst.ModLoaderDir);
 
-					foreach (string file in e.Data.GetData("FileDrop") as string[])
-					{
-						if (Directory.Exists(file))
-						{
-							RecursiveCopy(file, Path.Combine(inst.ModLoaderDir,
-								Path.GetFileName(file)), true);
-						}
-						else if (File.Exists(file))
-							File.Copy(file, Path.Combine(inst.ModLoaderDir,
-								Path.GetFileName(file)), true);
-					}
+					AddMLMods(e.Data.GetData("FileDrop") as string[]);
+					
 					LoadModList();
 				}
 				catch (UnauthorizedAccessException)
@@ -275,19 +338,62 @@ namespace MultiMC.WinGUI
 			}
 		}
 
+		private void AddMLMods(IEnumerable<string> files)
+		{
+			foreach (string file in files)
+			{
+				if (Directory.Exists(file))
+				{
+					RecursiveCopy(file, Path.Combine(inst.ModLoaderDir,
+						Path.GetFileName(file)), true);
+				}
+				else if (File.Exists(file))
+					File.Copy(file, Path.Combine(inst.ModLoaderDir,
+						Path.GetFileName(file)), true);
+			}
+		}
+
+		private void RemoveMLMods(IEnumerable<string> files)
+		{
+			foreach (string file in files)
+			{
+				if (File.Exists(file))
+					File.Delete(file);
+				else if (Directory.Exists(file))
+					Directory.Delete(file, true);
+			}
+		}
+
 		private void mlModView_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.KeyData == Keys.Delete)
 			{
+				List<string> removedMods = new List<string>();
 				foreach (ListViewItem item in mlModView.SelectedItems)
 				{
-					if (File.Exists(GetLinkedMod(item).FileName))
-						File.Delete(GetLinkedMod(item).FileName);
-					else if (Directory.Exists(GetLinkedMod(item).FileName))
-						Directory.Delete(GetLinkedMod(item).FileName, true);
+					removedMods.Add(GetLinkedMod(item).FileName);
 				}
+
+				RemoveMLMods(removedMods);
 				LoadModList();
 			}
+		}
+
+		private void buttonAddMLMod_Click(object sender, EventArgs e)
+		{
+			AddMLMods(AddModDialog("Add mods to minecraft/mods"));
+		}
+
+		private void buttonRemoveMLMod_Click(object sender, EventArgs e)
+		{
+			List<string> removedMods = new List<string>();
+			foreach (ListViewItem item in mlModView.SelectedItems)
+			{
+				removedMods.Add(GetLinkedMod(item).FileName);
+			}
+
+			RemoveMLMods(removedMods);
+			LoadModList();
 		}
 		
 		#endregion
@@ -565,7 +671,10 @@ namespace MultiMC.WinGUI
 
 		private void UpdateSizes()
 		{
-			modView.Columns[0].Width = modView.Width - 10;
+			modView.Columns[1].Width = 80;
+			modView.Columns[0].Width = modView.Width - 
+				modView.Columns[1].Width - 10;
+
 			mlModView.Columns[0].Width = mlModView.Width - 10;
 		}
 
@@ -604,6 +713,24 @@ namespace MultiMC.WinGUI
 			}
 		}
 
+		private string[] AddModDialog(string title)
+		{
+			OpenFileDialog fileDlg = new OpenFileDialog();
+			fileDlg.Title = title;
+			fileDlg.Filter = "Minecraft Mods (*.zip;*.jar)|*.zip;*.jar|All Files|*.*";
+			fileDlg.InitialDirectory = Environment.CurrentDirectory;
+
+			fileDlg.Multiselect = true;
+
+			fileDlg.CheckFileExists = true;
+			fileDlg.CheckPathExists = true;
+
+			fileDlg.DereferenceLinks = true;
+
+			fileDlg.ShowDialog(this);
+
+			return fileDlg.FileNames;
+		}
 		#endregion
 	}
 }

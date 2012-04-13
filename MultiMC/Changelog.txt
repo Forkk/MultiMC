@@ -1,4 +1,7 @@
-﻿Version 3.0.2.0:
+﻿Version 3.0.2.1:
+	- Made the edit mods menu a bit more intuitive.
+
+Version 3.0.2.0:
 	- Released v3!
 
 Version 3.0.1.3:
