@@ -34,19 +34,7 @@ namespace MultiMC
 		static void Main(string[] args)
 		{
 			// Register a callback with AssemblyResolve to load embedded DLLs
-			AppDomain.CurrentDomain.AssemblyResolve += (sender, e) =>
-			{
-				String resourceName = "AssemblyLoadingAndReflection." +
-					new AssemblyName(e.Name).Name + ".dll";
-
-				using (var stream = Assembly.GetExecutingAssembly().
-					GetManifestResourceStream(resourceName))
-				{
-					Byte[] assemblyData = new Byte[stream.Length];
-					stream.Read(assemblyData, 0, assemblyData.Length);
-					return Assembly.Load(assemblyData);
-				}
-			};
+			AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolve);
 
 			if (!args.Contains("-v"))
 				Console.WriteLine("Operating System: {0}", OSUtils.OS.ToString());
@@ -142,6 +130,22 @@ namespace MultiMC
 								  string.Format("-u \"{0}\"", currentFile));
 				}
 				Environment.Exit(0);
+			}
+		}
+
+		static Assembly AssemblyResolve(object sender, ResolveEventArgs args)
+		{
+			string assemblyName = new AssemblyName(args.Name).Name;
+			string resourceName = "MultiMC.Lib." + assemblyName + ".dll";
+
+			using (Stream stream = Assembly.GetExecutingAssembly().
+				GetManifestResourceStream(resourceName))
+			{
+				Byte[] assemblyData = new Byte[stream.Length];
+				stream.Read(assemblyData, 0, assemblyData.Length);
+
+				Console.WriteLine("Loaded {0} from resources.", assemblyName);
+				return Assembly.Load(assemblyData);
 			}
 		}
 

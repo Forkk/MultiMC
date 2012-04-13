@@ -136,14 +136,15 @@ namespace MultiMC
 		{
 			Console.WriteLine("Running startup tasks.");
 
-			if (!File.Exists("Ionic.Zip.Reduced.dll"))
-			{
-				Downloader dotNetZipDL = new Downloader(
-					"Ionic.Zip.Reduced.dll",
-					Properties.Resources.DotNetZipURL,
-					"Downloading DotNetZip");
-				MainWindow.Invoke((o, args) => StartTask(dotNetZipDL));
-			}
+			// No longer needed.
+			//if (!File.Exists("Ionic.Zip.Reduced.dll"))
+			//{
+			//    Downloader dotNetZipDL = new Downloader(
+			//        "Ionic.Zip.Reduced.dll",
+			//        Properties.Resources.DotNetZipURL,
+			//        "Downloading DotNetZip");
+			//    MainWindow.Invoke((o, args) => StartTask(dotNetZipDL));
+			//}
 
 			Downloader mcVersionsDL = new Downloader(
 				Properties.Resources.MCVersionFile,
