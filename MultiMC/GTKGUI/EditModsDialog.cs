@@ -61,45 +61,58 @@ namespace MultiMC.GTKGUI
 			// Listen for key presses
 			jarModList.KeyPressEvent += new KeyPressEventHandler(jarModList_KeyPressEvent);
 			mlModList.KeyPressEvent += new KeyPressEventHandler(mlModList_KeyPressEvent);
+			TargetEntry te = new TargetEntry ();
+			te.Flags = TargetFlags.Widget;
+			te.Target = "STRING"; 
+			TargetEntry[] tes = new TargetEntry[1];
+			tes[0]=te;
+			Gtk.TargetList tel = new Gtk.TargetList(tes);
+			Gtk.Drag.SourceSet (jarModList, Gdk.ModifierType.Button1Mask, tes, Gdk.DragAction.Move);
+			Gtk.Drag.DestSetTargetList (jarModList, tel);
+			jarModList.DragDataGet += new DragDataGetHandler (ddgh);
+			jarModList.DragDataReceived += new DragDataReceivedHandler (ddrh);
 		}
+		void ddgh (object sender, DragDataGetArgs args)
+		{
+			Console.WriteLine ("DragDataGet..");
+			args.SelectionData.Text = "text";
+		}
+		void ddrh (object sender, DragDataReceivedArgs args)
+		{
+			Console.WriteLine("DragDataReceived... info: "+
+			args.Info+" X: "+args.X+" Y: "+args.Y+" selection Data: "+ 
+			args.SelectionData.Data + " text: " +
+			args.SelectionData.Text);
+		}
+		void remove_selected_mods(Gtk.TreeView widget, Gtk.ListStore storage)
+		{
+			if (widget.Selection.CountSelectedRows() == 0)
+				return;
 
+			TreeIter iter;
+			widget.Selection.GetSelected(out iter);
+			
+			Mod m = (storage.GetValue(iter, 1) as Mod);
+			string file = m.FileName;
+
+			if (File.Exists(file))
+				File.Delete(file);
+			else if (Directory.Exists(file))
+				Directory.Delete(file, true);
+			LoadModList();
+		}
 		void jarModList_KeyPressEvent(object o, KeyPressEventArgs args)
 		{
 			if (args.Event.Key == Gdk.Key.Delete)
 			{
-				if (jarModList.Selection.CountSelectedRows() == 0)
-					return;
-
-				TreeIter iter;
-				jarModList.Selection.GetSelected(out iter);
-
-				string file = (modStore.GetValue(iter, 1) as Mod).FileName;
-
-				if (File.Exists(file))
-					File.Delete(file);
-				else if (Directory.Exists(file))
-					Directory.Delete(file, true);
-				LoadModList();
+				remove_selected_mods(jarModList,modStore);
 			}
 		}
-
 		void mlModList_KeyPressEvent(object o, KeyPressEventArgs args)
 		{
 			if (args.Event.Key == Gdk.Key.Delete)
 			{
-				if (mlModList.Selection.CountSelectedRows() == 0)
-					return;
-
-				TreeIter iter;
-				mlModList.Selection.GetSelected(out iter);
-
-				string file = (mlModStore.GetValue(iter, 1) as Mod).FileName;
-
-				if (File.Exists(file))
-					File.Delete(file);
-				else if (Directory.Exists(file))
-					Directory.Delete(file, true);
-				LoadModList();
+				remove_selected_mods(mlModList,mlModStore);
 			}
 		}
 
@@ -121,10 +134,11 @@ namespace MultiMC.GTKGUI
 					string itemLabel = System.IO.Path.GetFileName(file);
 					if (mod.Name != mod.FileName)
 						itemLabel = mod.Name;
-
-					modStore.AppendValues(itemLabel, mod);
+					
+					mlModStore.AppendValues(itemLabel, mod);
 				}
 			}
+			
 		}
 
 		public void SaveModList()
@@ -143,6 +157,10 @@ namespace MultiMC.GTKGUI
 		{
 			AddJarMods(ChooseFiles("Add mods to jar"));
 		}
+		void OnRmJarModClicked(object sender, EventArgs e)
+		{
+			remove_selected_mods(jarModList,modStore);
+		}
 
 		void OnViewModsFolderClicked(object sender, EventArgs e)
 		{
@@ -155,7 +173,11 @@ namespace MultiMC.GTKGUI
 		{
 			AddMLMods(ChooseFiles("Add ModLoader mods"));
 		}
-
+		void OnRmMLModClicked(object sender, EventArgs e)
+		{
+			remove_selected_mods(mlModList,mlModStore);
+		}
+		
 		string[] ChooseFiles(string dialogTitle)
 		{
 			FileChooserDialog fcDialog = new FileChooserDialog(

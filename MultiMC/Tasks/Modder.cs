@@ -128,11 +128,15 @@ namespace MultiMC.Tasks
 
 				TaskStep++; // STEP
 				Status = "Installing mods - Removing META-INF...";
-				string metaInfRegex = Path.Combine("META-INF", "*");
+				/*
+				 * HACK: This is a weird, custom regex. Not a filesystem path. At all. Never treat it as one.
+				 */
+				string metaInfRegex = "META-INF\\*";
 				if (jarFile.SelectEntries(metaInfRegex) != null)
 				{
 					DebugUtils.Print("Removing META-INF");
-					jarFile.RemoveEntries(jarFile.SelectEntries(metaInfRegex));
+					ICollection <Ionic.Zip.ZipEntry> coll = jarFile.SelectEntries(metaInfRegex);
+					jarFile.RemoveEntries(coll);
 				}
 
 				TaskStep++; // STEP

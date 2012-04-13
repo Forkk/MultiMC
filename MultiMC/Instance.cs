@@ -784,7 +784,7 @@ namespace MultiMC
 					{
 						ignoreList.Add(dest);
 	
-						File.Copy(path, dest);
+						File.Copy(path, dest, true); // true = overwrite
 						if (!modList.Any(m => m.FileName == path))
 						{
 							//if (index <= 0)
