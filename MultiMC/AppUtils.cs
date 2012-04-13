@@ -32,8 +32,8 @@ namespace MultiMC
 			if (!initialized)
 			{
 				initialized = true;
-				//				ServicePointManager.ServerCertificateValidationCallback = 
-				//					new RemoteCertificateValidationCallback(CertCheck);
+				ServicePointManager.ServerCertificateValidationCallback =
+					new RemoteCertificateValidationCallback(CertCheck);
 			}
 		}
 
