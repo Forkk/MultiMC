@@ -29,18 +29,18 @@ namespace MultiMC.WinGUI
 						WebClient webCl = new WebClient();
 						string chlog = 
 							webCl.DownloadString(Properties.Resources.ChangelogURL);
-						Invoke((o, args) => textBoxChangelog.Text = chlog);
+						Invoke((o, args) => ChangelogText = chlog);
 					}
 					catch (WebException ex)
 					{
-						Invoke((o, args) => textBoxChangelog.Text = ex.Message);
+						Invoke((o, args) => ChangelogText = ex.Message);
 					}
 					finally
 					{
 						Invoke((o, args) => buttonRefresh.Enabled = true);
 					}
 				});
-			textBoxChangelog.Text = "Loading...";
+			ChangelogText = "Loading...";
 			loadThread.Start();
 		}
 
@@ -52,6 +52,12 @@ namespace MultiMC.WinGUI
 		private void buttonClose_Click(object sender, EventArgs e)
 		{
 			Close();
+		}
+
+		public string ChangelogText
+		{
+			get { return textBoxChangelog.Text; }
+			set { textBoxChangelog.Text = DataUtils.ConvertLineEndings(value); }
 		}
 	}
 }

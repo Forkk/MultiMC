@@ -95,5 +95,10 @@ namespace MultiMC.WinGUI
 		{
 			return new ChangelogDialog();
 		}
+
+		public IUpdateDialog UpdateDialog()
+		{
+			return new UpdateDialog();
+		}
 	}
 }

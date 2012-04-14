@@ -36,6 +36,8 @@ namespace MultiMC.GUI
 
 		IDialog ChangelogDialog();
 
+		IUpdateDialog UpdateDialog();
+
 		void Run(IMainWindow mainWindow);
 	}
 

@@ -51,6 +51,7 @@
 			// 
 			// buttonClose
 			// 
+			this.buttonClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.buttonClose.Location = new System.Drawing.Point(402, 5);
 			this.buttonClose.Name = "buttonClose";
 			this.buttonClose.Size = new System.Drawing.Size(75, 23);
@@ -84,11 +85,16 @@
 			// 
 			// ChangelogDialog
 			// 
+			this.AcceptButton = this.buttonClose;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.CancelButton = this.buttonClose;
 			this.ClientSize = new System.Drawing.Size(484, 362);
 			this.Controls.Add(this.textBoxChangelog);
 			this.Controls.Add(this.flowLayoutPanel1);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
 			this.Name = "ChangelogDialog";
 			this.Text = "ChangelogDialog";
 			this.Title = "ChangelogDialog";

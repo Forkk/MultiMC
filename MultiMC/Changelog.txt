@@ -1,4 +1,9 @@
-﻿Version 3.0.2.2:
+﻿Version 3.0.2.3:
+	- Added changelog button to the update dialog.
+	- Dialogs no longer show in the taskbar.
+	- Fixed line endings in the changelog dialog.
+
+Version 3.0.2.2:
 	- DotNetZip is now embedded and does not need to be downloaded.
 	- Added a changelog button in the about dialog to show the changelog.
 	- AudioMod should now load sounds properly.

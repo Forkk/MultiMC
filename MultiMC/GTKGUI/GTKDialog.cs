@@ -220,5 +220,12 @@ namespace MultiMC.GTKGUI
 		}
 
 		public new event EventHandler<DialogResponseEventArgs> Response;
+
+
+		public bool ShowInTaskbar
+		{
+			get;
+			set;
+		}
 	}
 }

@@ -151,6 +151,7 @@
     <Compile Include="GUI\ILoginDialog.cs" />
     <Compile Include="GUI\INotesDialog.cs" />
     <Compile Include="GUI\ITaskStatus.cs" />
+    <Compile Include="GUI\IUpdateConfirmDialog.cs" />
     <Compile Include="GUI\MessageDialog.cs" />
     <Compile Include="MCVersionMap.cs" />
     <Compile Include="Mods\Mod.cs" />
@@ -223,6 +224,12 @@
     </Compile>
     <Compile Include="WinGUI\NotesForm.Designer.cs">
       <DependentUpon>NotesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinGUI\UpdateConfirmDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\UpdateConfirmDialog.Designer.cs">
+      <DependentUpon>UpdateConfirmDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="WinGUI\WinFormsGUIManager.cs" />
     <Compile Include="WinGUI\WinFormsImageList.cs" />
@@ -316,6 +323,9 @@
     <EmbeddedResource Include="GTKGUI\EditModsDialog.glade" />
     <EmbeddedResource Include="GTKGUI\EditNotesDialog.glade" />
     <EmbeddedResource Include="GTKGUI\DeleteDialog.glade" />
+    <EmbeddedResource Include="WinGUI\UpdateConfirmDialog.resx">
+      <DependentUpon>UpdateConfirmDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -80,6 +80,15 @@ namespace MultiMC.GUI
 		}
 
 		/// <summary>
+		/// True if the window should be shown in the taskbar.
+		/// </summary>
+		bool ShowInTaskbar
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// The window's default position. Changing this does not move the window.
 		/// You must call <c cref="MoveToDefPosition()">MoveToDefPosition</c>
 		/// </summary>
