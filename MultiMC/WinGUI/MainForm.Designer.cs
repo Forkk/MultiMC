@@ -55,6 +55,7 @@
 			this.toolStripContainer = new System.Windows.Forms.ToolStripContainer();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.DragDropHintLabel = new System.Windows.Forms.ToolStripStatusLabel();
+			this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.instanceContextMenu.SuspendLayout();
 			this.menuToolBar.SuspendLayout();
 			this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -69,6 +70,7 @@
 			this.instanceContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.playToolStripMenuItem,
             this.toolStripSeparator2,
+            this.renameToolStripMenuItem,
             this.changeIconToolStripMenuItem,
             this.editNotesToolStripMenuItem,
             this.toolStripMenuItem1,
@@ -78,72 +80,72 @@
             this.toolStripMenuItem2,
             this.deleteToolStripMenuItem});
 			this.instanceContextMenu.Name = "instanceContextMenu";
-			this.instanceContextMenu.Size = new System.Drawing.Size(142, 176);
+			this.instanceContextMenu.Size = new System.Drawing.Size(153, 220);
 			this.instanceContextMenu.Text = "Instance Menu";
 			this.instanceContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.instanceContextMenu_Opening);
 			// 
 			// playToolStripMenuItem
 			// 
 			this.playToolStripMenuItem.Name = "playToolStripMenuItem";
-			this.playToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+			this.playToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.playToolStripMenuItem.Text = "&Play";
 			this.playToolStripMenuItem.Click += new System.EventHandler(this.playToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator2
 			// 
 			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Size = new System.Drawing.Size(138, 6);
+			this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
 			// 
 			// changeIconToolStripMenuItem
 			// 
 			this.changeIconToolStripMenuItem.Name = "changeIconToolStripMenuItem";
-			this.changeIconToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
-			this.changeIconToolStripMenuItem.Text = "Change Icon";
+			this.changeIconToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.changeIconToolStripMenuItem.Text = "Change &Icon";
 			this.changeIconToolStripMenuItem.Click += new System.EventHandler(this.changeIconToolStripMenuItem_Click);
 			// 
 			// editNotesToolStripMenuItem
 			// 
 			this.editNotesToolStripMenuItem.Name = "editNotesToolStripMenuItem";
-			this.editNotesToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
-			this.editNotesToolStripMenuItem.Text = "Edit Notes";
+			this.editNotesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.editNotesToolStripMenuItem.Text = "Edit &Notes";
 			this.editNotesToolStripMenuItem.Click += new System.EventHandler(this.editNotesToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem1
 			// 
 			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(138, 6);
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
 			// 
 			// editModsToolStripMenuItem
 			// 
 			this.editModsToolStripMenuItem.Name = "editModsToolStripMenuItem";
-			this.editModsToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
-			this.editModsToolStripMenuItem.Text = "Edit Mods";
+			this.editModsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.editModsToolStripMenuItem.Text = "Edit &Mods";
 			this.editModsToolStripMenuItem.Click += new System.EventHandler(this.editModsToolStripMenuItem_Click);
 			// 
 			// rebuildJarToolStripMenuItem
 			// 
 			this.rebuildJarToolStripMenuItem.Name = "rebuildJarToolStripMenuItem";
-			this.rebuildJarToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
-			this.rebuildJarToolStripMenuItem.Text = "Rebuild Jar";
+			this.rebuildJarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.rebuildJarToolStripMenuItem.Text = "Rebuild &Jar";
 			this.rebuildJarToolStripMenuItem.Click += new System.EventHandler(this.rebuildJarToolStripMenuItem_Click);
 			// 
 			// viewFolderToolStripMenuItem
 			// 
 			this.viewFolderToolStripMenuItem.Name = "viewFolderToolStripMenuItem";
-			this.viewFolderToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
-			this.viewFolderToolStripMenuItem.Text = "View Folder";
+			this.viewFolderToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.viewFolderToolStripMenuItem.Text = "View &Folder";
 			this.viewFolderToolStripMenuItem.Click += new System.EventHandler(this.viewFolderToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem2
 			// 
 			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(138, 6);
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(149, 6);
 			// 
 			// deleteToolStripMenuItem
 			// 
 			this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
-			this.deleteToolStripMenuItem.Text = "Delete";
+			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.deleteToolStripMenuItem.Text = "&Delete";
 			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
 			// 
 			// menuToolBar
@@ -308,6 +310,13 @@
 			this.DragDropHintLabel.Text = "Drag Drop Hint";
 			this.DragDropHintLabel.Visible = false;
 			// 
+			// renameToolStripMenuItem
+			// 
+			this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
+			this.renameToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.renameToolStripMenuItem.Text = "&Rename";
+			this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -360,6 +369,7 @@
 		private System.Windows.Forms.ToolStripButton importButton;
 		private System.Windows.Forms.StatusStrip statusStrip1;
 		private System.Windows.Forms.ToolStripStatusLabel DragDropHintLabel;
+		private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem;
 	}
 }
 

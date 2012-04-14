@@ -697,5 +697,10 @@ namespace MultiMC.WinGUI
 					instView.SelectedItems[0].BeginEdit();
 			}
 		}
+
+		private void renameToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			instView.SelectedItems[0].BeginEdit();
+		}
 	}
 }

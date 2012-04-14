@@ -2,6 +2,7 @@
 	- Added changelog button to the update dialog.
 	- Dialogs no longer show in the taskbar.
 	- Fixed line endings in the changelog dialog.
+	- Added a menu item to rename instances.
 
 Version 3.0.2.2:
 	- DotNetZip is now embedded and does not need to be downloaded.
