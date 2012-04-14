@@ -167,15 +167,18 @@ namespace MultiMC
 			
 			aboutDlg.Parent = MainWindow;
 			aboutDlg.DefaultPosition = DefWindowPosition.CenterParent;
+			aboutDlg.ShowInTaskbar = false;
 
-			aboutDlg.ChangelogClicked += (o, args) =>
-				{
-					IDialog changelogDlg = GUIManager.Main.ChangelogDialog();
-					changelogDlg.Parent = this.MainWindow;
-					changelogDlg.DefaultPosition = DefWindowPosition.CenterParent;
+			aboutDlg.ChangelogClicked += ViewChangelogClicked;
+				//(o, args) =>
+				//{
+				//    IDialog changelogDlg = GUIManager.Main.ChangelogDialog();
+				//    changelogDlg.Parent = this.MainWindow;
+				//    changelogDlg.DefaultPosition = DefWindowPosition.CenterParent;
+				//    changelogDlg.ShowInTaskbar = false;
 
-					changelogDlg.Run();
-				};
+				//    changelogDlg.Run();
+				//};
 
 			aboutDlg.Run();
 		}
@@ -202,6 +205,7 @@ namespace MultiMC
 
 			addInstDlg.Parent = MainWindow;
 			addInstDlg.DefaultPosition = DefWindowPosition.CenterParent;
+			addInstDlg.ShowInTaskbar = false;
 			addInstDlg.MoveToDefPosition();
 			addInstDlg.Response += (o, args) =>
 			{
@@ -238,6 +242,8 @@ namespace MultiMC
 			IDialog settingsWindow = GUIManager.Main.SettingsWindow();
 			settingsWindow.Parent = MainWindow;
 			settingsWindow.DefaultPosition = DefWindowPosition.CenterParent;
+			settingsWindow.ShowInTaskbar = false;
+
 			settingsWindow.Response += (o, args) =>
 				{
 					if (args.Response != DialogResponse.Other)
@@ -256,6 +262,8 @@ namespace MultiMC
 			IChangeIconDialog changeIconDlg = GUIManager.Main.ChangeIconDialog();
 
 			changeIconDlg.ImageList = this.InstIconList;
+			changeIconDlg.ShowInTaskbar = false;
+
 			changeIconDlg.Response += (o, args) =>
 				{
 					if (args.Response == DialogResponse.OK)
@@ -275,6 +283,8 @@ namespace MultiMC
 			INotesDialog noteDlg = GUIManager.Main.NotesDialog();
 
 			noteDlg.Notes = SelectedInst.Notes;
+			noteDlg.ShowInTaskbar = false;
+
 			noteDlg.Response += (o, args) =>
 				{
 					if (args.Response == DialogResponse.OK)
@@ -291,6 +301,8 @@ namespace MultiMC
 			IEditModsDialog editModsDlg = GUIManager.Main.EditModsDialog(SelectedInst);
 
 			editModsDlg.LoadModList();
+			editModsDlg.ShowInTaskbar = false;
+
 			editModsDlg.Response += (o, args) =>
 				{
 					if (args.Response == DialogResponse.OK)
@@ -315,6 +327,8 @@ namespace MultiMC
 		void DeleteInstClicked(object sender, InstActionEventArgs e)
 		{
 			IDialog deleteDialog = GUIManager.Main.DeleteDialog();
+			deleteDialog.ShowInTaskbar = false;
+
 			deleteDialog.Response += (o, args) =>
 				{
 					if (args.Response == DialogResponse.OK)
@@ -517,22 +531,38 @@ namespace MultiMC
 						updateMsg =  string.Format("Version {0} has been downloaded. " +
 							"Would you like to install it now?", updateVersion);
 
+					IUpdateDialog updateDialog = GUIManager.Main.UpdateDialog();
+					updateDialog.ShowInTaskbar = false;
 
-					string updatestr = (updateVersion != null ? updateVersion.ToString() : "");
-					if (string.IsNullOrEmpty(updatestr))
-					{
-						updatestr = "";
-						updateMsg = "MultiMC has downloaded updates, would you like to install them?";
-					}
+					updateDialog.Message = updateMsg;
 
-					DialogResponse response = MessageDialog.Show(
-						MainWindow, updateMsg, "Update MultiMC?", MessageButtons.YesNo);
+					DialogResponse response = DialogResponse.No;
+					updateDialog.Response += (o, args) =>
+						{
+							response = args.Response;
+						};
+
+					updateDialog.ViewChangelogClicked += ViewChangelogClicked;
+
+					updateDialog.Run();
 
 					if (response == DialogResponse.Yes)
 					{
 						CloseForUpdates();
 					}
 				});
+		}
+
+		void ViewChangelogClicked(object sender, EventArgs e)
+		{
+			IDialog changelogDialog = GUIManager.Main.ChangelogDialog();
+			changelogDialog.DefaultPosition = DefWindowPosition.CenterParent;
+			changelogDialog.ShowInTaskbar = false;
+
+			if (sender is IDialog)
+				changelogDialog.Parent = sender as IDialog;
+
+			changelogDialog.Run();
 		}
 
 		void CloseForUpdates()
@@ -613,6 +643,7 @@ namespace MultiMC
 			ILoginDialog loginDlg = GUIManager.Main.LoginDialog(message);
 			loginDlg.Parent = MainWindow;
 			loginDlg.DefaultPosition = DefWindowPosition.CenterParent;
+			loginDlg.ShowInTaskbar = false;
 
 			if (!string.IsNullOrEmpty(username))
 			{

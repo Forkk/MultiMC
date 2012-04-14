@@ -173,5 +173,11 @@ namespace MultiMC.GTKGUI
 
 		public event EventHandler Closed;
 		public new event EventHandler Shown;
+
+		public bool ShowInTaskbar
+		{
+			get;
+			set;
+		}
 	}
 }

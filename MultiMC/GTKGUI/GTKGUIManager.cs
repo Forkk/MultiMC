@@ -108,5 +108,10 @@ namespace MultiMC.GTKGUI
 		{
 			throw new NotImplementedException();
 		}
+
+		public IUpdateDialog UpdateDialog()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

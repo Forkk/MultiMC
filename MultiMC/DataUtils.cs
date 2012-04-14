@@ -110,6 +110,49 @@ namespace MultiMC
 			}
 			return results;
 		}
+
+		public static string ConvertLineEndings(string text, string newLineFormat = null)
+		{
+			if (string.IsNullOrEmpty(newLineFormat))
+			{
+				newLineFormat = Environment.NewLine;
+			}
+
+			List<string> lines = new List<string>();
+
+			for (int i = 0; i < text.Length; i++)
+			{
+				// If it's CRLF (\r\n)
+				if (text.Length >= i + 1 && text[i] == '\r' && text[i + 1] == '\n')
+				{
+					// Move the line into the lines list and remove it from the string.
+					lines.Add(text.Substring(0, i));
+					text = text.Remove(0, i + 2);
+					i = -1;
+				}
+
+				// If it's CR (\r)
+				else if (text[i] == '\r')
+				{
+					// Move the line into the lines list and remove it from the string.
+					lines.Add(text.Substring(0, i));
+					text = text.Remove(0, i + 1);
+					i = -1;
+				}
+				
+				// If it's LF (\n)
+				else if (text[i] == '\n')
+				{
+					// Move the line into the lines list and remove it from the string.
+					lines.Add(text.Substring(0, i));
+					text = text.Remove(0, i + 1);
+					i = -1;
+				}
+			}
+			lines.Add(text);
+
+			return string.Join(newLineFormat, lines);
+		}
 	}
 }
 
