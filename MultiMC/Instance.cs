@@ -840,9 +840,13 @@ namespace MultiMC
 			{
 				Remove(modList.Where(m => m.FileName == mod.FileName), false);
 			}
-
-			modList.Insert(index, mod);
-
+			
+			// if the index is invalid, append mods to the end of list
+			if(index == -1)
+				modList.Add(mod);
+			else
+				modList.Insert(index, mod);
+			
 			if (triggerEvent)
 				OnModFileChanged(ModFileChangeTypes.ADDED, mod);
 		}
