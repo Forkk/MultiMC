@@ -126,6 +126,12 @@ namespace MultiMC.GUI
 			set;
 		}
 
+		bool AlwaysOnTop
+		{
+			get;
+			set;
+		}
+
 		bool HasParent
 		{
 			get;

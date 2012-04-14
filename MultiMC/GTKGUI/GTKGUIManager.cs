@@ -113,5 +113,11 @@ namespace MultiMC.GTKGUI
 		{
 			throw new NotImplementedException();
 		}
+
+
+		public ITaskDialog TaskDialog(Tasks.Task task)
+		{
+			return new TaskDialog(task);
+		}
 	}
 }

@@ -234,5 +234,11 @@ namespace MultiMC.GTKGUI
 			get;
 			set;
 		}
+
+		public bool AlwaysOnTop
+		{
+			get;
+			set;
+		}
 	}
 }

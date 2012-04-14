@@ -100,5 +100,10 @@ namespace MultiMC.WinGUI
 		{
 			return new UpdateDialog();
 		}
+
+		public ITaskDialog TaskDialog(Tasks.Task task)
+		{
+			return new TaskDialog(task);
+		}
 	}
 }

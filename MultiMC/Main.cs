@@ -367,22 +367,45 @@ namespace MultiMC
 		{
 			MainWindow.Invoke((o, args) =>
 				{
-					OnStartup();
-
-					if (customIconLoadError)
+					if (DirectLaunch)
 					{
-						DialogResponse reply = MessageDialog.Show(MainWindow,
-							"Couldn't load your custom icons because one or more " +
-							"of them are invalid or corrupt. This can be " +
-							"fixed by deleting them, however you will lose " +
-							"all custom icons that you've added.\nWould you " +
-							"like to delete all custom icons?",
-							"Failed to load icons.", MessageButtons.YesNo);
+						MainWindow.Visible = false;
 
-						if (reply == DialogResponse.Yes)
+						Instance launchInst = MainWindow.InstanceList.FirstOrDefault(
+							inst => inst.Name == DirectLaunchInstName);
+
+						if (launchInst != null)
 						{
-							Directory.Delete("icons", true);
+							StartInstance(launchInst);
 						}
+						else
+						{
+							MessageDialog.Show(null,
+								string.Format("No instance with the name {0} was found.",
+									DirectLaunchInstName),
+								"Direct Launch Failed");
+							Environment.Exit(0);
+						}
+					}
+					else
+					{
+						if (customIconLoadError)
+						{
+							DialogResponse reply = MessageDialog.Show(MainWindow,
+								"Couldn't load your custom icons because one or more " +
+								"of them are invalid or corrupt. This can be " +
+								"fixed by deleting them, however you will lose " +
+								"all custom icons that you've added.\nWould you " +
+								"like to delete all custom icons?",
+								"Failed to load icons.", MessageButtons.YesNo);
+
+							if (reply == DialogResponse.Yes)
+							{
+								Directory.Delete("icons", true);
+							}
+						}
+
+						OnStartup();
 					}
 				});
 
@@ -398,7 +421,22 @@ namespace MultiMC
 			task.StatusChange += taskStatusChange;
 			task.ErrorMessage += TaskErrorMessage;
 			MainWindow.TaskList.Add(task);
+
 			task.Start();
+		}
+
+		private void StartModalTask(Task task)
+		{
+			task.ErrorMessage += TaskErrorMessage;
+			ITaskDialog taskDlg = GUIManager.Main.TaskDialog(task);
+			if (!DirectLaunch)
+			{
+				taskDlg.Parent = MainWindow;
+				taskDlg.ShowInTaskbar = false;
+			}
+			taskDlg.DefaultPosition = DefWindowPosition.CenterScreen;
+			task.Start();
+			taskDlg.Run();
 		}
 
 		void TaskErrorMessage(object sender, Task.ErrorMessageEventArgs e)
@@ -417,7 +455,7 @@ namespace MultiMC
 		/// </summary>
 		private Modder RebuildMCJar(Instance inst)
 		{
-			if (!File.Exists(SelectedInst.MCJar))
+			if (!File.Exists(inst.MCJar))
 			{
 				MessageDialog.Show(MainWindow,
 								"You must run the " +
@@ -532,7 +570,10 @@ namespace MultiMC
 							"Would you like to install it now?", updateVersion);
 
 					IUpdateDialog updateDialog = GUIManager.Main.UpdateDialog();
+					updateDialog.Parent = MainWindow;
 					updateDialog.ShowInTaskbar = false;
+
+					updateDialog.DefaultPosition = DefWindowPosition.CenterParent;
 
 					updateDialog.Message = updateMsg;
 
@@ -641,9 +682,9 @@ namespace MultiMC
 			ReadUserInfo(out username, out password);
 
 			ILoginDialog loginDlg = GUIManager.Main.LoginDialog(message);
-			loginDlg.Parent = MainWindow;
+			loginDlg.Parent = (DirectLaunch ? null : MainWindow);
 			loginDlg.DefaultPosition = DefWindowPosition.CenterParent;
-			loginDlg.ShowInTaskbar = false;
+			loginDlg.ShowInTaskbar = DirectLaunch;
 
 			if (!string.IsNullOrEmpty(username))
 			{
@@ -746,7 +787,8 @@ namespace MultiMC
 
 					if (!loggingIn)
 					{
-						StartTask(loginTask);
+						MainWindow.Invoke((o2, args2) =>
+							StartModalTask(loginTask));
 					}
 				}
 				else if (args.Response == DialogResponse.No)
@@ -777,7 +819,9 @@ namespace MultiMC
 
 				EventHandler startDelegate = new EventHandler((e, args) =>
 					{
-						MainWindow.Visible = false;
+						if (!DirectLaunch)
+							MainWindow.Visible = false;
+
 						inst.Launch(info.Username, info.SessionID);
 
 						IConsoleWindow cwin = GUIManager.Main.ConsoleWindow(inst);
@@ -786,8 +830,15 @@ namespace MultiMC
 
 						cwin.ConsoleClosed += (e2, args2) =>
 							{
-								MainWindow.Invoke((e3, args3) => 
-									MainWindow.Visible = true);
+								if (DirectLaunch)
+								{
+									Environment.Exit(0);
+								}
+								else
+								{
+									MainWindow.Invoke((e3, args3) =>
+										MainWindow.Visible = true);
+								}
 							};
 
 						cwin.Show();
@@ -812,7 +863,8 @@ namespace MultiMC
 							MainWindow.Invoke(startDelegate);
 					};
 
-				StartTask(updater);
+				MainWindow.Invoke((o2, args2) =>
+					StartModalTask(updater));
 			}
 		}
 
@@ -992,6 +1044,26 @@ namespace MultiMC
 			//				ErrorMessage = errorMessage;
 			//				Failed = true;
 			//			}
+		}
+
+		public bool DirectLaunch
+		{
+			get;
+			private set;
+		}
+
+		public string DirectLaunchInstName
+		{
+			get;
+			private set;
+		}
+
+		public void Run(string instName)
+		{
+			DirectLaunch = true;
+			DirectLaunchInstName = instName;
+
+			Run();
 		}
 	}
 }

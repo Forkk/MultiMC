@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using MultiMC.Tasks;
+
 namespace MultiMC.GUI
 {
 	/// <summary>
@@ -37,6 +39,8 @@ namespace MultiMC.GUI
 		IDialog ChangelogDialog();
 
 		IUpdateDialog UpdateDialog();
+
+		ITaskDialog TaskDialog(Task task);
 
 		void Run(IMainWindow mainWindow);
 	}

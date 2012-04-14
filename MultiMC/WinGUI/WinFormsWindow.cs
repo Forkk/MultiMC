@@ -125,7 +125,7 @@ namespace MultiMC.WinGUI
 			get { return _parent; }
 			set
 			{
-				if (value is Form)
+				if (value is Form || value == null)
 					_parent = value;
 				else
 					throw new InvalidOperationException("Parent window must be " +
@@ -158,6 +158,12 @@ namespace MultiMC.WinGUI
 			{
 				HandleCreated += (o, args) => base.BeginInvoke(d);
 			}
+		}
+
+		public bool AlwaysOnTop
+		{
+			get { return base.TopMost; }
+			set { base.TopMost = value; }
 		}
 	}
 }

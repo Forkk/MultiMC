@@ -141,6 +141,7 @@
     <Compile Include="GTKGUI\LoginDialog.cs" />
     <Compile Include="GTKGUI\MainWindow.cs" />
     <Compile Include="GTKGUI\SettingsDialog.cs" />
+    <Compile Include="GTKGUI\TaskDialog.cs" />
     <Compile Include="GUI\IAboutDialog.cs" />
     <Compile Include="GUI\IAddInstDialog.cs" />
     <Compile Include="GUI\IChangeIconDialog.cs" />
@@ -150,9 +151,11 @@
     <Compile Include="GUI\IImageList.cs" />
     <Compile Include="GUI\ILoginDialog.cs" />
     <Compile Include="GUI\INotesDialog.cs" />
+    <Compile Include="GUI\ITaskDialog.cs" />
     <Compile Include="GUI\ITaskStatus.cs" />
     <Compile Include="GUI\IUpdateConfirmDialog.cs" />
     <Compile Include="GUI\MessageDialog.cs" />
+    <Compile Include="GUI\WindowUtils.cs" />
     <Compile Include="MCVersionMap.cs" />
     <Compile Include="Mods\Mod.cs" />
     <Compile Include="Mods\ModInfo.cs" />
@@ -224,6 +227,12 @@
     </Compile>
     <Compile Include="WinGUI\NotesForm.Designer.cs">
       <DependentUpon>NotesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinGUI\TaskDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\TaskDialog.Designer.cs">
+      <DependentUpon>TaskDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="WinGUI\UpdateConfirmDialog.cs">
       <SubType>Form</SubType>
@@ -323,9 +332,13 @@
     <EmbeddedResource Include="GTKGUI\EditModsDialog.glade" />
     <EmbeddedResource Include="GTKGUI\EditNotesDialog.glade" />
     <EmbeddedResource Include="GTKGUI\DeleteDialog.glade" />
+    <EmbeddedResource Include="WinGUI\TaskDialog.resx">
+      <DependentUpon>TaskDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WinGUI\UpdateConfirmDialog.resx">
       <DependentUpon>UpdateConfirmDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GTKGUI\TaskDialog.glade" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

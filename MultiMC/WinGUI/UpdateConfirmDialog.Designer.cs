@@ -50,7 +50,7 @@
 			this.layoutPanel.RowCount = 2;
 			this.layoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.layoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.layoutPanel.Size = new System.Drawing.Size(394, 122);
+			this.layoutPanel.Size = new System.Drawing.Size(394, 64);
 			this.layoutPanel.TabIndex = 0;
 			// 
 			// labelMessage
@@ -62,7 +62,7 @@
 			this.labelMessage.Location = new System.Drawing.Point(4, 6);
 			this.labelMessage.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
 			this.labelMessage.Name = "labelMessage";
-			this.labelMessage.Size = new System.Drawing.Size(386, 71);
+			this.labelMessage.Size = new System.Drawing.Size(386, 13);
 			this.labelMessage.TabIndex = 0;
 			this.labelMessage.Text = "New update";
 			// 
@@ -81,7 +81,7 @@
 			this.buttonPanel.Controls.Add(this.buttonYes, 2, 0);
 			this.buttonPanel.Controls.Add(this.buttonChangelog, 0, 0);
 			this.buttonPanel.Controls.Add(this.buttonNo, 3, 0);
-			this.buttonPanel.Location = new System.Drawing.Point(3, 86);
+			this.buttonPanel.Location = new System.Drawing.Point(3, 28);
 			this.buttonPanel.Name = "buttonPanel";
 			this.buttonPanel.Padding = new System.Windows.Forms.Padding(2);
 			this.buttonPanel.RowCount = 1;
@@ -125,7 +125,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(394, 122);
+			this.ClientSize = new System.Drawing.Size(394, 64);
 			this.Controls.Add(this.layoutPanel);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.MaximizeBox = false;

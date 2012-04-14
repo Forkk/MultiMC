@@ -14,6 +14,7 @@
 //    limitations under the License.
 //
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
@@ -49,34 +50,6 @@ namespace MultiMC
 				}
 			}
 
-			// Command line arguments
-			if (args.Length > 0)
-			{
-				if (args[0].Equals("-u"))
-				{
-					Console.WriteLine("Updating MultiMC...");
-					if (args.Length < 2)
-					{
-						Console.WriteLine("Invalid number of arguments for -u.");
-						Environment.Exit(-1);
-					}
-					else
-					{
-						InstallUpdate(args[1]);
-					}
-					Environment.Exit(0);
-				}
-				else if (args[0].Equals("-v"))
-				{
-					Console.WriteLine(AppUtils.GetVersion());
-					return;
-				}
-				else
-				{
-					Console.WriteLine("Unknown argument: " + args[0]);
-				}
-			}
-
 			if (!File.Exists(AppSettings.Main.JavaPath) ||
 				AppSettings.Main.JavaPath == "java")
 			{
@@ -105,7 +78,53 @@ namespace MultiMC
 				Toolkit = WindowToolkit.WinForms;
 
 			Main main = new Main();
-			main.Run();
+
+			if (args.Length <= 0)
+			{
+				main.Run();
+			}
+
+			// -u
+			else if (args[0].Equals("-u"))
+			{
+				Console.WriteLine("Updating MultiMC...");
+				if (args.Length < 2)
+				{
+					Console.WriteLine("Invalid number of arguments for -u.");
+					Environment.Exit(-1);
+				}
+				else
+				{
+					InstallUpdate(args[1]);
+				}
+				Environment.Exit(0);
+			}
+
+			 // -v
+			else if (args[0].Equals("-v"))
+			{
+				Console.WriteLine(AppUtils.GetVersion());
+				return;
+			}
+
+			// -l or --launch
+			else if (args[0] == "-l" || args[0] == "--launch")
+			{
+				if (args.Length < 2)
+				{
+					Console.WriteLine("Usage: MultiMC --launch <instance name>");
+					return;
+				}
+
+				string instName = args[1];
+
+				Console.WriteLine("Launching instance '{0}'", instName);
+				main.Run(instName);
+			}
+			else
+			{
+				Console.WriteLine("Unknown argument: " + args[0]);
+			}
 
 			if (InstallUpdates)
 			{
@@ -217,9 +236,10 @@ namespace MultiMC
 
 		public static WindowToolkit Toolkit
 		{
-			get;
-			private set;
+			get { return _toolkit; }
+			private set { _toolkit = value; }
 		}
+		static WindowToolkit _toolkit;
 	}
 
 	/// <summary>

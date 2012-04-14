@@ -26,16 +26,19 @@ namespace MultiMC.WinGUI
 
 			InitializeComponent();
 
-			Message("Instance started with command: " + inst.InstProcess.StartInfo.FileName +
-				 " " + inst.InstProcess.StartInfo.Arguments.ToString());
+			if (inst.InstProcess != null)
+			{
+				Message("Instance started with command: " + inst.InstProcess.StartInfo.FileName +
+					 " " + inst.InstProcess.StartInfo.Arguments.ToString());
 
-			inst.InstQuit += new EventHandler<InstQuitEventArgs>(InstQuit);
+				inst.InstQuit += new EventHandler<InstQuitEventArgs>(InstQuit);
 
-			inst.InstProcess.OutputDataReceived += new DataReceivedEventHandler(InstOutput);
-			inst.InstProcess.ErrorDataReceived += new DataReceivedEventHandler(InstOutput);
+				inst.InstProcess.OutputDataReceived += new DataReceivedEventHandler(InstOutput);
+				inst.InstProcess.ErrorDataReceived += new DataReceivedEventHandler(InstOutput);
 
-			inst.InstProcess.BeginOutputReadLine();
-			inst.InstProcess.BeginErrorReadLine();
+				inst.InstProcess.BeginOutputReadLine();
+				inst.InstProcess.BeginErrorReadLine();
+			}
 
 			trayIcon.Visible = true;
 
@@ -46,20 +49,13 @@ namespace MultiMC.WinGUI
 		public void Message(string text)
 		{
 			if (instConsole == null || text == null) return;
-			if (InvokeRequired)
-			{
-				ConsoleMessageCallback d = new ConsoleMessageCallback(Message);
-				if (IsHandleCreated && !IsDisposed)
-					Invoke(d, text);
-			}
-			else
-			{
-				if (!instConsole.IsDisposed)
-					instConsole.AppendText(text + "\n");
-			}
-		}
 
-		private delegate void ConsoleMessageCallback(string text);
+			Invoke((o, args) =>
+				{
+					if (!instConsole.IsDisposed && IsHandleCreated)
+						instConsole.AppendText(text + "\n");
+				});
+		}
 
 		void InstOutput(object sender, DataReceivedEventArgs e)
 		{

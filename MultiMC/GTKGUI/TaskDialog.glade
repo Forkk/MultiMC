@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<glade-interface>
+  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-naming-policy project-wide -->
+  <widget class="GtkVBox" id="vboxTask">
+    <property name="visible">True</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <widget class="GtkLabel" id="statusLabel">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Status</property>
+      </widget>
+      <packing>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkAlignment" id="progBarAlign">
+        <property name="visible">True</property>
+        <property name="top_padding">8</property>
+        <property name="bottom_padding">8</property>
+        <property name="left_padding">8</property>
+        <property name="right_padding">8</property>
+        <child>
+          <widget class="GtkProgressBar" id="taskProgBar">
+            <property name="visible">True</property>
+          </widget>
+        </child>
+      </widget>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">False</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+  </widget>
+</glade-interface>

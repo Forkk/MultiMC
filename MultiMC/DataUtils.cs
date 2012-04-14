@@ -111,6 +111,16 @@ namespace MultiMC
 			return results;
 		}
 
+		public static int IndexOf<T>(this T[] array, Predicate<T> predicate)
+		{
+			for (int i = 0; i < array.Length; i++)
+			{
+				if (predicate(array[i]))
+					return i;
+			}
+			return -1;
+		}
+
 		public static string ConvertLineEndings(string text, string newLineFormat = null)
 		{
 			if (string.IsNullOrEmpty(newLineFormat))
