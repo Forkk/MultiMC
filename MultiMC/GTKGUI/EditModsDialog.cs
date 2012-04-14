@@ -54,7 +54,7 @@ namespace MultiMC.GTKGUI
 			mlModList.Model = mlModStore;
 			mlModList.AppendColumn("Mod Name", new CellRendererText(), "text", 0);
 
-			mlModList.Selection.Mode = SelectionMode.Multiple;
+			//mlModList.Selection.Mode = SelectionMode.Multiple;
 
 			inst.InstMods.ModFileChanged += (o, args) => LoadModList();
 
@@ -84,35 +84,36 @@ namespace MultiMC.GTKGUI
 			args.SelectionData.Data + " text: " +
 			args.SelectionData.Text);
 		}
-		void remove_selected_mods(Gtk.TreeView widget, Gtk.ListStore storage)
+
+		void remove_selected_mods(Gtk.TreeView widget)
 		{
-			if (widget.Selection.CountSelectedRows() == 0)
-				return;
 
 			TreeIter iter;
-			widget.Selection.GetSelected(out iter);
-			
-			Mod m = (storage.GetValue(iter, 1) as Mod);
-			string file = m.FileName;
-
-			if (File.Exists(file))
-				File.Delete(file);
-			else if (Directory.Exists(file))
-				Directory.Delete(file, true);
-			LoadModList();
+			TreeModel model;
+			if(widget.Selection.GetSelected(out model, out iter))
+			{
+				Mod m = (Mod) model.GetValue (iter, 1);
+				string file = m.FileName;
+	
+				if (File.Exists(file))
+					File.Delete(file);
+				else if (Directory.Exists(file))
+					Directory.Delete(file, true);
+				LoadModList();
+			}
 		}
 		void jarModList_KeyPressEvent(object o, KeyPressEventArgs args)
 		{
 			if (args.Event.Key == Gdk.Key.Delete)
 			{
-				remove_selected_mods(jarModList,modStore);
+				remove_selected_mods(jarModList);
 			}
 		}
 		void mlModList_KeyPressEvent(object o, KeyPressEventArgs args)
 		{
 			if (args.Event.Key == Gdk.Key.Delete)
 			{
-				remove_selected_mods(mlModList,mlModStore);
+				remove_selected_mods(mlModList);
 			}
 		}
 
@@ -159,7 +160,7 @@ namespace MultiMC.GTKGUI
 		}
 		void OnRmJarModClicked(object sender, EventArgs e)
 		{
-			remove_selected_mods(jarModList,modStore);
+			remove_selected_mods(jarModList);
 		}
 
 		void OnViewModsFolderClicked(object sender, EventArgs e)
@@ -175,7 +176,7 @@ namespace MultiMC.GTKGUI
 		}
 		void OnRmMLModClicked(object sender, EventArgs e)
 		{
-			remove_selected_mods(mlModList,mlModStore);
+			remove_selected_mods(mlModList);
 		}
 		
 		string[] ChooseFiles(string dialogTitle)

@@ -76,6 +76,11 @@ namespace MultiMC.GTKGUI
 			InstanceList = iList;
 
 			helpButton.Sensitive = false;
+			if(OSUtils.OS == OSEnum.Linux)
+			{
+				Gtk.MenuItem openalRemoveItem = gxml2.GetWidget("removeOpenALMenuItem") as Gtk.MenuItem;
+				openalRemoveItem.Visible = true;
+			}
 		}
 
 		void InstAdded(object sender, ItemAddRemoveEventArgs<Instance> e)
@@ -265,7 +270,12 @@ namespace MultiMC.GTKGUI
 			if (DeleteInstClicked != null)
 				DeleteInstClicked(this, new InstActionEventArgs(SelectedInst));
 		}
-
+		
+		void OnRemoveOpenALClicked(object sender, EventArgs e)
+		{
+			if (RemoveOpenALClicked != null)
+				RemoveOpenALClicked(this, new InstActionEventArgs(SelectedInst));
+		}
 
 		// Other
 		void OnItemActivated(object sender, ItemActivatedArgs e)
@@ -357,7 +367,9 @@ namespace MultiMC.GTKGUI
 		public event EventHandler<InstActionEventArgs> ViewInstFolderClicked;
 
 		public event EventHandler<InstActionEventArgs> DeleteInstClicked;
-
+		
+		public event EventHandler<InstActionEventArgs> RemoveOpenALClicked;
+		
 		public IImageList ImageList
 		{
 			get { return _imageList; }
