@@ -23,12 +23,24 @@ namespace MultiMC.GTKGUI
 
 		[Widget]
 		TreeView mlModList = null;
-
+		
+		[Widget]
+		Button buttonUp = null;
+		
 		ListStore modStore;
 		ListStore mlModStore;
+		
 
 		Instance inst;
-
+		enum Mode
+		{
+			Jar,
+			Modloader,
+			Resources
+		};
+		Mode currentMode;
+		bool changed_mod_order = false;
+		
 		public EditModsDialog(Window parent, Instance inst)
 			: base("Edit Mods", parent)
 		{
@@ -45,6 +57,8 @@ namespace MultiMC.GTKGUI
 
 			WidthRequest = 600;
 			HeightRequest = 500;
+			// the Jar page is active by default. FIXME: determine dynamically!
+			currentMode = Mode.Jar;
 
 			modStore = new ListStore(typeof(string), typeof(Mod));
 			jarModList.Model = modStore;
@@ -102,6 +116,48 @@ namespace MultiMC.GTKGUI
 				LoadModList();
 			}
 		}
+		void move_selected_jar_mods(bool move_up)
+		{
+			TreeIter iter;
+			TreeModel model;
+			ListStore model_real;
+			// get selected item, if any
+			if(jarModList.Selection.GetSelected(out model, out iter))
+			{
+				model_real = model as ListStore;
+				
+				if(move_up)
+				{
+					TreeIter firstIter;
+					// is there at least one row? (better to be sure!)
+					if(!model_real.GetIterFirst(out firstIter))
+						return;
+					// don't move first line up into the void
+					if(firstIter.Equals(iter))
+						return;
+					System.Console.WriteLine("Can move up");
+					TreePath path = model.GetPath(iter);
+					TreePath prevPath = path;
+					if(prevPath.Prev())
+					{
+						TreeIter prevIter;
+						model.GetIter(out prevIter,prevPath);
+						model_real.Swap(iter, prevIter);
+						changed_mod_order = true;
+					}
+				}
+				else
+				{
+					TreeIter iternext = iter;
+					if(model.IterNext(ref iternext))
+					{
+						model_real.Swap(iter, iternext);
+						changed_mod_order = true;
+					}
+				}
+			}
+		}
+		
 		void jarModList_KeyPressEvent(object o, KeyPressEventArgs args)
 		{
 			if (args.Event.Key == Gdk.Key.Delete)
@@ -141,42 +197,111 @@ namespace MultiMC.GTKGUI
 			}
 			
 		}
+		private Mod GetLinkedJarMod(TreeIter item)
+		{
+			return modStore.GetValue(item, 1) as Mod;
+		}
 
 		public void SaveModList()
 		{
+			// no need to save anything if we didn't move any mods around
+			if(!changed_mod_order)
+				return;
+			int i = 0;
+			TreeIter iter;
+			// there are no more jar mods...
+			if(!modStore.GetIterFirst(out iter))
+				return;
+			// really a foreach. The GTK people added their own bastardized foreach I refuse to use.
+			do
+			{
+				inst.InstMods[GetLinkedJarMod(iter)] = i;
+				i++;
+			} while(modStore.IterNext(ref iter));
+			inst.InstMods.Save();
+			inst.NeedsRebuild = true;
+		}
+		
+		void OnPageChange(object sender, SwitchPageArgs e)
+		{
+			// it's kinda iffy using constants like this. DO NOT LIKE :(
+			if(e.PageNum == 0)
+			{
+				currentMode = Mode.Jar;
+			}
+			else if(e.PageNum == 1)
+			{
+				currentMode = Mode.Modloader;
+			}
+			System.Console.WriteLine("Notebook page: " + e.PageNum);
+		}
+
+		void OnAddClicked(object sender, EventArgs e)
+		{
+			switch(currentMode)
+			{
+			case Mode.Jar:
+				AddJarMods(ChooseFiles("Add mods to jar"));
+				break;
+			case Mode.Modloader:
+				AddMLMods(ChooseFiles("Add ModLoader mods"));
+				break;
+			case Mode.Resources:
+				System.Console.WriteLine("Adding resources not implemented yet.");
+				break;
+			}
+		}
+		
+		void OnRemoveClicked(object sender, EventArgs e)
+		{
+			switch(currentMode)
+			{
+			case Mode.Jar:
+				remove_selected_mods(jarModList);
+				break;
+			case Mode.Modloader:
+				remove_selected_mods(mlModList);
+				break;
+			case Mode.Resources:
+				System.Console.WriteLine("Removing resources not implemented yet.");
+				break;
+			}
+		}
+		
+		void OnUpDownClicked(object sender, EventArgs e)
+		{
+			bool move_up = (sender == buttonUp);
+			switch(currentMode)
+			{
+			case Mode.Jar:
+				move_selected_jar_mods(move_up);
+				break;
+			case Mode.Modloader:
+			case Mode.Resources:
+				System.Console.WriteLine("Moving resources and modloader mods around is nonsense.");
+				break;
+			}
+		}
+
+		void OnViewFolderClicked(object sender, EventArgs e)
+		{
+			switch(currentMode)
+			{
+			case Mode.Jar:
+				if (!Directory.Exists(inst.InstModsDir))
+					Directory.CreateDirectory(inst.InstModsDir);
+				Process.Start(inst.InstModsDir);
+				break;
+			case Mode.Modloader:
+				if (!Directory.Exists(inst.ModLoaderDir))
+					Directory.CreateDirectory(inst.ModLoaderDir);
+				Process.Start(inst.ModLoaderDir);
+				break;
+			case Mode.Resources:
+				System.Console.WriteLine("Unimplemented :(");
+				break;
+			}
 			
-		}
-
-		void OnViewJarModFolderClicked(object sender, EventArgs e)
-		{
-			if (!Directory.Exists(inst.InstModsDir))
-				Directory.CreateDirectory(inst.InstModsDir);
-			Process.Start(inst.InstModsDir);
-		}
-
-		void OnAddJarModClicked(object sender, EventArgs e)
-		{
-			AddJarMods(ChooseFiles("Add mods to jar"));
-		}
-		void OnRmJarModClicked(object sender, EventArgs e)
-		{
-			remove_selected_mods(jarModList);
-		}
-
-		void OnViewModsFolderClicked(object sender, EventArgs e)
-		{
-			if (!Directory.Exists(inst.ModLoaderDir))
-				Directory.CreateDirectory(inst.ModLoaderDir);
-			Process.Start(inst.ModLoaderDir);
-		}
-
-		void OnAddMLModClicked(object sender, EventArgs e)
-		{
-			AddMLMods(ChooseFiles("Add ModLoader mods"));
-		}
-		void OnRmMLModClicked(object sender, EventArgs e)
-		{
-			remove_selected_mods(mlModList);
 		}
 		
 		string[] ChooseFiles(string dialogTitle)
@@ -200,6 +325,7 @@ namespace MultiMC.GTKGUI
 			return files;
 		}
 			
+		// FIXME: this is generic and doesn't belong in the GUI
 		void AddJarMods(string[] files, int index = -1)
 		{
 			foreach (string file in files)
@@ -208,7 +334,7 @@ namespace MultiMC.GTKGUI
 			}
 			LoadModList();
 		}
-
+		// FIXME: this is generic and doesn't belong in the GUI
 		void AddMLMods(string[] files)
 		{
 			try
@@ -243,7 +369,7 @@ namespace MultiMC.GTKGUI
 					"Failed to copy files");
 			}
 		}
-
+		// FIXME: this is generic and doesn't belong in the GUI
 		private void RecursiveCopy(string source, string dest, bool overwrite = false)
 		{
 			if (!Directory.Exists(dest))
