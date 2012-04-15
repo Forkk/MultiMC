@@ -81,6 +81,21 @@ To uninstall a mod, select it in the list and press the delete key.</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
+                <child>
+                  <widget class="GtkButton" id="buttonRmJarMod">
+                    <property name="label" translatable="yes">_Remove</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="use_underline">True</property>
+                    <signal name="clicked" handler="OnRmJarModClicked"/>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -156,6 +171,21 @@ To uninstall a mod, select it in the list and press the delete key.</property>
                     <property name="expand">False</property>
                     <property name="fill">False</property>
                     <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkButton" id="buttonRmMLMod">
+                    <property name="label" translatable="yes">_Remove</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="use_underline">True</property>
+                    <signal name="clicked" handler="OnRmMLModClicked"/>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
               </widget>

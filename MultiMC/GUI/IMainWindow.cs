@@ -50,6 +50,7 @@ namespace MultiMC.GUI
 		event EventHandler<InstActionEventArgs> ViewInstFolderClicked;
 
 		event EventHandler<InstActionEventArgs> DeleteInstClicked;
+		event EventHandler<InstActionEventArgs> RemoveOpenALClicked;
 
 		IList<Instance> InstanceList
 		{

@@ -415,6 +415,8 @@ namespace MultiMC.WinGUI
 		public event EventHandler<InstActionEventArgs> ViewInstFolderClicked;
 
 		public event EventHandler<InstActionEventArgs> DeleteInstClicked;
+		
+		public event EventHandler<InstActionEventArgs> RemoveOpenALClicked;
 
 		protected enum InstAction
 		{

@@ -15,7 +15,7 @@ namespace MultiMC.GTKGUI
 		public AddInstDialog(Window parentWindow = null)
 			: base("Create new Instance", parentWindow)
 		{
-			XML gxml = gxml = new XML(null, "MultiMC.GTKGUI.AddInstDialog.glade",
+			XML gxml = new XML(null, "MultiMC.GTKGUI.AddInstDialog.glade",
 				"hboxDialogContent", null);
 			gxml.Autoconnect(this);
 
