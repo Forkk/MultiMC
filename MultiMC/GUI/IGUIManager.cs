@@ -24,7 +24,7 @@ namespace MultiMC.GUI
 
 		IAddInstDialog AddInstDialog();
 
-		IDialog SettingsWindow();
+		ISettingsDialog SettingsWindow();
 
 		IChangeIconDialog ChangeIconDialog();
 

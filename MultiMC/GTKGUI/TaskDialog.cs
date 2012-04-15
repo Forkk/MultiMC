@@ -47,7 +47,7 @@ namespace MultiMC.GTKGUI
 		public int TaskProgress
 		{
 			get { return (int)(taskProgBar.Fraction * 100); }
-			set { taskProgBar.Fraction = value / 100; }
+			set { taskProgBar.Fraction = (double)value / (double)100; }
 		}
 	}
 }

@@ -75,5 +75,14 @@
         <signal name="activate" handler="OnDeleteClicked"/>
       </widget>
     </child>
+    <child>
+      <widget class="GtkMenuItem" id="removeOpenALMenuItem">
+        <property name="visible">False</property>
+        <property name="label" translatable="yes">Remove OpenAL</property>
+        <property name="use_underline">True</property>
+		<property name="tooltip" translatable="yes">This will remove the sound library distributed with minecraft, making it use your own system libraries. Make sure you have them!</property>
+        <signal name="activate" handler="OnRemoveOpenALClicked"/>
+      </widget>
+    </child>
   </widget>
 </glade-interface>

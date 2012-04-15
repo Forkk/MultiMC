@@ -80,6 +80,11 @@ namespace MultiMC
 			MainWindow.ViewInstFolderClicked += ViewInstFolderClicked;
 
 			MainWindow.DeleteInstClicked += DeleteInstClicked;
+			// on linux, provide the possiblity to nuke OpenAL libs
+			if(OSUtils.OS == OSEnum.Linux)
+			{
+				MainWindow.RemoveOpenALClicked += RemoveOpenALClicked;
+			}
 
 			// Try to load the icon list.
 			int tries = 0;
@@ -239,7 +244,7 @@ namespace MultiMC
 
 		void SettingsClicked(object sender, EventArgs e)
 		{
-			IDialog settingsWindow = GUIManager.Main.SettingsWindow();
+			ISettingsDialog settingsWindow = GUIManager.Main.SettingsWindow();
 			settingsWindow.Parent = MainWindow;
 			settingsWindow.DefaultPosition = DefWindowPosition.CenterParent;
 			settingsWindow.ShowInTaskbar = false;
@@ -252,6 +257,11 @@ namespace MultiMC
 					}
 				};
 			settingsWindow.Run();
+
+			if (settingsWindow.ForceUpdate)
+			{
+				DownloadNewVersion();
+			}
 		}
 		#endregion
 
@@ -360,7 +370,33 @@ namespace MultiMC
 			deleteDialog.DefaultPosition = DefWindowPosition.CenterParent;
 			deleteDialog.Run();
 		}
+		
+		void RemoveOpenALClicked(object sender, InstActionEventArgs e)
+		{
+			DialogResponse reply = MessageDialog.Show(MainWindow,
+			"This will delete the OpenAL libraries distributed with minecraft." +
+			"It can fix sound issues, but you should have the OpenAL installed in your system first." +
+			"Are you sure you want to do this?",
+			"Really delete OpenAL libraries?", MessageButtons.YesNo);
 
+			if (reply == DialogResponse.Yes)
+			{
+				String openal32 = Path.Combine( ".", SelectedInst.MinecraftDir , "bin", "natives", "libopenal.so" );
+				String openal64 = Path.Combine( ".", SelectedInst.MinecraftDir , "bin", "natives", "libopenal64.so" );
+				openal32 = Path.GetFullPath(openal32);
+				openal64 = Path.GetFullPath(openal64);
+				System.Console.WriteLine(openal32);
+				System.Console.WriteLine(openal64);
+				if(File.Exists(openal32))
+	          	{
+					File.Delete(openal32);
+				}
+				if(File.Exists(openal64))
+				{
+					File.Delete(openal64);
+				}
+			}
+		}
 		#endregion
 
 		public void Run()
@@ -555,6 +591,7 @@ namespace MultiMC
 			updateDL = new Downloader(Properties.Resources.NewVersionFileName,
 				Properties.Resources.UpdateURL, "Downloading updates...");
 			updateDL.Completed += updateDL_Completed;
+
 			StartTask(updateDL);
 		}
 

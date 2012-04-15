@@ -66,7 +66,7 @@ namespace MultiMC.GTKGUI
 			return new AddInstDialog(mainWindow);
 		}
 
-		public IDialog SettingsWindow()
+		public ISettingsDialog SettingsWindow()
 		{
 			return new SettingsDialog(mainWindow);
 		}

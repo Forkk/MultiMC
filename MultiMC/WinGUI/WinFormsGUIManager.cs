@@ -55,7 +55,7 @@ namespace MultiMC.WinGUI
 			return new NewInstDialog();
 		}
 
-		public IDialog SettingsWindow()
+		public ISettingsDialog SettingsWindow()
 		{
 			return new SettingsForm();
 		}

@@ -11,7 +11,7 @@ using MultiMC.GUI;
 
 namespace MultiMC.WinGUI
 {
-	public partial class SettingsForm : WinFormsDialog
+	public partial class SettingsForm : WinFormsDialog, ISettingsDialog
 	{
 		public SettingsForm()
 		{
@@ -80,6 +80,11 @@ namespace MultiMC.WinGUI
 		{
 			AppSettings.Main.AutoDetectJavaPath();
 			textBoxJavaPath.Text = AppSettings.Main.JavaPath;
+		}
+
+		public bool ForceUpdate
+		{
+			get { return forceUpdateCheckBox.Checked; }
 		}
 	}
 }
