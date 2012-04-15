@@ -605,29 +605,34 @@ namespace MultiMC
 					if (updateVersion != null)
 						updateMsg =  string.Format("Version {0} has been downloaded. " +
 							"Would you like to install it now?", updateVersion);
-
-					IUpdateDialog updateDialog = GUIManager.Main.UpdateDialog();
-					updateDialog.Parent = MainWindow;
-					updateDialog.ShowInTaskbar = false;
-
-					updateDialog.DefaultPosition = DefWindowPosition.CenterParent;
-
-					updateDialog.Message = updateMsg;
-
-					DialogResponse response = DialogResponse.No;
-					updateDialog.Response += (o, args) =>
-						{
-							response = args.Response;
-						};
-
-					updateDialog.ViewChangelogClicked += ViewChangelogClicked;
-
-					updateDialog.Run();
-
-					if (response == DialogResponse.Yes)
+				
+					try
 					{
-						CloseForUpdates();
+						IUpdateDialog updateDialog = GUIManager.Main.UpdateDialog();
+						updateDialog.Parent = MainWindow;
+						updateDialog.ShowInTaskbar = false;
+	
+						updateDialog.DefaultPosition = DefWindowPosition.CenterParent;
+	
+						updateDialog.Message = updateMsg;
+	
+						DialogResponse response = DialogResponse.No;
+						updateDialog.Response += (o, args) =>
+							{
+								response = args.Response;
+							};
+	
+						updateDialog.ViewChangelogClicked += ViewChangelogClicked;
+	
+						updateDialog.Run();
+	
+						if (response == DialogResponse.Yes)
+						{
+							CloseForUpdates();
+						}
 					}
+					catch(NotImplementedException)
+					{}
 				});
 		}
 
