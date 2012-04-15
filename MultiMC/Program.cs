@@ -65,27 +65,8 @@ namespace MultiMC
 				}
 			}
 
-			// If we're not on Windows or not using Mono, use GTK#.
-			if (OSUtils.OS != OSEnum.Windows || 
-				OSUtils.Runtime == Runtime.Mono)
-				Toolkit = WindowToolkit.GtkSharp;
-			else
-				Toolkit = WindowToolkit.WinForms;
-
-			if (args.Contains("--gtk"))
-				Toolkit = WindowToolkit.GtkSharp;
-			else if (args.Contains("--winforms"))
-				Toolkit = WindowToolkit.WinForms;
-
-			Main main = new Main();
-
-			if (args.Length <= 0)
-			{
-				main.Run();
-			}
-
-			// -u
-			else if (args[0].Equals("-u"))
+			// -u or --update
+			if (args.Length > 0 && (args[0] == "-u" || args[0] == "--update"))
 			{
 				Console.WriteLine("Updating MultiMC...");
 				if (args.Length < 2)
@@ -100,15 +81,27 @@ namespace MultiMC
 				Environment.Exit(0);
 			}
 
-			 // -v
-			else if (args[0].Equals("-v"))
+			if (args.Contains("-v") || args.Contains("--version"))
 			{
 				Console.WriteLine(AppUtils.GetVersion());
 				return;
 			}
 
-			// -l or --launch
-			else if (args[0] == "-l" || args[0] == "--launch")
+			// If we're not on Windows or not using Mono, use GTK#.
+			if (OSUtils.OS != OSEnum.Windows || 
+				OSUtils.Runtime == Runtime.Mono)
+				Toolkit = WindowToolkit.GtkSharp;
+			else
+				Toolkit = WindowToolkit.WinForms;
+
+			if (args.Contains("--gtk"))
+				Toolkit = WindowToolkit.GtkSharp;
+			else if (args.Contains("--winforms"))
+				Toolkit = WindowToolkit.WinForms;
+
+			Main main = new Main();
+			
+			if (args.Length > 0 && (args[0] == "-l" || args[0] == "--launch"))
 			{
 				if (args.Length < 2)
 				{
@@ -123,7 +116,7 @@ namespace MultiMC
 			}
 			else
 			{
-				Console.WriteLine("Unknown argument: " + args[0]);
+				main.Run();
 			}
 
 			if (InstallUpdates)

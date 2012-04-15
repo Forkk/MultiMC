@@ -1,4 +1,7 @@
-﻿Version 3.0.2.4:
+﻿Version 3.0.2.5:
+	- Fixed Linux and Mac GUI.
+
+Version 3.0.2.4:
 	- Fixed custom assembly loading.
 
 Version 3.0.2.3:
