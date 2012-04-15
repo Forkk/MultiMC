@@ -53,8 +53,24 @@ namespace MultiMC
 		public static string ExecutePost(string url, string urlParams)
 		{
 			Init();
+			// FIXME Mac doesn't like WebClients :(
 			WebClient webClient = new WebClient();
 			return webClient.DownloadString((url + "?" + urlParams));
+
+			//HttpWebRequest request = 
+			//    HttpWebRequest.Create((url + "?" + urlParams)) as HttpWebRequest;
+			//request.Method = "GET";
+
+			//using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+			//{
+			//    using (Stream responseStream = response.GetResponseStream())
+			//    {
+			//        using (StreamReader reader = new StreamReader(responseStream))
+			//        {
+			//            return reader.ReadToEnd();
+			//        }
+			//    }
+			//}
 		}
 
 		public static T GetAssemblyAttr<T>(Assembly assembly) where T : Attribute
