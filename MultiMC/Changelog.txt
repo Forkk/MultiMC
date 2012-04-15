@@ -1,5 +1,6 @@
 ﻿Version 3.0.2.5:
 	- Fixed Linux and Mac GUI.
+	- Fixed the force update MultiMC option in the settings dialog.
 
 Version 3.0.2.4:
 	- Fixed custom assembly loading.

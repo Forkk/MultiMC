@@ -10,7 +10,7 @@ using MultiMC.GUI;
 
 namespace MultiMC.GTKGUI
 {
-	public class SettingsDialog : GTKDialog
+	public class SettingsDialog : GTKDialog, ISettingsDialog
 	{
 		public SettingsDialog(Window parent)
 			: base("Settings", parent)
@@ -92,5 +92,10 @@ namespace MultiMC.GTKGUI
 		[Widget]
 		Entry entryJavaPath;
 		#endregion
+
+		public bool ForceUpdate
+		{
+			get { return toggleForceUpdate.Active; }
+		}
 	}
 }

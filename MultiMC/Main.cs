@@ -244,7 +244,7 @@ namespace MultiMC
 
 		void SettingsClicked(object sender, EventArgs e)
 		{
-			IDialog settingsWindow = GUIManager.Main.SettingsWindow();
+			ISettingsDialog settingsWindow = GUIManager.Main.SettingsWindow();
 			settingsWindow.Parent = MainWindow;
 			settingsWindow.DefaultPosition = DefWindowPosition.CenterParent;
 			settingsWindow.ShowInTaskbar = false;
@@ -257,6 +257,11 @@ namespace MultiMC
 					}
 				};
 			settingsWindow.Run();
+
+			if (settingsWindow.ForceUpdate)
+			{
+				DownloadNewVersion();
+			}
 		}
 		#endregion
 
@@ -586,6 +591,7 @@ namespace MultiMC
 			updateDL = new Downloader(Properties.Resources.NewVersionFileName,
 				Properties.Resources.UpdateURL, "Downloading updates...");
 			updateDL.Completed += updateDL_Completed;
+
 			StartTask(updateDL);
 		}
 

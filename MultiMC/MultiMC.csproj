@@ -151,6 +151,7 @@
     <Compile Include="GUI\IImageList.cs" />
     <Compile Include="GUI\ILoginDialog.cs" />
     <Compile Include="GUI\INotesDialog.cs" />
+    <Compile Include="GUI\ISettingsDialog.cs" />
     <Compile Include="GUI\ITaskDialog.cs" />
     <Compile Include="GUI\ITaskStatus.cs" />
     <Compile Include="GUI\IUpdateConfirmDialog.cs" />
