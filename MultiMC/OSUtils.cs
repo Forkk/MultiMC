@@ -19,6 +19,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace MultiMC
 {
@@ -39,7 +40,8 @@ namespace MultiMC
 
 				case 4:
 				case 128:
-					return OSEnum.Linux;
+					var kernel = DetectUnixKernel();					
+					return (kernel == "Darwin") ? OSEnum.OSX : OSEnum.Linux;
 
 				default:
 					return OSEnum.Other;
@@ -123,6 +125,57 @@ namespace MultiMC
 			IntPtr hwnd,
 			[MarshalAs(UnmanagedType.LPWStr)] string pszSubAppName,
 			[MarshalAs(UnmanagedType.LPWStr)] string pszSubIdList);
+		
+		#region private static string DetectUnixKernel
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        struct utsname
+        {
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+            public string sysname;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+            public string nodename;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+            public string release;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+            public string version;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+            public string machine;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 1024)]
+            public string extraJustInCase;
+
+        }
+		
+		/// <summary>
+        /// Detects the unix kernel by p/invoking uname (libc).
+        /// </summary>
+        /// <returns></returns>
+        private static string DetectUnixKernel()
+        {
+            Debug.Print("Size: {0}", Marshal.SizeOf(typeof(utsname)).ToString());
+            Debug.Flush();
+            utsname uts = new utsname();
+            uname(out uts);
+
+            Debug.WriteLine("System:");
+            Debug.Indent();
+            Debug.WriteLine(uts.sysname);
+            Debug.WriteLine(uts.nodename);
+            Debug.WriteLine(uts.release);
+            Debug.WriteLine(uts.version);
+            Debug.WriteLine(uts.machine);
+            Debug.Unindent();
+
+            return uts.sysname.ToString();
+        }
+
+        [DllImport("libc")]
+        private static extern void uname(out utsname uname_struct);
+		#endregion
 	}
 
 	public enum OSEnum
