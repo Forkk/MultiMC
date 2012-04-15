@@ -155,7 +155,13 @@ namespace MultiMC
 		static Assembly AssemblyResolve(object sender, ResolveEventArgs args)
 		{
 			string assemblyName = new AssemblyName(args.Name).Name;
-			string resourceName = "MultiMC.Lib." + assemblyName + ".dll";
+			string resourceName = "MultiMC." + assemblyName;
+
+			if (assemblyName.Contains("Ionic.Zip.Reduced") ||
+				assemblyName.Contains("Newtonsoft.Json"))
+			{
+				resourceName = "MultiMC.Lib." + assemblyName + ".dll";
+			}
 
 			using (Stream stream = Assembly.GetExecutingAssembly().
 				GetManifestResourceStream(resourceName))

@@ -1,4 +1,7 @@
-﻿Version 3.0.2.3:
+﻿Version 3.0.2.4:
+	- Fixed custom assembly loading.
+
+Version 3.0.2.3:
 	- Added changelog button to the update dialog.
 	- Dialogs no longer show in the taskbar.
 	- Fixed line endings in the changelog dialog.
