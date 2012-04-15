@@ -27,6 +27,18 @@ namespace MultiMC.GTKGUI
 		[Widget]
 		Button buttonUp = null;
 		
+		[Widget]
+		Button buttonDown = null;
+		
+		[Widget]
+		Button buttonAdd = null;
+		
+		[Widget]
+		Button buttonRemove = null;
+		
+		[Widget]
+		Button buttonOpenFolder = null;
+		
 		ListStore modStore;
 		ListStore mlModStore;
 		
@@ -228,10 +240,14 @@ namespace MultiMC.GTKGUI
 			if(e.PageNum == 0)
 			{
 				currentMode = Mode.Jar;
+				buttonUp.Sensitive = true;
+				buttonDown.Sensitive = true;
 			}
 			else if(e.PageNum == 1)
 			{
 				currentMode = Mode.Modloader;
+				buttonUp.Sensitive = false;
+				buttonDown.Sensitive = false;
 			}
 			System.Console.WriteLine("Notebook page: " + e.PageNum);
 		}
