@@ -461,6 +461,11 @@ namespace MultiMC
 			get { return Path.Combine(MinecraftDir, "resources"); }
 		}
 
+		public string SavesDir
+		{
+			get { return Path.Combine(MinecraftDir, "saves"); }
+		}
+
 		#endregion
 
 		/// <summary>

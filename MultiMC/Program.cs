@@ -151,7 +151,12 @@ namespace MultiMC
 			string resourceName = "MultiMC." + assemblyName;
 
 			if (assemblyName.Contains("Ionic.Zip.Reduced") ||
-				assemblyName.Contains("Newtonsoft.Json"))
+				assemblyName.Contains("Newtonsoft.Json") ||
+				assemblyName.Contains("GitSharp") ||
+				assemblyName.Contains("SharpZipLib") ||
+				assemblyName.Contains("nunit") ||
+				assemblyName.Contains("SharpSSH") ||
+				assemblyName.Contains("Winterdom.IO.FileMap"))
 			{
 				resourceName = "MultiMC.Lib." + assemblyName + ".dll";
 			}

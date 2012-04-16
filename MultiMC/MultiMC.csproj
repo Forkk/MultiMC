@@ -79,6 +79,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\gdk-sharp.dll</HintPath>
     </Reference>
+    <Reference Include="GitSharp, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\GitSharp.dll</HintPath>
+    </Reference>
     <Reference Include="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\glade-sharp.dll</HintPath>
@@ -169,6 +173,7 @@
     <Compile Include="ProblemDetection\Problems\ModLoaderProblems.cs" />
     <Compile Include="ProblemDetection\Problems\VerifyError.cs" />
     <Compile Include="ProblemDetection\RegexProblem.cs" />
+    <Compile Include="Tasks\BackupTask.cs" />
     <Compile Include="Tasks\GameUpdater.cs" />
     <Compile Include="GUI\IDialog.cs" />
     <Compile Include="GUI\IMainWindow.cs" />
@@ -179,6 +184,7 @@
     <Compile Include="ConfigFile.cs" />
     <Compile Include="Tasks\Downloader.cs" />
     <Compile Include="Tasks\Modder.cs" />
+    <Compile Include="Tasks\RestoreTask.cs" />
     <Compile Include="Tasks\SimpleTask.cs" />
     <Compile Include="Tasks\Task.cs" />
     <Compile Include="Tasks\Updater.cs" />
@@ -277,6 +283,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WorldSave.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -397,6 +404,12 @@
     <None Include="Resources\MultiMC.ico" />
     <None Include="WinGUI\ToolbarIcons\ImportIcon.png" />
     <EmbeddedResource Include="Lib\Newtonsoft.Json.dll" />
+    <EmbeddedResource Include="Lib\GitSharp.Core.dll" />
+    <EmbeddedResource Include="Lib\GitSharp.dll" />
+    <EmbeddedResource Include="Lib\ICSharpCode.SharpZipLib.dll" />
+    <EmbeddedResource Include="Lib\nunit.framework.dll" />
+    <EmbeddedResource Include="Lib\Tamir.SharpSSH.dll" />
+    <EmbeddedResource Include="Lib\Winterdom.IO.FileMap.dll" />
     <Content Include="WinGUI\ToolbarIcons\AboutIcon.png" />
     <Content Include="WinGUI\ToolbarIcons\CheckUpdateIcon.png" />
     <Content Include="WinGUI\ToolbarIcons\HelpIcon.png" />
