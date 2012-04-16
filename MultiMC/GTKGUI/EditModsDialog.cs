@@ -41,8 +41,24 @@ namespace MultiMC.GTKGUI
 		
 		ListStore modStore;
 		ListStore mlModStore;
-		
-
+		enum TargetType
+		{
+			Text,
+			Uri,
+			Movement
+		};
+		static Gtk.TargetEntry[] targetEntries =
+		{
+			new TargetEntry ("string", 0, (uint)TargetType.Text),
+			new TargetEntry ("text/plain",	0, (uint)TargetType.Text),
+			new TargetEntry ("text/uri-list", 0, (uint)TargetType.Uri),
+			new TargetEntry ("minecraft/mod", 0, (uint)TargetType.Movement)
+		};
+		static Gtk.TargetEntry[] srcEntries =
+		{
+			new TargetEntry ("minecraft/mod", 0, (uint)TargetType.Movement)
+		};
+					
 		Instance inst;
 		enum Mode
 		{
@@ -87,30 +103,146 @@ namespace MultiMC.GTKGUI
 			// Listen for key presses
 			jarModList.KeyPressEvent += new KeyPressEventHandler(jarModList_KeyPressEvent);
 			mlModList.KeyPressEvent += new KeyPressEventHandler(mlModList_KeyPressEvent);
-			TargetEntry te = new TargetEntry ();
-			te.Flags = TargetFlags.Widget;
-			te.Target = "STRING"; 
-			TargetEntry[] tes = new TargetEntry[1];
-			tes[0]=te;
-			Gtk.TargetList tel = new Gtk.TargetList(tes);
-			Gtk.Drag.SourceSet (jarModList, Gdk.ModifierType.Button1Mask, tes, Gdk.DragAction.Move);
-			Gtk.Drag.DestSetTargetList (jarModList, tel);
-			jarModList.DragDataGet += new DragDataGetHandler (ddgh);
-			jarModList.DragDataReceived += new DragDataReceivedHandler (ddrh);
+			
+			// set up drag & drop
+			jarModList.EnableModelDragDest(targetEntries,Gdk.DragAction.Default);
+			jarModList.EnableModelDragSource(Gdk.ModifierType.Button1Mask,srcEntries,Gdk.DragAction.Move);
+			jarModList.DragDataReceived += OnDragDataReceived;
+			jarModList.DragDataGet += (object o, DragDataGetArgs args) =>
+			{
+				TreeIter iter;
+				TreeModel model;
+				if(!jarModList.Selection.GetSelected (out iter))
+					return;
+				Gdk.Atom[] targets = args.Context.Targets;
+				TreePath tp = modStore.GetPath(iter);
+				int idx = tp.Indices[0];
+				
+				args.SelectionData.Set(targets[0],0,System.Text.Encoding.UTF8.GetBytes( idx.ToString() ));
+			};
+			
+			Drag.DestSet(mlModList, DestDefaults.All, targetEntries, Gdk.DragAction.Default);
+			mlModList.DragDataReceived += OnDragDataReceived;
 		}
-		void ddgh (object sender, DragDataGetArgs args)
+		
+		void OnDragDataReceived (object o, DragDataReceivedArgs args)
 		{
-			Console.WriteLine ("DragDataGet..");
-			args.SelectionData.Text = "text";
+			Console.WriteLine("OnDragDataReceived: {0}", (TargetType)args.Info);
+			Console.WriteLine("Position: {0} {1}", args.X, args.Y);
+			switch ((TargetType)args.Info)
+			{
+				case TargetType.Text:
+					// preprocess input string...
+					String input = Encoding.UTF8.GetString(args.SelectionData.Data).Trim();
+					string[] words = input.Split('\n');
+					List<string> nwords = new List<string>();
+					foreach (string word in words)
+					{
+						String nword = word;
+						// let's just ignore anything that's not a zip or jar
+						if(!word.ToLower().Contains(".jar") && !word.ToLower().Contains(".zip"))
+							continue;
+						// trim nonsense
+						if(word.StartsWith("file://"))
+						{
+							nword = nword.Substring(7);
+						}
+						nwords.Add(nword);
+					}
+					// filtered away everything... just stop.
+					if(nwords.Count == 0)
+						return;
+					// if the drop target is the jar list
+					if (o == jarModList)
+					{
+						TreePath path;
+						TreeIter iter;
+						TreeViewDropPosition droppos;
+						jarModList.GetDestRowAtPos (args.X,args.Y,out path, out droppos);
+						jarModList.Model.GetIter (out iter, path);
+						if(path != null)
+						{
+							Console.WriteLine("Got position ;) " + path.Indices[0]);
+							switch(droppos)
+							{
+								case TreeViewDropPosition.Before:
+								case TreeViewDropPosition.IntoOrBefore:
+									AddJarMods(nwords.ToArray(), path.Indices[0]);
+								break;
+								case TreeViewDropPosition.After:
+								case TreeViewDropPosition.IntoOrAfter:
+									AddJarMods(nwords.ToArray(), path.Indices[0]+1);
+								break;
+							}
+						}
+						else
+						{
+							Console.WriteLine("Indeterminate position... ");
+							AddJarMods(nwords.ToArray(), -1);
+						}
+					}
+					// if it's the modloader list
+					else if (o == mlModList)
+						AddMLMods(nwords.ToArray());
+					break;
+	
+				// let's hope this never happens, because it sure doesn't happen here. :whistles:
+				case TargetType.Uri:
+					foreach (string uri in Encoding.UTF8.GetString(args.SelectionData.Data).Trim().Split('\n'))
+						Console.WriteLine("Uri: {0}", Uri.UnescapeDataString(uri));
+					break;
+				// Handle reorder events inside the list.
+				// This is only needed because the Reorderable property stops working
+				// when you use custom drag&drop handling
+				case TargetType.Movement:
+					if (o == jarModList)
+					{
+						TreePath path;
+						TreeIter srcIter;
+						TreeIter destIter;
+						TreeViewDropPosition droppos;
+						jarModList.GetDestRowAtPos (args.X,args.Y,out path, out droppos);
+						String sourceStr = System.Text.Encoding.UTF8.GetString (args.SelectionData.Data);
+						int sourceInt = int.Parse(sourceStr);
+						int destInt = -1;
+						modStore.IterNthChild(out srcIter,sourceInt);
+						if(path != null)
+						{
+							jarModList.Model.GetIter (out destIter, path);
+							destInt = path.Indices[0];
+							switch(droppos)
+							{
+								case TreeViewDropPosition.Before:
+								case TreeViewDropPosition.IntoOrBefore:
+									modStore.MoveBefore(srcIter,destIter);
+								break;
+								case TreeViewDropPosition.After:
+								case TreeViewDropPosition.IntoOrAfter:
+									modStore.MoveAfter(srcIter,destIter);
+								break;
+							}
+							
+							Console.WriteLine("Moving something!: from {0} to {1}", sourceInt, destInt );
+						}
+						else
+						{
+							// HACK : this is needed becuase of a GTK# API bug.
+							// See: http://mono.1490590.n4.nabble.com/On-a-ListStore-moving-items-on-the-list-some-questions-td2222829.html
+							TreeIter stDestIter;
+							modStore.GetIterFromString(out stDestIter, (Convert.ToUInt16(modStore.IterNChildren()) - 1).ToString());
+							modStore.MoveAfter(srcIter, stDestIter);
+							Console.WriteLine("Moving something!: from {0} to End", sourceInt );
+						}
+						// mod order most probably did change.
+						changed_mod_order = true;
+					}
+					break;
+			}
+			Console.WriteLine();
+			bool success = true;
+			Gtk.Drag.Finish (args.Context, success, false, args.Time);
 		}
-		void ddrh (object sender, DragDataReceivedArgs args)
-		{
-			Console.WriteLine("DragDataReceived... info: "+
-			args.Info+" X: "+args.X+" Y: "+args.Y+" selection Data: "+ 
-			args.SelectionData.Data + " text: " +
-			args.SelectionData.Text);
-		}
-
+		
 		void remove_selected_mods(Gtk.TreeView widget)
 		{
 
