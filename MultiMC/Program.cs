@@ -159,12 +159,17 @@ namespace MultiMC
 			using (Stream stream = Assembly.GetExecutingAssembly().
 				GetManifestResourceStream(resourceName))
 			{
-				Byte[] assemblyData = new Byte[stream.Length];
-				stream.Read(assemblyData, 0, assemblyData.Length);
-
-				Console.WriteLine("Loaded {0} from resources.", assemblyName);
-				return Assembly.Load(assemblyData);
+				if (stream != null)
+				{
+					Byte[] assemblyData = new Byte[stream.Length];
+					stream.Read(assemblyData, 0, assemblyData.Length);
+	
+					Console.WriteLine("Loaded {0} from resources.", assemblyName);
+					return Assembly.Load(assemblyData);
+				}
 			}
+			
+			return null;
 		}
 
 		private static void InstallUpdate(string target)
