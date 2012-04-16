@@ -602,6 +602,7 @@ namespace MultiMC
 				{
 					string updateMsg = "Updates have been downloaded. " +
 						"Would you like to install them?";
+
 					if (updateVersion != null)
 						updateMsg =  string.Format("Version {0} has been downloaded. " +
 							"Would you like to install it now?", updateVersion);

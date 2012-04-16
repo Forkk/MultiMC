@@ -1,4 +1,9 @@
-﻿Version 3.0.2.6:
+﻿Version 3.0.2.7:
+	- Implemented update confirmation dialog for Linux and OS X.
+	- OS detection now works properly on OS X.
+	- MultiMC no longer crashes when an embedded DLL is missing.
+
+Version 3.0.2.6:
 	- Fixed the update system. (You will need to manually update by 
 	  re-downloading MultiMC from http://forkk.net/MultiMC)
 

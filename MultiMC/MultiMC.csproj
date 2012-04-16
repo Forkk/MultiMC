@@ -142,6 +142,7 @@
     <Compile Include="GTKGUI\MainWindow.cs" />
     <Compile Include="GTKGUI\SettingsDialog.cs" />
     <Compile Include="GTKGUI\TaskDialog.cs" />
+    <Compile Include="GTKGUI\UpdateDialog.cs" />
     <Compile Include="GUI\IAboutDialog.cs" />
     <Compile Include="GUI\IAddInstDialog.cs" />
     <Compile Include="GUI\IChangeIconDialog.cs" />
@@ -340,6 +341,7 @@
       <DependentUpon>UpdateConfirmDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GTKGUI\TaskDialog.glade" />
+    <EmbeddedResource Include="GTKGUI\UpdateDialog.glade" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

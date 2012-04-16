@@ -111,7 +111,7 @@ namespace MultiMC.GTKGUI
 
 		public IUpdateDialog UpdateDialog()
 		{
-			throw new NotImplementedException();
+			return new UpdateDialog(mainWindow);
 		}
 
 
