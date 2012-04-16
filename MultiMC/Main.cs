@@ -614,20 +614,17 @@ namespace MultiMC
 
 					updateDialog.Message = updateMsg;
 
-					DialogResponse response = DialogResponse.No;
 					updateDialog.Response += (o, args) =>
 						{
-							response = args.Response;
+							if (args.Response == DialogResponse.Yes)
+							{
+								MainWindow.Invoke((o2, args2) => CloseForUpdates());
+							}
 						};
 
 					updateDialog.ViewChangelogClicked += ViewChangelogClicked;
 
 					updateDialog.Run();
-
-					if (response == DialogResponse.Yes)
-					{
-						CloseForUpdates();
-					}
 				});
 		}
 

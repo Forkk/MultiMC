@@ -1,4 +1,8 @@
-﻿Version 3.0.2.5:
+﻿Version 3.0.2.6:
+	- Fixed the update system. (You will need to manually update by 
+	  re-downloading MultiMC from http://forkk.net/MultiMC)
+
+Version 3.0.2.5:
 	- Fixed Linux and Mac GUI.
 	- Fixed the force update MultiMC option in the settings dialog.
 
