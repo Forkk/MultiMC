@@ -815,10 +815,10 @@ namespace MultiMC
 						File.Copy(path, dest, true); // true = overwrite
 						if (!modList.Any(m => m.FileName == path))
 						{
-							//if (index <= 0)
-							//    Add(new Mod(dest), true);
-							//else
-							Insert(index, new Mod(dest), true);
+							if (index == -1)
+							    Add(new Mod(dest), true);
+							else
+								Insert(index, new Mod(dest), true);
 						}
 					}
 					finally
@@ -851,8 +851,7 @@ namespace MultiMC
 		{
 			if (modList.Any(m => m.FileName == mod.FileName))
 			{
-				//Console.WriteLine("{0} was added to modlist twice. Removed original.",
-				//    mod.FileName);
+				Console.WriteLine("{0} was added to modlist twice. Removed original.", mod.FileName);
 				Remove(modList.Where(m => m.FileName == mod.FileName), false);
 			}
 
