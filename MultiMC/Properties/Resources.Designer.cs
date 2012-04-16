@@ -255,7 +255,7 @@ namespace MultiMC.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://199.26.85.36/mc-versions.cfg.
+        ///   Looks up a localized string similar to http://forkk.net/mc-versions.cfg.
         /// </summary>
         internal static string MCVersionFileDL {
             get {
