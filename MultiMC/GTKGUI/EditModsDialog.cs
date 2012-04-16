@@ -25,19 +25,19 @@ namespace MultiMC.GTKGUI
 		TreeView mlModList = null;
 		
 		[Widget]
-		Button buttonUp = null;
+		ToolButton buttonUp = null;
 		
 		[Widget]
-		Button buttonDown = null;
+		ToolButton buttonDown = null;
 		
 		[Widget]
-		Button buttonAdd = null;
+		ToolButton buttonAdd = null;
 		
 		[Widget]
-		Button buttonRemove = null;
+		ToolButton buttonRemove = null;
 		
 		[Widget]
-		Button buttonOpenFolder = null;
+		ToolButton buttonOpenFolder = null;
 		
 		ListStore modStore;
 		ListStore mlModStore;

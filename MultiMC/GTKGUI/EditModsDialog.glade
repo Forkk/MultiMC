@@ -100,122 +100,110 @@ To uninstall a mod, select it in the list and press the delete key.</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkVButtonBox" id="vbuttonbox1">
+          <widget class="GtkToolbar" id="toolbar1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="layout_style">start</property>
+            <property name="orientation">vertical</property>
+            <property name="toolbar_style">both</property>
             <child>
-              <widget class="GtkButton" id="buttonOpenFolder">
-                <property name="label">gtk-open</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_underline">True</property>
-                <property name="use_stock">True</property>
-                <property name="image_position">top</property>
-                <signal name="clicked" handler="OnViewFolderClicked" swapped="no"/>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkHSeparator" id="hseparator1">
+              <widget class="GtkToolButton" id="buttonAdd">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-              </widget>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkButton" id="buttonAdd">
-                <property name="label">gtk-add</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
+                <property name="tooltip" translatable="yes">Add mods to jar or mods folder</property>
+                <property name="label" translatable="yes">Add Mod</property>
                 <property name="use_underline">True</property>
-                <property name="use_stock">True</property>
-                <property name="image_position">top</property>
+                <property name="stock_id">gtk-add</property>
                 <signal name="clicked" handler="OnAddClicked" swapped="no"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">2</property>
+                <property name="homogeneous">True</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="buttonRemove">
-                <property name="label">gtk-remove</property>
+              <widget class="GtkToolButton" id="buttonRemove">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
+                <property name="can_focus">False</property>
+                <property name="tooltip" translatable="yes">Remove selected mod</property>
+                <property name="label" translatable="yes">Remove Mod</property>
                 <property name="use_underline">True</property>
-                <property name="use_stock">True</property>
-                <property name="image_position">top</property>
+                <property name="stock_id">gtk-remove</property>
                 <signal name="clicked" handler="OnRemoveClicked" swapped="no"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">3</property>
+                <property name="homogeneous">True</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkHSeparator" id="hseparator2">
+              <widget class="GtkSeparatorToolItem" id="toolbutton1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">4</property>
+                <property name="homogeneous">True</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="buttonUp">
-                <property name="label">gtk-go-up</property>
+              <widget class="GtkToolButton" id="buttonUp">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
+                <property name="can_focus">False</property>
+                <property name="tooltip" translatable="yes">Make mod load sooner (only supported for jar mods)</property>
+                <property name="label" translatable="yes">Move Up</property>
                 <property name="use_underline">True</property>
-                <property name="use_stock">True</property>
-                <property name="image_position">top</property>
+                <property name="stock_id">gtk-go-up</property>
                 <signal name="clicked" handler="OnUpDownClicked" swapped="no"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">5</property>
+                <property name="homogeneous">True</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="buttonDown">
-                <property name="label">gtk-go-down</property>
+              <widget class="GtkToolButton" id="buttonDown">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
+                <property name="can_focus">False</property>
+                <property name="tooltip" translatable="yes">make mod load later (only supported for jar mods)</property>
+                <property name="label" translatable="yes">Move Down</property>
                 <property name="use_underline">True</property>
-                <property name="use_stock">True</property>
-                <property name="image_position">bottom</property>
+                <property name="stock_id">gtk-go-down</property>
                 <signal name="clicked" handler="OnUpDownClicked" swapped="no"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">6</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkSeparatorToolItem" id="toolbutton2">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkToolButton" id="buttonOpenFolder">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="tooltip" translatable="yes">Open folder with installed jar or modloader mods</property>
+                <property name="label" translatable="yes">Open folder</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-open</property>
+                <signal name="clicked" handler="OnViewFolderClicked" swapped="no"/>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
-            <property name="padding">5</property>
             <property name="position">1</property>
           </packing>
         </child>
