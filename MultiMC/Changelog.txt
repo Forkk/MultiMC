@@ -1,4 +1,8 @@
-﻿Version 3.0.2.7:
+﻿Version 3.1.0.0:
+	- Implemented a save manager that can back up your saves quickly and
+	  easily.
+
+Version 3.0.2.7:
 	- Implemented update confirmation dialog for Linux and OS X.
 	- OS detection now works properly on OS X.
 	- MultiMC no longer crashes when an embedded DLL is missing.
