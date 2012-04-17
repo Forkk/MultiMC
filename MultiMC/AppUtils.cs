@@ -17,6 +17,8 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Collections;
+using System.Linq;
 using System.Net.Security;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
@@ -27,14 +29,92 @@ namespace MultiMC
 	{
 		static bool initialized;
 
-		private static void Init()
+		public static void Init()
 		{
-			if (!initialized)
+			if (initialized)
+				return;
+
+			initialized = true;
+			ServicePointManager.ServerCertificateValidationCallback =
+				new RemoteCertificateValidationCallback(CertCheck);
+
+			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+
+			AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
+		}
+
+		static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+		{
+			try
 			{
-				initialized = true;
-				ServicePointManager.ServerCertificateValidationCallback =
-					new RemoteCertificateValidationCallback(CertCheck);
+				Console.WriteLine("Unhandled exception occurred!");
+				Console.WriteLine(e.ExceptionObject.ToString());
+
+				Exception ex = e.ExceptionObject as Exception;
+
+				if (ex == null)
+				{
+					Console.WriteLine("ExceptionObject is not an Exception!");
+					Environment.Exit(-2);
+				}
+
+				Console.WriteLine("Dumping error log...");
+				LogError(ex);
+
+				if (ex is StackOverflowException ||
+					ex is OutOfMemoryException)
+				{
+					Console.WriteLine("Fatal exception! Aborting!");
+					Environment.Exit(-1);
+				}
+
+				if (UnhandledException != null)
+					UnhandledException(sender, e);
 			}
+			catch (Exception)
+			{
+				Environment.Exit(-3);
+			}
+		}
+
+		public static event UnhandledExceptionEventHandler UnhandledException;
+
+		static readonly string[] EmbeddedDLLs = new string[]
+		{
+			"GitSharp.Core",
+			"GitSharp",
+			"ICSharpCode.SharpZipLib",
+			"Ionic.Zip.Reduced",
+			"Newtonsoft.Json",
+			"nunit.framework",
+			"Tamir.SharpSSH",
+			"Winterdom.IO.FileMap",
+		};
+
+		static Assembly AssemblyResolve(object sender, ResolveEventArgs args)
+		{
+			string assemblyName = new AssemblyName(args.Name).Name;
+			string resourceName = "MultiMC." + assemblyName;
+
+			if (EmbeddedDLLs.Any(dll => assemblyName.ToLower().Contains(dll)))
+			{
+				resourceName = "MultiMC.Lib." + assemblyName + ".dll";
+			}
+
+			using (Stream stream = Assembly.GetExecutingAssembly().
+				GetManifestResourceStream(resourceName))
+			{
+				if (stream != null)
+				{
+					Byte[] assemblyData = new Byte[stream.Length];
+					stream.Read(assemblyData, 0, assemblyData.Length);
+
+					Console.WriteLine("Loaded {0} from resources.", assemblyName);
+					return Assembly.Load(assemblyData);
+				}
+			}
+
+			return null;
 		}
 
 		/// <summary>
@@ -101,6 +181,7 @@ namespace MultiMC
 			sb.AppendLine();
 			sb.AppendLine("Computer info:");
 			sb.AppendLine(string.Format("\tOperating System: {0}", OSUtils.OSName));
+			sb.AppendLine(string.Format("\tRuntime: {0}", OSUtils.Runtime.ToString()));
 			sb.AppendLine();
 			sb.AppendLine("---------- BEGIN STACK TRACE ----------");
 			sb.AppendLine(e.ToString());

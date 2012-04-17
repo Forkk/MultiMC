@@ -1,4 +1,7 @@
-﻿Version 3.1.0.0:
+﻿Version 3.1.0.1:
+	- MultiMC now (usually) dumps an error log when it crashes.
+
+Version 3.1.0.0:
 	- Implemented a save manager that can back up your saves quickly and
 	  easily.
 
