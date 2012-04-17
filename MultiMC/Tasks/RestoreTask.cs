@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
+
 using GitSharp;
 
 namespace MultiMC.Tasks
@@ -39,6 +41,22 @@ namespace MultiMC.Tasks
 				Commit restoreCommit =
 					repo.CurrentBranch.CurrentCommit.Ancestors.FirstOrDefault(commit =>
 						commit.Hash.StartsWith(BackupHash));
+
+				Status = "Preparing...";
+				foreach (string path in Directory.GetFileSystemEntries(Save.Path))
+				{
+					if (!path.Contains(".git"))
+					{
+						try
+						{
+							Directory.Delete(path, true);
+						}
+						catch (IOException)
+						{
+							
+						}
+					}
+				}
 
 				if (restoreCommit == null)
 				{

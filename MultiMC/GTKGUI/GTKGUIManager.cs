@@ -119,5 +119,17 @@ namespace MultiMC.GTKGUI
 		{
 			return new TaskDialog(task);
 		}
+
+
+		public ISaveManagerDialog SaveManagerDialog()
+		{
+			throw new NotImplementedException();
+		}
+
+
+		public IRestoreBackupDialog RestoreBackupDialog()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 using MultiMC.Tasks;
 
@@ -25,6 +26,11 @@ namespace MultiMC
 		{
 			get;
 			protected set;
+		}
+
+		public string FolderName
+		{
+			get { return System.IO.Path.GetFileName(Path); }
 		}
 	}
 }

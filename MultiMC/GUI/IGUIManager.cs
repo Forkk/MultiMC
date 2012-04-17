@@ -42,6 +42,10 @@ namespace MultiMC.GUI
 
 		ITaskDialog TaskDialog(Task task);
 
+		ISaveManagerDialog SaveManagerDialog();
+
+		IRestoreBackupDialog RestoreBackupDialog();
+
 		void Run(IMainWindow mainWindow);
 	}
 

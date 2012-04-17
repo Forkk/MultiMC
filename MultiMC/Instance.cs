@@ -521,6 +521,19 @@ namespace MultiMC
 			private set;
 		}
 
+		public List<WorldSave> Saves
+		{
+			get
+			{
+				List<WorldSave> saves = new List<WorldSave>();
+				foreach (string file in Directory.GetDirectories(SavesDir))
+				{
+					saves.Add(new WorldSave(this, file));
+				}
+				return saves;
+			}
+		}
+
 		#endregion
 
 		#region Events

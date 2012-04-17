@@ -156,6 +156,8 @@
     <Compile Include="GUI\IImageList.cs" />
     <Compile Include="GUI\ILoginDialog.cs" />
     <Compile Include="GUI\INotesDialog.cs" />
+    <Compile Include="GUI\IRestoreBackupDialog.cs" />
+    <Compile Include="GUI\ISaveManagerDialog.cs" />
     <Compile Include="GUI\ISettingsDialog.cs" />
     <Compile Include="GUI\ITaskDialog.cs" />
     <Compile Include="GUI\ITaskStatus.cs" />
@@ -235,6 +237,18 @@
     </Compile>
     <Compile Include="WinGUI\NotesForm.Designer.cs">
       <DependentUpon>NotesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinGUI\RestoreBackupDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\RestoreBackupDialog.Designer.cs">
+      <DependentUpon>RestoreBackupDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinGUI\SaveManagerDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\SaveManagerDialog.Designer.cs">
+      <DependentUpon>SaveManagerDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="WinGUI\TaskDialog.cs">
       <SubType>Form</SubType>
@@ -326,6 +340,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinGUI\NotesForm.resx">
       <DependentUpon>NotesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinGUI\RestoreBackupDialog.resx">
+      <DependentUpon>RestoreBackupDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinGUI\SaveManagerDialog.resx">
+      <DependentUpon>SaveManagerDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinGUI\SettingsForm.resx">
       <DependentUpon>SettingsForm.cs</DependentUpon>

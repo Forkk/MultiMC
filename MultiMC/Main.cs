@@ -75,6 +75,7 @@ namespace MultiMC
 			MainWindow.ChangeIconClicked += ChangeIconClicked;
 			MainWindow.EditNotesClicked += EditNotesClicked;
 
+			MainWindow.ManageSavesClicked += ManageSavesClicked;
 			MainWindow.EditModsClicked += EditModsClicked;
 			MainWindow.RebuildJarClicked += RebuildClicked;
 			MainWindow.ViewInstFolderClicked += ViewInstFolderClicked;
@@ -306,6 +307,48 @@ namespace MultiMC
 			noteDlg.Run();
 		}
 
+		void ManageSavesClicked(object sender, InstActionEventArgs e)
+		{
+			ISaveManagerDialog manageSaveDialog = GUIManager.Main.SaveManagerDialog();
+			manageSaveDialog.LoadSaveList(e.Inst);
+			manageSaveDialog.Parent = MainWindow;
+			manageSaveDialog.DefaultPosition = DefWindowPosition.CenterParent;
+
+			manageSaveDialog.BackupSaveClicked += BackupSaveClicked;
+			manageSaveDialog.RestoreSaveClicked += RestoreSaveClicked;
+
+			manageSaveDialog.Run();
+		}
+
+		void BackupSaveClicked(object sender, EventArgs e)
+		{
+			WorldSave save = (sender as ISaveManagerDialog).SelectedSave;
+
+			if (save == null)
+				return;
+
+			StartModalTask(new BackupTask(save, "MultiMC Backup"), sender as IWindow);
+		}
+
+		void RestoreSaveClicked(object sender, EventArgs e)
+		{
+			WorldSave save = (sender as ISaveManagerDialog).SelectedSave;
+			IRestoreBackupDialog restoreDialog = GUIManager.Main.RestoreBackupDialog();
+			restoreDialog.Parent = sender as IWindow;
+			restoreDialog.DefaultPosition = DefWindowPosition.CenterParent;
+
+			restoreDialog.Response += (o, args) =>
+				{
+					if (args.Response == DialogResponse.OK)
+					{
+						StartModalTask(new RestoreTask(save, restoreDialog.SelectedHash));
+					}
+				};
+
+			restoreDialog.LoadBackupList(save);
+			restoreDialog.Run();
+		}
+
 		void EditModsClicked(object sender, InstActionEventArgs e)
 		{
 			IEditModsDialog editModsDlg = GUIManager.Main.EditModsDialog(SelectedInst);
@@ -461,13 +504,13 @@ namespace MultiMC
 			task.Start();
 		}
 
-		private void StartModalTask(Task task)
+		private void StartModalTask(Task task, IWindow parentWindow = null)
 		{
 			task.ErrorMessage += TaskErrorMessage;
 			ITaskDialog taskDlg = GUIManager.Main.TaskDialog(task);
 			if (!DirectLaunch)
 			{
-				taskDlg.Parent = MainWindow;
+				taskDlg.Parent = parentWindow != null ? parentWindow : MainWindow;
 				taskDlg.ShowInTaskbar = false;
 			}
 			taskDlg.DefaultPosition = DefWindowPosition.CenterScreen;
