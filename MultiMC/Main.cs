@@ -337,7 +337,10 @@ namespace MultiMC
 			inputDialog.Response += (o, args) =>
 				{
 					if (args.Response == DialogResponse.OK)
-						StartModalTask(new BackupTask(save, ""), inputDialog);
+						StartModalTask(new BackupTask(save, 
+							inputDialog.Input != null ? 
+								inputDialog.Input : "Unnamed MultiMC Backup"), 
+							inputDialog);
 				};
 
 			inputDialog.Run();
