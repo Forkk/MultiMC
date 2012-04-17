@@ -161,6 +161,7 @@
     <Compile Include="GUI\ISettingsDialog.cs" />
     <Compile Include="GUI\ITaskDialog.cs" />
     <Compile Include="GUI\ITaskStatus.cs" />
+    <Compile Include="GUI\ITextInputDialog.cs" />
     <Compile Include="GUI\IUpdateConfirmDialog.cs" />
     <Compile Include="GUI\MessageDialog.cs" />
     <Compile Include="GUI\WindowUtils.cs" />
@@ -213,6 +214,12 @@
     </Compile>
     <Compile Include="WinGUI\ConsoleForm.Designer.cs">
       <DependentUpon>ConsoleForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinGUI\TextInputDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\TextInputDialog.Designer.cs">
+      <DependentUpon>TextInputDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="WinGUI\DeleteConfirmForm.cs">
       <SubType>Form</SubType>
@@ -319,6 +326,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinGUI\ConsoleForm.resx">
       <DependentUpon>ConsoleForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinGUI\TextInputDialog.resx">
+      <DependentUpon>TextInputDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinGUI\DeleteConfirmForm.resx">
       <DependentUpon>DeleteConfirmForm.cs</DependentUpon>

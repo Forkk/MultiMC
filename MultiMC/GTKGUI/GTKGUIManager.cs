@@ -131,5 +131,11 @@ namespace MultiMC.GTKGUI
 		{
 			throw new NotImplementedException();
 		}
+
+
+		public ITextInputDialog TextInputDialog(string message, string text = "")
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

@@ -327,12 +327,29 @@ namespace MultiMC
 			if (save == null)
 				return;
 
-			StartModalTask(new BackupTask(save, "MultiMC Backup"), sender as IWindow);
+			ITextInputDialog inputDialog = GUIManager.Main.TextInputDialog(
+				"Please enter a name for your backup.", 
+				"Unnamed MultiMC Backup");
+			inputDialog.Title = "Backup Save";
+
+			inputDialog.Shown += (o, args) => inputDialog.HighlightText();
+
+			inputDialog.Response += (o, args) =>
+				{
+					if (args.Response == DialogResponse.OK)
+						StartModalTask(new BackupTask(save, ""), inputDialog);
+				};
+
+			inputDialog.Run();
 		}
 
 		void RestoreSaveClicked(object sender, EventArgs e)
 		{
 			WorldSave save = (sender as ISaveManagerDialog).SelectedSave;
+
+			if (save == null)
+				return;
+
 			IRestoreBackupDialog restoreDialog = GUIManager.Main.RestoreBackupDialog();
 			restoreDialog.Parent = sender as IWindow;
 			restoreDialog.DefaultPosition = DefWindowPosition.CenterParent;

@@ -17,6 +17,8 @@ namespace MultiMC.WinGUI
 		{
 			InitializeComponent();
 
+			UpdateButtons();
+
 			if (OSUtils.OS == OSEnum.Windows)
 				OSUtils.SetWindowTheme(saveView.Handle, "explorer", null);
 		}
@@ -50,7 +52,13 @@ namespace MultiMC.WinGUI
 
 		public WorldSave SelectedSave
 		{
-			get { return GetLinkedSave(saveView.SelectedItems[0]); }
+			get
+			{
+				if (saveView.SelectedItems.Count == 0)
+					return null;
+				else
+					return GetLinkedSave(saveView.SelectedItems[0]);
+			}
 		}
 
 		private void buttonRestore_Click(object sender, EventArgs e)
@@ -63,6 +71,17 @@ namespace MultiMC.WinGUI
 		{
 			if (BackupSaveClicked != null)
 				BackupSaveClicked(this, EventArgs.Empty);
+		}
+
+		private void saveView_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			UpdateButtons();
+		}
+
+		void UpdateButtons()
+		{
+			buttonCreateBackup.Enabled = saveView.SelectedItems.Count > 0;
+			buttonRestore.Enabled = saveView.SelectedItems.Count > 0;
 		}
 	}
 }

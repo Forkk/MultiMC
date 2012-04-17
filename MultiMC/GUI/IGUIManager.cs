@@ -46,6 +46,8 @@ namespace MultiMC.GUI
 
 		IRestoreBackupDialog RestoreBackupDialog();
 
+		ITextInputDialog TextInputDialog(string message, string text = "");
+
 		void Run(IMainWindow mainWindow);
 	}
 

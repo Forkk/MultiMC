@@ -115,5 +115,10 @@ namespace MultiMC.WinGUI
 		{
 			return new RestoreBackupDialog();
 		}
+
+		public ITextInputDialog TextInputDialog(string message, string text = "")
+		{
+			return new TextInputDialog(message, text);
+		}
 	}
 }

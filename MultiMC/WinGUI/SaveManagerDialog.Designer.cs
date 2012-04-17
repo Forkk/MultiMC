@@ -50,6 +50,7 @@
 			this.saveView.TabIndex = 0;
 			this.saveView.UseCompatibleStateImageBehavior = false;
 			this.saveView.View = System.Windows.Forms.View.Details;
+			this.saveView.SelectedIndexChanged += new System.EventHandler(this.saveView_SelectedIndexChanged);
 			// 
 			// columnHeaderName
 			// 

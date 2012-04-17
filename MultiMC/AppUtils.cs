@@ -96,7 +96,7 @@ namespace MultiMC
 			string assemblyName = new AssemblyName(args.Name).Name;
 			string resourceName = "MultiMC." + assemblyName;
 
-			if (EmbeddedDLLs.Any(dll => assemblyName.ToLower().Contains(dll)))
+			if (EmbeddedDLLs.Any(dll => assemblyName.ToLower().Contains(dll.ToLower())))
 			{
 				resourceName = "MultiMC.Lib." + assemblyName + ".dll";
 			}
