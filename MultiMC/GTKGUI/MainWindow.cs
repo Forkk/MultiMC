@@ -44,10 +44,28 @@ namespace MultiMC.GTKGUI
 			instView.Model = instListStore;
 			instView.TextColumn = 0;
 			instView.PixbufColumn = 1;
-
 			instView.ItemWidth = -1;
+			
+			Gtk.CellRendererText crt = instView.Cells[0] as CellRendererText;
+			crt.Editable = true;
+			crt.Edited += (object o, EditedArgs args) =>
+			{
+				int EditedIndex = int.Parse(args.Path);
+				TreeIter iter;
+				// don't allow bad names
+				if(!Instance.NameIsValid(args.NewText))
+					return;
+				System.Console.WriteLine("Path: " + args.Path + " New text: " + args.NewText);
+				if(instListStore.GetIterFromString(out iter,args.Path))
+				{
+					instListStore.SetValue(iter, 0, args.NewText);
+					Instance inst = instListStore.GetValue(iter, 2) as Instance;
+					inst.Name = args.NewText;
+				}
+				
+			};
+			
 			instView.Orientation = Orientation.Vertical;
-
 			instView.ButtonPressEvent += (o, args) =>
 				{
 					if (args.Event.Button == 3 &&
@@ -275,6 +293,12 @@ namespace MultiMC.GTKGUI
 		{
 			if (RemoveOpenALClicked != null)
 				RemoveOpenALClicked(this, new InstActionEventArgs(SelectedInst));
+		}
+		
+		void OnRenameClicked(object sender, EventArgs e)
+		{
+			if(instView.SelectedItems.Count() != 0)
+				instView.SetCursor(instView.SelectedItems[0], instView.Cells[0], true);
 		}
 
 		// Other

@@ -18,6 +18,14 @@
       </widget>
     </child>
     <child>
+      <widget class="GtkMenuItem" id="renameMenuItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Rename</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="OnRenameClicked"/>
+      </widget>
+    </child>
+    <child>
       <widget class="GtkMenuItem" id="changeIconMenuItem">
         <property name="visible">True</property>
         <property name="label" translatable="yes">Change Icon</property>
