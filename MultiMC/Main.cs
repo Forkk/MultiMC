@@ -75,6 +75,7 @@ namespace MultiMC
 			MainWindow.ChangeIconClicked += ChangeIconClicked;
 			MainWindow.EditNotesClicked += EditNotesClicked;
 
+			MainWindow.ManageSavesClicked += ManageSavesClicked;
 			MainWindow.EditModsClicked += EditModsClicked;
 			MainWindow.RebuildJarClicked += RebuildClicked;
 			MainWindow.ViewInstFolderClicked += ViewInstFolderClicked;
@@ -306,6 +307,68 @@ namespace MultiMC
 			noteDlg.Run();
 		}
 
+		void ManageSavesClicked(object sender, InstActionEventArgs e)
+		{
+			ISaveManagerDialog manageSaveDialog = GUIManager.Main.SaveManagerDialog();
+			manageSaveDialog.LoadSaveList(e.Inst);
+			manageSaveDialog.Parent = MainWindow;
+			manageSaveDialog.DefaultPosition = DefWindowPosition.CenterParent;
+
+			manageSaveDialog.BackupSaveClicked += BackupSaveClicked;
+			manageSaveDialog.RestoreSaveClicked += RestoreSaveClicked;
+
+			manageSaveDialog.Run();
+		}
+
+		void BackupSaveClicked(object sender, EventArgs e)
+		{
+			WorldSave save = (sender as ISaveManagerDialog).SelectedSave;
+
+			if (save == null)
+				return;
+
+			ITextInputDialog inputDialog = GUIManager.Main.TextInputDialog(
+				"Please enter a name for your backup.", 
+				"Unnamed MultiMC Backup");
+			inputDialog.Title = "Backup Save";
+
+			inputDialog.Shown += (o, args) => inputDialog.HighlightText();
+
+			inputDialog.Response += (o, args) =>
+				{
+					if (args.Response == DialogResponse.OK)
+						StartModalTask(new BackupTask(save, 
+							inputDialog.Input != null ? 
+								inputDialog.Input : "Unnamed MultiMC Backup"), 
+							inputDialog);
+				};
+
+			inputDialog.Run();
+		}
+
+		void RestoreSaveClicked(object sender, EventArgs e)
+		{
+			WorldSave save = (sender as ISaveManagerDialog).SelectedSave;
+
+			if (save == null)
+				return;
+
+			IRestoreBackupDialog restoreDialog = GUIManager.Main.RestoreBackupDialog();
+			restoreDialog.Parent = sender as IWindow;
+			restoreDialog.DefaultPosition = DefWindowPosition.CenterParent;
+
+			restoreDialog.Response += (o, args) =>
+				{
+					if (args.Response == DialogResponse.OK)
+					{
+						StartModalTask(new RestoreTask(save, restoreDialog.SelectedHash));
+					}
+				};
+
+			restoreDialog.LoadBackupList(save);
+			restoreDialog.Run();
+		}
+
 		void EditModsClicked(object sender, InstActionEventArgs e)
 		{
 			IEditModsDialog editModsDlg = GUIManager.Main.EditModsDialog(SelectedInst);
@@ -461,13 +524,13 @@ namespace MultiMC
 			task.Start();
 		}
 
-		private void StartModalTask(Task task)
+		private void StartModalTask(Task task, IWindow parentWindow = null)
 		{
 			task.ErrorMessage += TaskErrorMessage;
 			ITaskDialog taskDlg = GUIManager.Main.TaskDialog(task);
 			if (!DirectLaunch)
 			{
-				taskDlg.Parent = MainWindow;
+				taskDlg.Parent = parentWindow != null ? parentWindow : MainWindow;
 				taskDlg.ShowInTaskbar = false;
 			}
 			taskDlg.DefaultPosition = DefWindowPosition.CenterScreen;
@@ -602,37 +665,30 @@ namespace MultiMC
 				{
 					string updateMsg = "Updates have been downloaded. " +
 						"Would you like to install them?";
+
 					if (updateVersion != null)
 						updateMsg =  string.Format("Version {0} has been downloaded. " +
 							"Would you like to install it now?", updateVersion);
-				
-					try
-					{
-						IUpdateDialog updateDialog = GUIManager.Main.UpdateDialog();
-						updateDialog.Parent = MainWindow;
-						updateDialog.ShowInTaskbar = false;
-	
-						updateDialog.DefaultPosition = DefWindowPosition.CenterParent;
-	
-						updateDialog.Message = updateMsg;
-	
-						DialogResponse response = DialogResponse.No;
-						updateDialog.Response += (o, args) =>
-							{
-								response = args.Response;
-							};
-	
-						updateDialog.ViewChangelogClicked += ViewChangelogClicked;
-	
-						updateDialog.Run();
-	
-						if (response == DialogResponse.Yes)
+
+					IUpdateDialog updateDialog = GUIManager.Main.UpdateDialog();
+					updateDialog.Parent = MainWindow;
+					updateDialog.ShowInTaskbar = false;
+
+					updateDialog.DefaultPosition = DefWindowPosition.CenterParent;
+
+					updateDialog.Message = updateMsg;
+
+					updateDialog.Response += (o, args) =>
 						{
-							CloseForUpdates();
-						}
-					}
-					catch(NotImplementedException)
-					{}
+							if (args.Response == DialogResponse.Yes)
+							{
+								MainWindow.Invoke((o2, args2) => CloseForUpdates());
+							}
+						};
+
+					updateDialog.ViewChangelogClicked += ViewChangelogClicked;
+
+					updateDialog.Run();
 				});
 		}
 

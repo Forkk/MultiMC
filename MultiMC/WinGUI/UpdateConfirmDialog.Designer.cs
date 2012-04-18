@@ -99,6 +99,7 @@
 			this.buttonYes.TabIndex = 0;
 			this.buttonYes.Text = "&Yes";
 			this.buttonYes.UseVisualStyleBackColor = true;
+			this.buttonYes.Click += new System.EventHandler(this.buttonYes_Click);
 			// 
 			// buttonChangelog
 			// 
@@ -120,6 +121,7 @@
 			this.buttonNo.TabIndex = 2;
 			this.buttonNo.Text = "&No";
 			this.buttonNo.UseVisualStyleBackColor = true;
+			this.buttonNo.Click += new System.EventHandler(this.buttonNo_Click);
 			// 
 			// UpdateDialog
 			// 

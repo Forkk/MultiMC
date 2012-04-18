@@ -45,6 +45,7 @@ namespace MultiMC.GUI
 		event EventHandler<InstActionEventArgs> ChangeIconClicked;
 		event EventHandler<InstActionEventArgs> EditNotesClicked;
 
+		event EventHandler<InstActionEventArgs> ManageSavesClicked;
 		event EventHandler<InstActionEventArgs> EditModsClicked;
 		event EventHandler<InstActionEventArgs> RebuildJarClicked;
 		event EventHandler<InstActionEventArgs> ViewInstFolderClicked;

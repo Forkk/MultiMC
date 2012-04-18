@@ -111,13 +111,31 @@ namespace MultiMC.GTKGUI
 
 		public IUpdateDialog UpdateDialog()
 		{
-			throw new NotImplementedException();
+			return new UpdateDialog(mainWindow);
 		}
 
 
 		public ITaskDialog TaskDialog(Tasks.Task task)
 		{
 			return new TaskDialog(task);
+		}
+
+
+		public ISaveManagerDialog SaveManagerDialog()
+		{
+			throw new NotImplementedException();
+		}
+
+
+		public IRestoreBackupDialog RestoreBackupDialog()
+		{
+			throw new NotImplementedException();
+		}
+
+
+		public ITextInputDialog TextInputDialog(string message, string text = "")
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

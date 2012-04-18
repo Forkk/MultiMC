@@ -105,5 +105,20 @@ namespace MultiMC.WinGUI
 		{
 			return new TaskDialog(task);
 		}
+
+		public ISaveManagerDialog SaveManagerDialog()
+		{
+			return new SaveManagerDialog();
+		}
+
+		public IRestoreBackupDialog RestoreBackupDialog()
+		{
+			return new RestoreBackupDialog();
+		}
+
+		public ITextInputDialog TextInputDialog(string message, string text = "")
+		{
+			return new TextInputDialog(message, text);
+		}
 	}
 }

@@ -704,5 +704,14 @@ namespace MultiMC.WinGUI
 		{
 			instView.SelectedItems[0].BeginEdit();
 		}
+
+
+		public event EventHandler<InstActionEventArgs> ManageSavesClicked;
+
+		private void manageSavesToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (ManageSavesClicked != null)
+				ManageSavesClicked(this, new InstActionEventArgs(SelectedInst));
+		}
 	}
 }

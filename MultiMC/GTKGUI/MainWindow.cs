@@ -419,5 +419,8 @@ namespace MultiMC.GTKGUI
 			}
 			return i;
 		}
+
+
+		public event EventHandler<InstActionEventArgs> ManageSavesClicked;
 	}
 }

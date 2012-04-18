@@ -79,6 +79,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\gdk-sharp.dll</HintPath>
     </Reference>
+    <Reference Include="GitSharp, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\GitSharp.dll</HintPath>
+    </Reference>
     <Reference Include="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\glade-sharp.dll</HintPath>
@@ -142,6 +146,7 @@
     <Compile Include="GTKGUI\MainWindow.cs" />
     <Compile Include="GTKGUI\SettingsDialog.cs" />
     <Compile Include="GTKGUI\TaskDialog.cs" />
+    <Compile Include="GTKGUI\UpdateDialog.cs" />
     <Compile Include="GUI\IAboutDialog.cs" />
     <Compile Include="GUI\IAddInstDialog.cs" />
     <Compile Include="GUI\IChangeIconDialog.cs" />
@@ -151,9 +156,12 @@
     <Compile Include="GUI\IImageList.cs" />
     <Compile Include="GUI\ILoginDialog.cs" />
     <Compile Include="GUI\INotesDialog.cs" />
+    <Compile Include="GUI\IRestoreBackupDialog.cs" />
+    <Compile Include="GUI\ISaveManagerDialog.cs" />
     <Compile Include="GUI\ISettingsDialog.cs" />
     <Compile Include="GUI\ITaskDialog.cs" />
     <Compile Include="GUI\ITaskStatus.cs" />
+    <Compile Include="GUI\ITextInputDialog.cs" />
     <Compile Include="GUI\IUpdateConfirmDialog.cs" />
     <Compile Include="GUI\MessageDialog.cs" />
     <Compile Include="GUI\WindowUtils.cs" />
@@ -168,6 +176,7 @@
     <Compile Include="ProblemDetection\Problems\ModLoaderProblems.cs" />
     <Compile Include="ProblemDetection\Problems\VerifyError.cs" />
     <Compile Include="ProblemDetection\RegexProblem.cs" />
+    <Compile Include="Tasks\BackupTask.cs" />
     <Compile Include="Tasks\GameUpdater.cs" />
     <Compile Include="GUI\IDialog.cs" />
     <Compile Include="GUI\IMainWindow.cs" />
@@ -178,6 +187,7 @@
     <Compile Include="ConfigFile.cs" />
     <Compile Include="Tasks\Downloader.cs" />
     <Compile Include="Tasks\Modder.cs" />
+    <Compile Include="Tasks\RestoreTask.cs" />
     <Compile Include="Tasks\SimpleTask.cs" />
     <Compile Include="Tasks\Task.cs" />
     <Compile Include="Tasks\Updater.cs" />
@@ -205,6 +215,12 @@
     <Compile Include="WinGUI\ConsoleForm.Designer.cs">
       <DependentUpon>ConsoleForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="WinGUI\TextInputDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\TextInputDialog.Designer.cs">
+      <DependentUpon>TextInputDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinGUI\DeleteConfirmForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -228,6 +244,18 @@
     </Compile>
     <Compile Include="WinGUI\NotesForm.Designer.cs">
       <DependentUpon>NotesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinGUI\RestoreBackupDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\RestoreBackupDialog.Designer.cs">
+      <DependentUpon>RestoreBackupDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinGUI\SaveManagerDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinGUI\SaveManagerDialog.Designer.cs">
+      <DependentUpon>SaveManagerDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="WinGUI\TaskDialog.cs">
       <SubType>Form</SubType>
@@ -276,6 +304,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WorldSave.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -298,6 +327,9 @@
     <EmbeddedResource Include="WinGUI\ConsoleForm.resx">
       <DependentUpon>ConsoleForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="WinGUI\TextInputDialog.resx">
+      <DependentUpon>TextInputDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WinGUI\DeleteConfirmForm.resx">
       <DependentUpon>DeleteConfirmForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -318,6 +350,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinGUI\NotesForm.resx">
       <DependentUpon>NotesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinGUI\RestoreBackupDialog.resx">
+      <DependentUpon>RestoreBackupDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinGUI\SaveManagerDialog.resx">
+      <DependentUpon>SaveManagerDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinGUI\SettingsForm.resx">
       <DependentUpon>SettingsForm.cs</DependentUpon>
@@ -340,6 +378,7 @@
       <DependentUpon>UpdateConfirmDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GTKGUI\TaskDialog.glade" />
+    <EmbeddedResource Include="GTKGUI\UpdateDialog.glade" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -395,6 +434,12 @@
     <None Include="Resources\MultiMC.ico" />
     <None Include="WinGUI\ToolbarIcons\ImportIcon.png" />
     <EmbeddedResource Include="Lib\Newtonsoft.Json.dll" />
+    <EmbeddedResource Include="Lib\GitSharp.Core.dll" />
+    <EmbeddedResource Include="Lib\GitSharp.dll" />
+    <EmbeddedResource Include="Lib\ICSharpCode.SharpZipLib.dll" />
+    <EmbeddedResource Include="Lib\nunit.framework.dll" />
+    <EmbeddedResource Include="Lib\Tamir.SharpSSH.dll" />
+    <EmbeddedResource Include="Lib\Winterdom.IO.FileMap.dll" />
     <Content Include="WinGUI\ToolbarIcons\AboutIcon.png" />
     <Content Include="WinGUI\ToolbarIcons\CheckUpdateIcon.png" />
     <Content Include="WinGUI\ToolbarIcons\HelpIcon.png" />

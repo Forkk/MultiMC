@@ -31,5 +31,15 @@ namespace MultiMC.WinGUI
 			if (ViewChangelogClicked != null)
 				ViewChangelogClicked(this, EventArgs.Empty);
 		}
+
+		private void buttonYes_Click(object sender, EventArgs e)
+		{
+			OnResponse(DialogResponse.Yes);
+		}
+
+		private void buttonNo_Click(object sender, EventArgs e)
+		{
+			OnResponse(DialogResponse.No);
+		}
 	}
 }

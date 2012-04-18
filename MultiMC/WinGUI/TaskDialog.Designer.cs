@@ -71,7 +71,6 @@
 			// 
 			// TaskDialog
 			// 
-			this.AlwaysOnTop = true;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(394, 81);
@@ -80,7 +79,6 @@
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "TaskDialog";
-			this.TopMost = true;
 			this.layoutPanel.ResumeLayout(false);
 			this.layoutPanel.PerformLayout();
 			this.ResumeLayout(false);
