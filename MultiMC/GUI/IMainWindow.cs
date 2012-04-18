@@ -29,7 +29,14 @@ namespace MultiMC.GUI
 	{
 		void LoadInstances();
 
-		event EventHandler NewInstClicked;
+		/// <summary>
+		/// Opens a file selection dialog allowing the user to pick a 
+		/// .minecraft folder to import.
+		/// </summary>
+		/// <returns>The path to the .minecraft folder the user picked.</returns>
+		string ImportInstance();
+
+		event EventHandler<AddInstEventArgs> AddInstClicked;
 		event EventHandler ViewFolderClicked;
 		event EventHandler RefreshClicked;
 
@@ -91,5 +98,26 @@ namespace MultiMC.GUI
 			get;
 			protected set;
 		}
+	}
+
+	public class AddInstEventArgs : EventArgs
+	{
+		public AddInstEventArgs(AddInstAction action)
+		{
+			this.Action = action;
+		}
+
+		public AddInstAction Action
+		{
+			get;
+			protected set;
+		}
+	}
+
+	public enum AddInstAction
+	{
+		CreateNew,
+		CopyExisting,
+		ImportExisting,
 	}
 }

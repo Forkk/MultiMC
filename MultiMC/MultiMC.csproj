@@ -186,6 +186,7 @@
     <Compile Include="OSUtils.cs" />
     <Compile Include="ConfigFile.cs" />
     <Compile Include="Tasks\Downloader.cs" />
+    <Compile Include="Tasks\DirCopyTask.cs" />
     <Compile Include="Tasks\Modder.cs" />
     <Compile Include="Tasks\RestoreTask.cs" />
     <Compile Include="Tasks\SimpleTask.cs" />

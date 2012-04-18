@@ -185,8 +185,9 @@ namespace MultiMC.GTKGUI
 		// Menu Bar
 		void OnNewInstanceClicked(object sender, EventArgs e)
 		{
-			if (NewInstClicked != null)
-				NewInstClicked(this, EventArgs.Empty);
+			if (AddInstClicked != null)
+				AddInstClicked(this,
+					new AddInstEventArgs(AddInstAction.CreateNew));
 		}
 
 		void OnViewFolderClicked(object sender, EventArgs e)
@@ -340,7 +341,7 @@ namespace MultiMC.GTKGUI
 			protected set;
 		}
 
-		public event EventHandler NewInstClicked;
+		public event EventHandler<AddInstEventArgs> AddInstClicked;
 
 		public event EventHandler ViewFolderClicked;
 
@@ -422,5 +423,26 @@ namespace MultiMC.GTKGUI
 
 
 		public event EventHandler<InstActionEventArgs> ManageSavesClicked;
+
+		public string ImportInstance()
+		{
+			FileChooserDialog browserDlg = new FileChooserDialog(
+				"Import .minecraft folder", this, FileChooserAction.SelectFolder);
+			browserDlg.SelectMultiple = false;
+
+			browserDlg.AddButton("_Cancel", 0);
+			browserDlg.AddButton("_Select Folder", 1);
+
+			int response = browserDlg.Run();
+
+			if (response == 1)
+			{
+				return browserDlg.Filename;
+			}
+			else
+			{
+				return null;
+			}
+		}
 	}
 }
