@@ -247,11 +247,7 @@ namespace MultiMC.WinGUI
 			instView.Items.Add(item);
 		}
 
-		public event EventHandler NewInstClicked
-		{
-			add { addInstButton.Click += value; }
-			remove { addInstButton.Click -= value; }
-		}
+		public event EventHandler<AddInstEventArgs> AddInstClicked;
 
 		public event EventHandler ViewFolderClicked
 		{
@@ -485,12 +481,11 @@ namespace MultiMC.WinGUI
 
 		private string DragDropHint
 		{
-			get { return _ddHint; }
+			get { return DragDropHintLabel.Text; }
 			set
 			{
-				_ddHint = value;
-				DragDropHintLabel.Text = _ddHint;
-				DragDropHintLabel.Visible = !string.IsNullOrEmpty(_ddHint);
+				DragDropHintLabel.Text = value;
+				DragDropHintLabel.Visible = !string.IsNullOrEmpty(DragDropHint);
 			}
 		}
 
@@ -698,6 +693,11 @@ namespace MultiMC.WinGUI
 				if (instView.SelectedItems.Count > 0)
 					instView.SelectedItems[0].BeginEdit();
 			}
+			else if (e.KeyData == Keys.Escape)
+			{
+				if (EscPressed != null)
+					EscPressed(this, EventArgs.Empty);
+			}
 		}
 
 		private void renameToolStripMenuItem_Click(object sender, EventArgs e)
@@ -712,6 +712,62 @@ namespace MultiMC.WinGUI
 		{
 			if (ManageSavesClicked != null)
 				ManageSavesClicked(this, new InstActionEventArgs(SelectedInst));
+		}
+
+		private void addInstButton_ButtonClick(object sender, EventArgs e)
+		{
+			OnAddInstClicked(AddInstAction.CreateNew);
+		}
+
+		private void addNewToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			OnAddInstClicked(AddInstAction.CreateNew);
+		}
+
+		private void copyExistingToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			OnAddInstClicked(AddInstAction.CopyExisting);
+		}
+
+		private void importToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			OnAddInstClicked(AddInstAction.ImportExisting);
+		}
+
+		void OnAddInstClicked(AddInstAction action)
+		{
+			if (AddInstClicked != null)
+				AddInstClicked(this, new AddInstEventArgs(action));
+		}
+
+		public string ImportInstance()
+		{
+			FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
+			folderBrowser.ShowNewFolderButton = false;
+			folderBrowser.Description = "Choose a .minecraft to import.";
+
+			if (OSUtils.OS == OSEnum.Windows)
+			{
+				string defMCDir = Path.Combine(
+					Environment.GetEnvironmentVariable("APPDATA"), ".minecraft");
+
+				if (Directory.Exists(defMCDir))
+				{
+					folderBrowser.SelectedPath = defMCDir;
+				}
+			}
+
+			folderBrowser.ShowDialog(this);
+
+			return folderBrowser.SelectedPath;
+		}
+
+		public event EventHandler EscPressed;
+
+		public string StatusText
+		{
+			get { return DragDropHint; }
+			set { DragDropHint = value; }
 		}
 	}
 }

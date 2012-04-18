@@ -60,7 +60,7 @@ namespace MultiMC
 			MainWindow.DefaultPosition = DefWindowPosition.CenterScreen;
 
 			// Main toolbar
-			MainWindow.NewInstClicked += NewInstClicked;
+			MainWindow.AddInstClicked += AddInstClicked;
 			MainWindow.RefreshClicked += (o, args) => MainWindow.LoadInstances();
 			MainWindow.ViewFolderClicked += ViewFolderClicked;
 
@@ -205,28 +205,143 @@ namespace MultiMC
 			DownloadNewVersion();
 		}
 
-		void NewInstClicked(object sender, EventArgs e)
+		void AddInstClicked(object sender, AddInstEventArgs e)
 		{
-			IAddInstDialog addInstDlg = GUIManager.Main.AddInstDialog();
-
-			addInstDlg.Parent = MainWindow;
-			addInstDlg.DefaultPosition = DefWindowPosition.CenterParent;
-			addInstDlg.ShowInTaskbar = false;
-			addInstDlg.MoveToDefPosition();
-			addInstDlg.Response += (o, args) =>
+			switch (e.Action)
 			{
-				if (args.Response == DialogResponse.OK)
-				{
-					Instance inst = new Instance(addInstDlg.InstName, 
-						Path.Combine(AppSettings.Main.InstanceDir,
-							Instance.GetValidDirName(addInstDlg.InstName, 
-							AppSettings.Main.InstanceDir)));
-					MainWindow.LoadInstances();
-				}
-				addInstDlg.Close();
-			};
+			case AddInstAction.CreateNew:
+				AddNewInst();
+				break;
+			case AddInstAction.CopyExisting:
+				CopyExistingInst();
+				break;
+			case AddInstAction.ImportExisting:
+				ImportExistingInstall();
+				break;
+			default:
+				break;
+			}
+		}
 
-			addInstDlg.Run();
+		void AddNewInst()
+		{
+			string instName = AskInstName("Add new instance");
+
+			if (string.IsNullOrEmpty(instName))
+				return;
+
+			Instance inst = new Instance(instName,
+				Path.Combine(AppSettings.Main.InstanceDir,
+					Instance.GetValidDirName(instName,
+						AppSettings.Main.InstanceDir)));
+
+			MainWindow.LoadInstances();
+		}
+
+		void CopyExistingInst()
+		{
+			MainWindow.StatusText = "Double click the instance you would " +
+				"like to copy. (Press escape to cancel)";
+			MainWindow.EscPressed += MainWindow_EscPressed;
+			MainWindow.InstanceLaunched -= LaunchInstance;
+			MainWindow.InstanceLaunched += InstCopied;
+		}
+
+		void InstCopied(object sender, InstActionEventArgs e)
+		{
+			StopInstCopy();
+
+			string instName = AskInstName("Copy instance");
+
+			if (string.IsNullOrEmpty(instName))
+				return;
+
+			string newInstDir = Instance.GetValidDirName(instName,
+				AppSettings.Main.InstanceDir);
+			newInstDir = Path.Combine(AppSettings.Main.InstanceDir, newInstDir);
+
+			DirCopyTask copyTask = new DirCopyTask(e.Inst.RootDir, newInstDir);
+			StartModalTask(copyTask);
+
+			Instance copiedInst = Instance.LoadInstance(newInstDir);
+			copiedInst.Name = instName;
+			copiedInst.Dispose();
+
+			MainWindow.LoadInstances();
+		}
+
+		void MainWindow_EscPressed(object sender, EventArgs e)
+		{
+			StopInstCopy();
+		}
+
+		void StopInstCopy()
+		{
+			MainWindow.StatusText = "";
+			MainWindow.EscPressed -= MainWindow_EscPressed;
+			MainWindow.InstanceLaunched += LaunchInstance;
+			MainWindow.InstanceLaunched -= InstCopied;
+		}
+
+		void ImportExistingInstall()
+		{
+		SelectFolder:
+			string path = MainWindow.ImportInstance();
+
+			if (string.IsNullOrEmpty(path))
+				return;
+
+			if (!Directory.Exists(path))
+			{
+				MessageDialog.Show(MainWindow,
+					"The specified folder doesn't exist.", "Error");
+				goto SelectFolder; // Gotos are cool.
+			}
+
+			if (!File.Exists(Path.Combine(path, "bin", "minecraft.jar")))
+			{
+				DialogResponse response = MessageDialog.Show(MainWindow,
+					"Couldn't find minecraft.jar. Do you really want to import this?",
+					"That doesn't look like Minecraft!", MessageButtons.YesNo);
+				if (response != DialogResponse.Yes)
+					goto SelectFolder; // Again, gotos are cool.
+			}
+
+			string instName = AskInstName("Import .minecraft folder");
+
+			if (string.IsNullOrEmpty(instName))
+				return;
+
+			// Create the new instance.
+			Instance inst = new Instance(instName,
+				Path.Combine(AppSettings.Main.InstanceDir,
+					Instance.GetValidDirName(instName,
+						AppSettings.Main.InstanceDir)));
+
+			// Copy the .minecraft folder into the new instance.
+			DirCopyTask dirCopy = new DirCopyTask(path, inst.MinecraftDir);
+			StartModalTask(dirCopy, MainWindow);
+
+			MainWindow.LoadInstances();
+		}
+
+		string AskInstName(string title = "Add instance", 
+			string dialogMsg = "Instance name:")
+		{
+			ITextInputDialog instNameDialog = 
+				GUIManager.Main.TextInputDialog(dialogMsg);
+			instNameDialog.Parent = MainWindow;
+			instNameDialog.DefaultPosition = DefWindowPosition.CenterParent;
+			instNameDialog.ShowInTaskbar = false;
+			instNameDialog.MoveToDefPosition();
+
+			bool okClicked = false;
+			instNameDialog.Response += (o, args) =>
+				okClicked = args.Response == DialogResponse.OK;
+
+			instNameDialog.Run();
+
+			return (okClicked ? instNameDialog.Input : null);
 		}
 
 		void ViewFolderClicked(object sender, EventArgs e)

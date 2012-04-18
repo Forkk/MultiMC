@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using MultiMC.GUI;
 
 namespace MultiMC.Tasks
 {
@@ -197,6 +198,36 @@ namespace MultiMC.Tasks
 				ErrorMessage(this, new ErrorMessageEventArgs(this, message));
 		}
 
+
+		/// <summary>
+		/// Called when the task wants to show a dialog for some reason.
+		/// (such as to ask the user a question)
+		/// </summary>
+		public event EventHandler<ShowDialogTaskEventArgs> ShowDialog;
+
+		/// <summary>
+		/// Shows a dialog with the given message, title, and buttons.
+		/// </summary>
+		/// <param name="message">The message shown on the dialog.</param>
+		/// <param name="title">The dialog's title.</param>
+		/// <param name="buttons">The buttons shown on the dialog.</param>
+		/// <param name="defResponse">The default dialog response to be
+		/// returned if nothing handles the event and sets the response value.</param>
+		/// <returns>The response from the dialog.</returns>
+		protected virtual DialogResponse ShowMessageDialog(
+			string message, string title, 
+			MessageButtons buttons = MessageButtons.Ok,
+			DialogResponse defResponse = DialogResponse.Other)
+		{
+			ShowDialogTaskEventArgs args = new ShowDialogTaskEventArgs(
+				this, message, title, buttons, defResponse);
+
+			if (ShowDialog != null)
+				ShowDialog(this, args);
+
+			return args.Response;
+		}
+
 		#endregion
 
 		#region Classes
@@ -328,6 +359,44 @@ namespace MultiMC.Tasks
 			{
 				get;
 				protected set;
+			}
+		}
+
+		public class ShowDialogTaskEventArgs : TaskEventArgs
+		{
+			public ShowDialogTaskEventArgs(Task t, 
+				string message, string title, MessageButtons buttons,
+				DialogResponse defResponse = DialogResponse.Other)
+				: base(t)
+			{
+				this.Message = message;
+				this.Title = title;
+				this.Buttons = buttons;
+				this.Response = defResponse;
+			}
+
+			public string Message
+			{
+				get;
+				protected set;
+			}
+
+			public string Title
+			{
+				get;
+				protected set;
+			}
+
+			public MessageButtons Buttons
+			{
+				get;
+				protected set;
+			}
+
+			public DialogResponse Response
+			{
+				get;
+				set;
 			}
 		}
 

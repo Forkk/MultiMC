@@ -1,4 +1,9 @@
-﻿Version 3.1.0.2:
+﻿Version 3.1.1.0:
+	- Added multiple options to the add instance button. You can now choose
+	  to create a brand new instance, copy an existing instance, or import 
+	  an existing .minecraft folder.
+
+Version 3.1.0.2:
 	- You can now name your backups.
 
 Version 3.1.0.1:
