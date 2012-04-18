@@ -481,12 +481,11 @@ namespace MultiMC.WinGUI
 
 		private string DragDropHint
 		{
-			get { return _ddHint; }
+			get { return DragDropHintLabel.Text; }
 			set
 			{
-				_ddHint = value;
-				DragDropHintLabel.Text = _ddHint;
-				DragDropHintLabel.Visible = !string.IsNullOrEmpty(_ddHint);
+				DragDropHintLabel.Text = value;
+				DragDropHintLabel.Visible = !string.IsNullOrEmpty(DragDropHint);
 			}
 		}
 
@@ -694,6 +693,11 @@ namespace MultiMC.WinGUI
 				if (instView.SelectedItems.Count > 0)
 					instView.SelectedItems[0].BeginEdit();
 			}
+			else if (e.KeyData == Keys.Escape)
+			{
+				if (EscPressed != null)
+					EscPressed(this, EventArgs.Empty);
+			}
 		}
 
 		private void renameToolStripMenuItem_Click(object sender, EventArgs e)
@@ -756,6 +760,14 @@ namespace MultiMC.WinGUI
 			folderBrowser.ShowDialog(this);
 
 			return folderBrowser.SelectedPath;
+		}
+
+		public event EventHandler EscPressed;
+
+		public string StatusText
+		{
+			get { return DragDropHint; }
+			set { DragDropHint = value; }
 		}
 	}
 }

@@ -60,6 +60,8 @@ namespace MultiMC.GUI
 		event EventHandler<InstActionEventArgs> DeleteInstClicked;
 		event EventHandler<InstActionEventArgs> RemoveOpenALClicked;
 
+		event EventHandler EscPressed;
+
 		IList<Instance> InstanceList
 		{
 			get;
@@ -79,6 +81,12 @@ namespace MultiMC.GUI
 		Instance SelectedInst
 		{
 			get;
+		}
+
+		string StatusText
+		{
+			get;
+			set;
 		}
 
 		Task GetTaskByID(int taskID);

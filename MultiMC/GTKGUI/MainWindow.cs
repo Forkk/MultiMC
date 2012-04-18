@@ -444,5 +444,20 @@ namespace MultiMC.GTKGUI
 				return null;
 			}
 		}
+
+
+		public event EventHandler EscPressed;
+
+		public string StatusText
+		{
+			get
+			{
+				throw new NotImplementedException();
+			}
+			set
+			{
+				throw new NotImplementedException();
+			}
+		}
 	}
 }

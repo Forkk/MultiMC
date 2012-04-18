@@ -240,7 +240,47 @@ namespace MultiMC
 
 		void CopyExistingInst()
 		{
+			MainWindow.StatusText = "Double click the instance you would " +
+				"like to copy. (Press escape to cancel)";
+			MainWindow.EscPressed += MainWindow_EscPressed;
+			MainWindow.InstanceLaunched -= LaunchInstance;
+			MainWindow.InstanceLaunched += InstCopied;
+		}
 
+		void InstCopied(object sender, InstActionEventArgs e)
+		{
+			StopInstCopy();
+
+			string instName = AskInstName("Copy instance");
+
+			if (string.IsNullOrEmpty(instName))
+				return;
+
+			string newInstDir = Instance.GetValidDirName(instName,
+				AppSettings.Main.InstanceDir);
+			newInstDir = Path.Combine(AppSettings.Main.InstanceDir, newInstDir);
+
+			DirCopyTask copyTask = new DirCopyTask(e.Inst.RootDir, newInstDir);
+			StartModalTask(copyTask);
+
+			Instance copiedInst = Instance.LoadInstance(newInstDir);
+			copiedInst.Name = instName;
+			copiedInst.Dispose();
+
+			MainWindow.LoadInstances();
+		}
+
+		void MainWindow_EscPressed(object sender, EventArgs e)
+		{
+			StopInstCopy();
+		}
+
+		void StopInstCopy()
+		{
+			MainWindow.StatusText = "";
+			MainWindow.EscPressed -= MainWindow_EscPressed;
+			MainWindow.InstanceLaunched += LaunchInstance;
+			MainWindow.InstanceLaunched -= InstCopied;
 		}
 
 		void ImportExistingInstall()
@@ -255,7 +295,16 @@ namespace MultiMC
 			{
 				MessageDialog.Show(MainWindow,
 					"The specified folder doesn't exist.", "Error");
-				goto SelectFolder; // Gotos are cool
+				goto SelectFolder; // Gotos are cool.
+			}
+
+			if (!File.Exists(Path.Combine(path, "bin", "minecraft.jar")))
+			{
+				DialogResponse response = MessageDialog.Show(MainWindow,
+					"Couldn't find minecraft.jar. Do you really want to import this?",
+					"That doesn't look like Minecraft!", MessageButtons.YesNo);
+				if (response != DialogResponse.Yes)
+					goto SelectFolder; // Again, gotos are cool.
 			}
 
 			string instName = AskInstName("Import .minecraft folder");
