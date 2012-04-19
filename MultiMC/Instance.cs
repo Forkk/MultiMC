@@ -219,6 +219,12 @@ namespace MultiMC
 		/// <returns>The process the instance is running in</returns>
 		public Process Launch(string username, string sessionID)
 		{
+			if (string.IsNullOrEmpty(username))
+				username = "Offline";
+
+			if (string.IsNullOrEmpty(sessionID))
+				sessionID = "Offline";
+
 			using (FileStream output = File.Open("MultiMCLauncher.class", FileMode.Create))
 			{
 				using (Stream input = System.Reflection.Assembly.
@@ -499,7 +505,7 @@ namespace MultiMC
 				if (Directory.Exists(BinDir) && File.Exists(vfile))
 				{
 					string version = Tasks.GameUpdater.ReadVersionFile(vfile);
-					if (version != null && version.Length > 0)
+					if (!string.IsNullOrEmpty(version))
 						return true;
 				}
 				return false;

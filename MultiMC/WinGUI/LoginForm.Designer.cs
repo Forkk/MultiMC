@@ -171,12 +171,14 @@
 			// 
 			// buttonOffline
 			// 
+			this.buttonOffline.DialogResult = System.Windows.Forms.DialogResult.No;
 			this.buttonOffline.Location = new System.Drawing.Point(130, 3);
 			this.buttonOffline.Name = "buttonOffline";
 			this.buttonOffline.Size = new System.Drawing.Size(75, 23);
 			this.buttonOffline.TabIndex = 7;
 			this.buttonOffline.Text = "Play &Offline";
 			this.buttonOffline.UseVisualStyleBackColor = true;
+			this.buttonOffline.Click += new System.EventHandler(this.buttonOffline_Click);
 			// 
 			// checkRememberUsername
 			// 

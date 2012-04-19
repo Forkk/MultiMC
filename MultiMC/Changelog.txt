@@ -1,4 +1,7 @@
-﻿Version 3.1.1.0:
+﻿Version 3.1.1.1:
+	- Fixed play offline.
+
+Version 3.1.1.0:
 	- Added multiple options to the add instance button. You can now choose
 	  to create a brand new instance, copy an existing instance, or import 
 	  an existing .minecraft folder.
