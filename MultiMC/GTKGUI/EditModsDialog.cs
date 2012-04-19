@@ -123,6 +123,7 @@ namespace MultiMC.GTKGUI
 			
 			Drag.DestSet(mlModList, DestDefaults.All, targetEntries, Gdk.DragAction.Default);
 			mlModList.DragDataReceived += OnDragDataReceived;
+			mlModList.EnableModelDragDest(targetEntries,Gdk.DragAction.Default);
 		}
 		
 		void OnDragDataReceived (object o, DragDataReceivedArgs args)
