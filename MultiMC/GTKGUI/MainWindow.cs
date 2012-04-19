@@ -88,6 +88,19 @@ namespace MultiMC.GTKGUI
 						instContextMenu.Popup();
 					}
 				};
+			instView.KeyPressEvent += (object o, KeyPressEventArgs args) =>
+				{
+					if(args.Event.Key == Gdk.Key.F2)
+					{
+						if(instView.SelectedItems.Count() != 0)
+							instView.SetCursor(instView.SelectedItems[0], instView.Cells[0], true);
+					}
+					else if(args.Event.Key == Gdk.Key.Escape)
+					{
+						if(EscPressed != null)
+							EscPressed(this, EventArgs.Empty);
+					}
+				};
 
 			// Set up the task list
 			EventfulList<Task> tList = new EventfulList<Task>();
