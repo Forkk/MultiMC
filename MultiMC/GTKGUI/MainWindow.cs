@@ -16,6 +16,8 @@ namespace MultiMC.GTKGUI
 		ListStore instListStore;
 
 		Dictionary<int, Box> taskProgBars;
+		
+		String current_status_text = "";
 
 		public MainWindow()
 		{
@@ -27,7 +29,16 @@ namespace MultiMC.GTKGUI
 			XML gxml2 = new XML(null, "MultiMC.GTKGUI.InstContextMenu.glade",
 				"instContextMenu", null);
 			gxml2.Autoconnect(this);
-
+			
+			/*
+			 * HACK: the nested menu isn't picked up by the first gxml object. It is probably a GTK# bug.
+			 * This is the fix - manually asking for the menu and connecting it.
+			 */
+			XML gxml3 = new XML(null, "MultiMC.GTKGUI.MainWindow.glade",
+				"menunew", null);
+			gxml3.Autoconnect(this);
+			newInstButton.Menu = menunew;
+			
 			this.Add(mainVBox);
 
 			ShowAll();
@@ -200,12 +211,24 @@ namespace MultiMC.GTKGUI
 		}
 
 		#region Glade Handlers
-		// Menu Bar
+		// Menu Bar/submenus
 		void OnNewInstanceClicked(object sender, EventArgs e)
 		{
 			if (AddInstClicked != null)
 				AddInstClicked(this,
 					new AddInstEventArgs(AddInstAction.CreateNew));
+		}
+		void OnCopyInstanceClicked(object sender, EventArgs e)
+		{
+			if (AddInstClicked != null)
+				AddInstClicked(this,
+					new AddInstEventArgs(AddInstAction.CopyExisting));
+		}
+		void OnImportInstanceClicked(object sender, EventArgs e)
+		{
+			if (AddInstClicked != null)
+				AddInstClicked(this,
+					new AddInstEventArgs(AddInstAction.ImportExisting));
 		}
 
 		void OnViewFolderClicked(object sender, EventArgs e)
@@ -310,9 +333,12 @@ namespace MultiMC.GTKGUI
 		#endregion
 
 		#region Glade Widgets
-		//[Widget]
-		//ToolButton newInstButton = null;
-
+		[Widget]
+		MenuToolButton newInstButton = null;
+		
+		[Widget]
+		Menu menunew = null;
+		
 		//[Widget]
 		//ToolButton viewInstFolderButton = null;
 
@@ -342,6 +368,9 @@ namespace MultiMC.GTKGUI
 
 		[Widget]
 		Menu instContextMenu = null;
+		
+		[Widget]
+		Statusbar mainStatusBar = null;
 		#endregion
 
 		public void LoadInstances()
@@ -456,15 +485,18 @@ namespace MultiMC.GTKGUI
 
 			browserDlg.AddButton("_Cancel", 0);
 			browserDlg.AddButton("_Select Folder", 1);
-
+			
 			int response = browserDlg.Run();
 
 			if (response == 1)
 			{
-				return browserDlg.Filename;
+				string output = browserDlg.Filename;
+				browserDlg.Destroy();
+				return output;
 			}
 			else
 			{
+				browserDlg.Destroy();
 				return null;
 			}
 		}
@@ -476,11 +508,13 @@ namespace MultiMC.GTKGUI
 		{
 			get
 			{
-				throw new NotImplementedException();
+				return current_status_text;
 			}
 			set
 			{
-				throw new NotImplementedException();
+				current_status_text = value;
+				mainStatusBar.Pop(0);
+				mainStatusBar.Push(0,value);
 			}
 		}
 	}
