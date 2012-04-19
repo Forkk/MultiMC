@@ -77,5 +77,10 @@ namespace MultiMC.WinGUI
 		{
 			checkRememberPassword.Enabled = RememberUsername;
 		}
+
+		private void buttonOffline_Click(object sender, EventArgs e)
+		{
+			OnResponse(DialogResponse.No);
+		}
 	}
 }

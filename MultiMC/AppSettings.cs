@@ -168,7 +168,7 @@ namespace MultiMC
 
 		public bool QuitIfProblem
 		{
-			get { return ParseSetting<bool>("QuitIfProblem", true); }
+			get { return ParseSetting<bool>("QuitIfProblem", false); }
 			set { this["QuitIfProblem"] = value.ToString(); }
 		}
 	}
