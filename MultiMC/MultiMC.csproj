@@ -115,6 +115,7 @@
       <HintPath>Lib\Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="Mono.Posix" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
@@ -383,6 +384,10 @@
     </Compile>
     <EmbeddedResource Include="GTKGUI\TextInputDialog.glade" />
     <Compile Include="GTKGUI\TextInputDialog.cs" />
+    <Compile Include="GTKGUI\SaveManagerDialog.cs" />
+    <EmbeddedResource Include="GTKGUI\RestoreBackupDialog.glade" />
+    <EmbeddedResource Include="GTKGUI\SaveManagerDialog.glade" />
+    <Compile Include="GTKGUI\RestoreBackupDialog.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

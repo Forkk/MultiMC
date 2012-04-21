@@ -123,13 +123,13 @@ namespace MultiMC.GTKGUI
 
 		public ISaveManagerDialog SaveManagerDialog()
 		{
-			throw new NotImplementedException();
+			return new SaveManagerDialog(mainWindow);
 		}
 
 
 		public IRestoreBackupDialog RestoreBackupDialog()
 		{
-			throw new NotImplementedException();
+			return new RestoreBackupDialog(mainWindow);
 		}
 
 

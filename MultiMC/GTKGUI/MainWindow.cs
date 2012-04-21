@@ -301,7 +301,12 @@ namespace MultiMC.GTKGUI
 			if (EditNotesClicked != null)
 				EditNotesClicked(this, new InstActionEventArgs(SelectedInst));
 		}
-
+		
+		void OnManageSavesClicked(object sender, EventArgs e)
+		{
+			if (ManageSavesClicked != null)
+				ManageSavesClicked(this, new InstActionEventArgs(SelectedInst));
+		}
 		void OnEditModsClicked(object sender, EventArgs e)
 		{
 			if (EditModsClicked != null)

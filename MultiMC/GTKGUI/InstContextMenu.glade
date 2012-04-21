@@ -47,6 +47,14 @@
       </widget>
     </child>
     <child>
+      <widget class="GtkMenuItem" id="manageSavesMenuItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Manage Saves</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="OnManageSavesClicked"/>
+      </widget>
+    </child>
+    <child>
       <widget class="GtkMenuItem" id="editModsMenuItem">
         <property name="visible">True</property>
         <property name="label" translatable="yes">Edit Mods</property>
