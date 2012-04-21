@@ -719,6 +719,7 @@ namespace MultiMC.WinGUI
 			fileDlg.Title = title;
 			fileDlg.Filter = "Minecraft Mods (*.zip;*.jar)|*.zip;*.jar|All Files|*.*";
 			fileDlg.InitialDirectory = Environment.CurrentDirectory;
+			fileDlg.RestoreDirectory = true;
 
 			fileDlg.Multiselect = true;
 
