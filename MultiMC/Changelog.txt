@@ -1,4 +1,7 @@
-﻿Version 3.1.1.4:
+﻿Version 3.1.1.5:
+	- Version number incremented by popular demand. (Hi Luke! :D)
+
+Version 3.1.1.4:
 	- Fixed some bugs with the edit mods form where deleting a mod after 
 	  changing the mod order would undo changes to the mod order.
 
