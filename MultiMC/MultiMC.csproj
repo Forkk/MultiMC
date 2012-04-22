@@ -115,7 +115,6 @@
       <HintPath>Lib\Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="Mono.Posix" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
