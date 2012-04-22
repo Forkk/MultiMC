@@ -179,6 +179,8 @@ namespace MultiMC.WinGUI
 					// the item is moved to the new location.
 					modView.Items.Remove(dragItem);
 				}
+
+				SaveModList();
 			}
 			else if (e.Data.GetDataPresent("FileDrop"))
 			{
@@ -259,6 +261,7 @@ namespace MultiMC.WinGUI
 				modView.Items.Remove(item);
 				modView.Items.Insert(oldIndex - 1, item);
 			}
+			SaveModList();
 		}
 
 		private void buttonMoveDown_Click(object sender, EventArgs e)
@@ -285,6 +288,7 @@ namespace MultiMC.WinGUI
 				modView.Items.Remove(item);
 				modView.Items.Insert(oldIndex + 1, item);
 			}
+			SaveModList();
 		}
 
 		private void buttonAddJarMod_Click(object sender, EventArgs e)
@@ -633,11 +637,6 @@ namespace MultiMC.WinGUI
 				i++;
 			}
 			inst.InstMods.Save();
-		}
-
-		private void buttonCancel_Click(object sender, EventArgs e)
-		{
-			OnResponse(DialogResponse.Cancel);
 		}
 
 		private void buttonOk_Click(object sender, EventArgs e)

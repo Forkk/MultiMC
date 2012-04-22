@@ -1,4 +1,11 @@
-﻿Version 3.1.1.2:
+﻿Version 3.1.1.4:
+	- Fixed some bugs with the edit mods form where deleting a mod after 
+	  changing the mod order would undo changes to the mod order.
+
+Version 3.1.1.3:
+	- Fixed play offline bugs.
+
+Version 3.1.1.2:
 	- Fixed some bugs with the add mod buttons in the edit mods menu.
 
 Version 3.1.1.1:
