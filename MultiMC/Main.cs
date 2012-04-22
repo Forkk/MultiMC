@@ -1024,6 +1024,7 @@ namespace MultiMC
 			if (!info.Cancelled)
 			{
 				Console.WriteLine("Version: {0}", info.LatestVersion);
+
 				GameUpdater updater =
 						new GameUpdater(inst,
 										info.LatestVersion,
@@ -1076,8 +1077,11 @@ namespace MultiMC
 							MainWindow.Invoke(startDelegate);
 					};
 
-				MainWindow.Invoke((o2, args2) =>
-					StartModalTask(updater));
+				if (!string.IsNullOrEmpty(info.SessionID))
+					MainWindow.Invoke((o2, args2) =>
+						StartModalTask(updater));
+				else
+					MainWindow.Invoke(startDelegate);
 			}
 		}
 
