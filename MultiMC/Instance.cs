@@ -532,6 +532,12 @@ namespace MultiMC
 			get
 			{
 				List<WorldSave> saves = new List<WorldSave>();
+
+				if (!Directory.Exists(SavesDir))
+				{
+					Directory.CreateDirectory(SavesDir);
+				}
+
 				foreach (string file in Directory.GetDirectories(SavesDir))
 				{
 					saves.Add(new WorldSave(this, file));

@@ -1,4 +1,12 @@
-﻿Version 3.1.1.5:
+﻿Version 3.1.1.6:
+	- Reworked GTK# mod edit dialog.
+	- Drag and drop now works in GTK.
+	- Implemented instance renaming in the GTK GUI.
+	- Implemended save backup / restore in GTK.
+	- Big thanks to peterix for his awesome work on the GTK GUI in this 
+	  update.
+
+Version 3.1.1.5:
 	- Version number incremented by popular demand. (Hi Luke! :D)
 
 Version 3.1.1.4:
