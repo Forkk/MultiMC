@@ -16,6 +16,8 @@ namespace MultiMC.GTKGUI
 		ListStore instListStore;
 
 		Dictionary<int, Box> taskProgBars;
+		
+		String current_status_text = "";
 
 		public MainWindow()
 		{
@@ -27,7 +29,16 @@ namespace MultiMC.GTKGUI
 			XML gxml2 = new XML(null, "MultiMC.GTKGUI.InstContextMenu.glade",
 				"instContextMenu", null);
 			gxml2.Autoconnect(this);
-
+			
+			/*
+			 * HACK: the nested menu isn't picked up by the first gxml object. It is probably a GTK# bug.
+			 * This is the fix - manually asking for the menu and connecting it.
+			 */
+			XML gxml3 = new XML(null, "MultiMC.GTKGUI.MainWindow.glade",
+				"menunew", null);
+			gxml3.Autoconnect(this);
+			newInstButton.Menu = menunew;
+			
 			this.Add(mainVBox);
 
 			ShowAll();
@@ -44,10 +55,28 @@ namespace MultiMC.GTKGUI
 			instView.Model = instListStore;
 			instView.TextColumn = 0;
 			instView.PixbufColumn = 1;
-
 			instView.ItemWidth = -1;
+			
+			Gtk.CellRendererText crt = instView.Cells[0] as CellRendererText;
+			crt.Editable = true;
+			crt.Edited += (object o, EditedArgs args) =>
+			{
+				int EditedIndex = int.Parse(args.Path);
+				TreeIter iter;
+				// don't allow bad names
+				if(!Instance.NameIsValid(args.NewText))
+					return;
+				System.Console.WriteLine("Path: " + args.Path + " New text: " + args.NewText);
+				if(instListStore.GetIterFromString(out iter,args.Path))
+				{
+					instListStore.SetValue(iter, 0, args.NewText);
+					Instance inst = instListStore.GetValue(iter, 2) as Instance;
+					inst.Name = args.NewText;
+				}
+				
+			};
+			
 			instView.Orientation = Orientation.Vertical;
-
 			instView.ButtonPressEvent += (o, args) =>
 				{
 					if (args.Event.Button == 3 &&
@@ -57,6 +86,19 @@ namespace MultiMC.GTKGUI
 						instView.SelectPath(instView.GetPathAtPos(
 							(int)args.Event.X, (int)args.Event.Y));
 						instContextMenu.Popup();
+					}
+				};
+			instView.KeyPressEvent += (object o, KeyPressEventArgs args) =>
+				{
+					if(args.Event.Key == Gdk.Key.F2)
+					{
+						if(instView.SelectedItems.Count() != 0)
+							instView.SetCursor(instView.SelectedItems[0], instView.Cells[0], true);
+					}
+					else if(args.Event.Key == Gdk.Key.Escape)
+					{
+						if(EscPressed != null)
+							EscPressed(this, EventArgs.Empty);
 					}
 				};
 
@@ -182,12 +224,24 @@ namespace MultiMC.GTKGUI
 		}
 
 		#region Glade Handlers
-		// Menu Bar
+		// Menu Bar/submenus
 		void OnNewInstanceClicked(object sender, EventArgs e)
 		{
 			if (AddInstClicked != null)
 				AddInstClicked(this,
 					new AddInstEventArgs(AddInstAction.CreateNew));
+		}
+		void OnCopyInstanceClicked(object sender, EventArgs e)
+		{
+			if (AddInstClicked != null)
+				AddInstClicked(this,
+					new AddInstEventArgs(AddInstAction.CopyExisting));
+		}
+		void OnImportInstanceClicked(object sender, EventArgs e)
+		{
+			if (AddInstClicked != null)
+				AddInstClicked(this,
+					new AddInstEventArgs(AddInstAction.ImportExisting));
 		}
 
 		void OnViewFolderClicked(object sender, EventArgs e)
@@ -247,7 +301,12 @@ namespace MultiMC.GTKGUI
 			if (EditNotesClicked != null)
 				EditNotesClicked(this, new InstActionEventArgs(SelectedInst));
 		}
-
+		
+		void OnManageSavesClicked(object sender, EventArgs e)
+		{
+			if (ManageSavesClicked != null)
+				ManageSavesClicked(this, new InstActionEventArgs(SelectedInst));
+		}
 		void OnEditModsClicked(object sender, EventArgs e)
 		{
 			if (EditModsClicked != null)
@@ -277,6 +336,12 @@ namespace MultiMC.GTKGUI
 			if (RemoveOpenALClicked != null)
 				RemoveOpenALClicked(this, new InstActionEventArgs(SelectedInst));
 		}
+		
+		void OnRenameClicked(object sender, EventArgs e)
+		{
+			if(instView.SelectedItems.Count() != 0)
+				instView.SetCursor(instView.SelectedItems[0], instView.Cells[0], true);
+		}
 
 		// Other
 		void OnItemActivated(object sender, ItemActivatedArgs e)
@@ -286,9 +351,12 @@ namespace MultiMC.GTKGUI
 		#endregion
 
 		#region Glade Widgets
-		//[Widget]
-		//ToolButton newInstButton = null;
-
+		[Widget]
+		MenuToolButton newInstButton = null;
+		
+		[Widget]
+		Menu menunew = null;
+		
 		//[Widget]
 		//ToolButton viewInstFolderButton = null;
 
@@ -318,6 +386,9 @@ namespace MultiMC.GTKGUI
 
 		[Widget]
 		Menu instContextMenu = null;
+		
+		[Widget]
+		Statusbar mainStatusBar = null;
 		#endregion
 
 		public void LoadInstances()
@@ -432,15 +503,18 @@ namespace MultiMC.GTKGUI
 
 			browserDlg.AddButton("_Cancel", 0);
 			browserDlg.AddButton("_Select Folder", 1);
-
+			
 			int response = browserDlg.Run();
 
 			if (response == 1)
 			{
-				return browserDlg.Filename;
+				string output = browserDlg.Filename;
+				browserDlg.Destroy();
+				return output;
 			}
 			else
 			{
+				browserDlg.Destroy();
 				return null;
 			}
 		}
@@ -452,11 +526,13 @@ namespace MultiMC.GTKGUI
 		{
 			get
 			{
-				throw new NotImplementedException();
+				return current_status_text;
 			}
 			set
 			{
-				throw new NotImplementedException();
+				current_status_text = value;
+				mainStatusBar.Pop(0);
+				mainStatusBar.Push(0,value);
 			}
 		}
 	}

@@ -1,35 +1,96 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <glade-interface>
   <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy project-wide -->
   <widget class="GtkVBox" id="mainVBox">
     <property name="visible">True</property>
-    <property name="orientation">vertical</property>
+    <property name="can_focus">False</property>
     <child>
       <widget class="GtkToolbar" id="menuToolBar">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <property name="toolbar_style">icons</property>
         <property name="show_arrow">False</property>
         <child>
-          <widget class="GtkToolButton" id="newInstButton">
+          <widget class="GtkMenuToolButton" id="newInstButton">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label" translatable="yes">New Instance</property>
             <property name="use_underline">True</property>
             <property name="stock_id">gtk-new</property>
-            <signal name="clicked" handler="OnNewInstanceClicked"/>
+            <signal name="clicked" handler="OnNewInstanceClicked" swapped="no"/>
+            <child>
+              <widget class="GtkMenu" id="menunew">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <child>
+                  <widget class="GtkImageMenuItem" id="newMenuNew">
+                    <property name="label" translatable="yes">Create a new instance</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="use_stock">False</property>
+                    <signal name="activate" handler="OnNewInstanceClicked" swapped="no"/>
+                    <child internal-child="image">
+                      <widget class="GtkImage" id="image1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="stock">gtk-new</property>
+                        <property name="icon-size">1</property>
+                      </widget>
+                    </child>
+                  </widget>
+                </child>
+                <child>
+                  <widget class="GtkImageMenuItem" id="newMenuCopy">
+                    <property name="label" translatable="yes">Copy an existing instance</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="use_stock">False</property>
+                    <signal name="activate" handler="OnCopyInstanceClicked" swapped="no"/>
+                    <child internal-child="image">
+                      <widget class="GtkImage" id="image2">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="stock">gtk-copy</property>
+                        <property name="icon-size">1</property>
+                      </widget>
+                    </child>
+                  </widget>
+                </child>
+                <child>
+                  <widget class="GtkImageMenuItem" id="newMenuImport">
+                    <property name="label" translatable="yes">Import a .minecraft folder as instance</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="use_stock">False</property>
+                    <signal name="activate" handler="OnImportInstanceClicked" swapped="no"/>
+                    <child internal-child="image">
+                      <widget class="GtkImage" id="image3">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="stock">gtk-convert</property>
+                      </widget>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
+              <packing>
+                <property name="menu">menu</property>
+              </packing>
+            </child>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="homogeneous">True</property>
           </packing>
         </child>
         <child>
           <widget class="GtkToolButton" id="viewInstFolderButton">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label" translatable="yes">View Instances Folder</property>
             <property name="use_underline">True</property>
             <property name="stock_id">gtk-open</property>
-            <signal name="clicked" handler="OnViewFolderClicked"/>
+            <signal name="clicked" handler="OnViewFolderClicked" swapped="no"/>
           </widget>
           <packing>
             <property name="expand">False</property>
@@ -39,10 +100,11 @@
         <child>
           <widget class="GtkToolButton" id="refreshButton">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label" translatable="yes">Refresh</property>
             <property name="use_underline">True</property>
             <property name="stock_id">gtk-refresh</property>
-            <signal name="clicked" handler="OnRefreshClicked"/>
+            <signal name="clicked" handler="OnRefreshClicked" swapped="no"/>
           </widget>
           <packing>
             <property name="expand">False</property>
@@ -52,6 +114,7 @@
         <child>
           <widget class="GtkSeparatorToolItem" id="separator3">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
           </widget>
           <packing>
             <property name="expand">False</property>
@@ -60,10 +123,11 @@
         <child>
           <widget class="GtkToolButton" id="settingsButton">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label" translatable="yes">Settings</property>
             <property name="use_underline">True</property>
             <property name="stock_id">gtk-preferences</property>
-            <signal name="clicked" handler="OnSettingsClicked"/>
+            <signal name="clicked" handler="OnSettingsClicked" swapped="no"/>
           </widget>
           <packing>
             <property name="expand">False</property>
@@ -73,10 +137,11 @@
         <child>
           <widget class="GtkToolButton" id="updateButton">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label" translatable="yes">Check for updates...</property>
             <property name="use_underline">True</property>
             <property name="icon_name">gtk-harddisk</property>
-            <signal name="clicked" handler="OnCheckUpdatesClicked"/>
+            <signal name="clicked" handler="OnCheckUpdatesClicked" swapped="no"/>
           </widget>
           <packing>
             <property name="expand">False</property>
@@ -86,6 +151,7 @@
         <child>
           <widget class="GtkSeparatorToolItem" id="separator4">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
           </widget>
           <packing>
             <property name="expand">False</property>
@@ -94,11 +160,12 @@
         <child>
           <widget class="GtkToolButton" id="helpButton">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="is_important">True</property>
             <property name="label" translatable="yes">Help</property>
             <property name="use_underline">True</property>
             <property name="stock_id">gtk-help</property>
-            <signal name="clicked" handler="OnHelpClicked"/>
+            <signal name="clicked" handler="OnHelpClicked" swapped="no"/>
           </widget>
           <packing>
             <property name="expand">False</property>
@@ -108,11 +175,12 @@
         <child>
           <widget class="GtkToolButton" id="aboutButton">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="is_important">True</property>
             <property name="label" translatable="yes">About</property>
             <property name="use_underline">True</property>
             <property name="stock_id">gtk-about</property>
-            <signal name="clicked" handler="OnAboutClicked"/>
+            <signal name="clicked" handler="OnAboutClicked" swapped="no"/>
           </widget>
           <packing>
             <property name="expand">False</property>
@@ -122,7 +190,8 @@
       </widget>
       <packing>
         <property name="expand">False</property>
-        <property name="position">1</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
       </packing>
     </child>
     <child>
@@ -131,24 +200,38 @@
         <property name="can_focus">True</property>
         <property name="has_focus">True</property>
         <property name="item_width">64</property>
-        <signal name="item_activated" handler="OnItemActivated"/>
+        <signal name="item_activated" handler="OnItemActivated" swapped="no"/>
       </widget>
       <packing>
-        <property name="position">2</property>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
       </packing>
     </child>
     <child>
       <widget class="GtkVBox" id="progBarVBox">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
+        <property name="can_focus">False</property>
         <child>
           <placeholder/>
         </child>
       </widget>
       <packing>
         <property name="expand">False</property>
-        <property name="pack_type">end</property>
-        <property name="position">0</property>
+        <property name="fill">True</property>
+        <property name="position">2</property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkStatusbar" id="mainStatusBar">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="spacing">2</property>
+      </widget>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">3</property>
       </packing>
     </child>
   </widget>
