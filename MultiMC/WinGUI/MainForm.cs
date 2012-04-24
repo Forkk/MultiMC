@@ -240,7 +240,9 @@ namespace MultiMC.WinGUI
 		{
 			ListViewItem item = new ListViewItem(e.Item.Name);
 			item.Tag = e.Item;
-			if ((ImageList as WinFormsImageList).ImgList.Images.ContainsKey(e.Item.IconKey))
+			if (e.Item.Name.ToLower().Contains("direwolf"))
+				item.ImageKey = "enderman";
+			else if ((ImageList as WinFormsImageList).ImgList.Images.ContainsKey(e.Item.IconKey))
 				item.ImageKey = e.Item.IconKey;
 			else
 				item.ImageIndex = 0;

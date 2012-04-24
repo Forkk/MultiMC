@@ -34,6 +34,7 @@ namespace MultiMC.WinGUI
 			imgDict.Add("iron", Properties.Resources.iron);
 			imgDict.Add("planks", Properties.Resources.planks);
 			imgDict.Add("tnt", Properties.Resources.tnt);
+			imgDict.Add("enderman", Properties.Resources.enderman);
 
 			return new WinFormsImageList(
 				Properties.Resources.UserIconDir,

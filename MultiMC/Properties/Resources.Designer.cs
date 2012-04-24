@@ -138,6 +138,13 @@ namespace MultiMC.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap enderman {
+            get {
+                object obj = ResourceManager.GetObject("enderman", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to http://dl.dropbox.com/u/52412912/LWJGL/.
         /// </summary>
