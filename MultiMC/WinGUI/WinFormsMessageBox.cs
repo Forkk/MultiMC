@@ -47,6 +47,9 @@ namespace MultiMC.WinGUI
 			case MessageButtons.YesNo:
 				return MessageBoxButtons.YesNo;
 
+			case MessageButtons.YesNoCancel:
+				return MessageBoxButtons.YesNoCancel;
+
 			default:
 				return MessageBoxButtons.OK;
 			}
@@ -66,6 +69,8 @@ namespace MultiMC.WinGUI
 				return DialogResponse.OK;
 			case DialogResult.Yes:
 				return DialogResponse.Yes;
+			case DialogResult.Retry:
+				return DialogResponse.OK;
 			default:
 				return DialogResponse.Other;
 			}

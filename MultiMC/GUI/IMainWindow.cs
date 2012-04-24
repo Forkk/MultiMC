@@ -38,6 +38,7 @@ namespace MultiMC.GUI
 
 		event EventHandler<AddInstEventArgs> AddInstClicked;
 		event EventHandler ViewFolderClicked;
+		event EventHandler CentralModsFolderClicked;
 		event EventHandler RefreshClicked;
 
 		event EventHandler SettingsClicked;

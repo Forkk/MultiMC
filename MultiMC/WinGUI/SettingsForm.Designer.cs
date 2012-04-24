@@ -31,6 +31,10 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
 			this.settingsTabs = new System.Windows.Forms.TabControl();
 			this.generalTab = new System.Windows.Forms.TabPage();
+			this.groupBoxInstances = new System.Windows.Forms.GroupBox();
+			this.instDirBrowseButton = new System.Windows.Forms.Button();
+			this.labelInstDirLocation = new System.Windows.Forms.Label();
+			this.textBoxInstDir = new System.Windows.Forms.TextBox();
 			this.groupBoxUpdates = new System.Windows.Forms.GroupBox();
 			this.forceUpdateCheckBox = new System.Windows.Forms.CheckBox();
 			this.autoUpdateCheckBox = new System.Windows.Forms.CheckBox();
@@ -52,6 +56,7 @@
 			this.cancelButton = new System.Windows.Forms.Button();
 			this.settingsTabs.SuspendLayout();
 			this.generalTab.SuspendLayout();
+			this.groupBoxInstances.SuspendLayout();
 			this.groupBoxUpdates.SuspendLayout();
 			this.groupBoxConsole.SuspendLayout();
 			this.advancedTab.SuspendLayout();
@@ -77,6 +82,7 @@
 			// 
 			// generalTab
 			// 
+			this.generalTab.Controls.Add(this.groupBoxInstances);
 			this.generalTab.Controls.Add(this.groupBoxUpdates);
 			this.generalTab.Controls.Add(this.groupBoxConsole);
 			this.generalTab.Location = new System.Drawing.Point(4, 22);
@@ -87,8 +93,55 @@
 			this.generalTab.Text = "General";
 			this.generalTab.UseVisualStyleBackColor = true;
 			// 
+			// groupBoxInstances
+			// 
+			this.groupBoxInstances.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBoxInstances.Controls.Add(this.instDirBrowseButton);
+			this.groupBoxInstances.Controls.Add(this.labelInstDirLocation);
+			this.groupBoxInstances.Controls.Add(this.textBoxInstDir);
+			this.groupBoxInstances.Location = new System.Drawing.Point(6, 148);
+			this.groupBoxInstances.Name = "groupBoxInstances";
+			this.groupBoxInstances.Size = new System.Drawing.Size(414, 58);
+			this.groupBoxInstances.TabIndex = 2;
+			this.groupBoxInstances.TabStop = false;
+			this.groupBoxInstances.Text = "Instances";
+			// 
+			// instDirBrowseButton
+			// 
+			this.instDirBrowseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.instDirBrowseButton.AutoSize = true;
+			this.instDirBrowseButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.instDirBrowseButton.Location = new System.Drawing.Point(382, 30);
+			this.instDirBrowseButton.Name = "instDirBrowseButton";
+			this.instDirBrowseButton.Size = new System.Drawing.Size(26, 23);
+			this.instDirBrowseButton.TabIndex = 2;
+			this.instDirBrowseButton.Text = "...";
+			this.instDirBrowseButton.UseVisualStyleBackColor = true;
+			this.instDirBrowseButton.Click += new System.EventHandler(this.instDirBrowseButton_Click);
+			// 
+			// labelInstDirLocation
+			// 
+			this.labelInstDirLocation.AutoSize = true;
+			this.labelInstDirLocation.Location = new System.Drawing.Point(6, 16);
+			this.labelInstDirLocation.Name = "labelInstDirLocation";
+			this.labelInstDirLocation.Size = new System.Drawing.Size(120, 13);
+			this.labelInstDirLocation.TabIndex = 1;
+			this.labelInstDirLocation.Text = "Instance folder location:";
+			// 
+			// textBoxInstDir
+			// 
+			this.textBoxInstDir.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxInstDir.Location = new System.Drawing.Point(9, 32);
+			this.textBoxInstDir.Name = "textBoxInstDir";
+			this.textBoxInstDir.Size = new System.Drawing.Size(367, 20);
+			this.textBoxInstDir.TabIndex = 0;
+			// 
 			// groupBoxUpdates
 			// 
+			this.groupBoxUpdates.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBoxUpdates.Controls.Add(this.forceUpdateCheckBox);
 			this.groupBoxUpdates.Controls.Add(this.autoUpdateCheckBox);
 			this.groupBoxUpdates.Location = new System.Drawing.Point(6, 77);
@@ -300,6 +353,8 @@
 			this.Title = "Settings";
 			this.settingsTabs.ResumeLayout(false);
 			this.generalTab.ResumeLayout(false);
+			this.groupBoxInstances.ResumeLayout(false);
+			this.groupBoxInstances.PerformLayout();
 			this.groupBoxUpdates.ResumeLayout(false);
 			this.groupBoxUpdates.PerformLayout();
 			this.groupBoxConsole.ResumeLayout(false);
@@ -340,5 +395,9 @@
 		private System.Windows.Forms.TextBox textBoxJavaPath;
 		private System.Windows.Forms.Button buttonAutoDetect;
 		private System.Windows.Forms.Button cancelButton;
+		private System.Windows.Forms.GroupBox groupBoxInstances;
+		private System.Windows.Forms.Label labelInstDirLocation;
+		private System.Windows.Forms.TextBox textBoxInstDir;
+		private System.Windows.Forms.Button instDirBrowseButton;
 	}
 }

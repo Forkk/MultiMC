@@ -65,6 +65,9 @@ namespace MultiMC.GTKGUI
 			case MessageButtons.YesNo:
 				return ButtonsType.YesNo;
 
+			case MessageButtons.YesNoCancel:
+				return ButtonsType.YesNo;
+
 			default:
 				return ButtonsType.Ok;
 			}

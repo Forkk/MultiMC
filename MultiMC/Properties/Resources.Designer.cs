@@ -74,6 +74,13 @@ namespace MultiMC.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap CentralModsFolder {
+            get {
+                object obj = ResourceManager.GetObject("CentralModsFolder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to http://forkk.net/MultiMC/download/Changelog.txt.
         /// </summary>

@@ -257,6 +257,12 @@ namespace MultiMC.WinGUI
 			remove { viewInstanceFolder.Click -= value; }
 		}
 
+		public event EventHandler CentralModsFolderClicked
+		{
+			add { centralModsFolderButton.Click += value; }
+			remove { centralModsFolderButton.Click -= value; }
+		}
+
 		public event EventHandler RefreshClicked
 		{
 			add { refreshButton.Click += value; }

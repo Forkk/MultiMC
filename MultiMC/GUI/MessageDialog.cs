@@ -32,6 +32,7 @@ namespace MultiMC.GUI
 		Ok,
 		OkCancel,
 		YesNo,
+		YesNoCancel,
 		RetryCancel
 	}
 }

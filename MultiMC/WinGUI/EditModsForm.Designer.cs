@@ -29,24 +29,24 @@
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditModsForm));
-			System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Test Node 1");
-			System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Child Node 1");
-			System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("Child Node 2");
-			System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Test Node 2", new System.Windows.Forms.TreeNode[] {
-            treeNode12,
-            treeNode13});
-			System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Root", new System.Windows.Forms.TreeNode[] {
-            treeNode11,
-            treeNode14});
-			System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Test Node 1");
-			System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Child Node 1");
-			System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Child Node 2");
-			System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Test Node 2", new System.Windows.Forms.TreeNode[] {
-            treeNode17,
-            treeNode18});
-			System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Root", new System.Windows.Forms.TreeNode[] {
-            treeNode16,
-            treeNode19});
+			System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Test Node 1");
+			System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Child Node 1");
+			System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Child Node 2");
+			System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Test Node 2", new System.Windows.Forms.TreeNode[] {
+            treeNode22,
+            treeNode23});
+			System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Root", new System.Windows.Forms.TreeNode[] {
+            treeNode21,
+            treeNode24});
+			System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Test Node 1");
+			System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Child Node 1");
+			System.Windows.Forms.TreeNode treeNode28 = new System.Windows.Forms.TreeNode("Child Node 2");
+			System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("Test Node 2", new System.Windows.Forms.TreeNode[] {
+            treeNode27,
+            treeNode28});
+			System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("Root", new System.Windows.Forms.TreeNode[] {
+            treeNode26,
+            treeNode29});
 			this.labelHelp = new System.Windows.Forms.Label();
 			this.modTabControl = new System.Windows.Forms.TabControl();
 			this.tabPageJar = new System.Windows.Forms.TabPage();
@@ -71,6 +71,7 @@
 			this.buttonExport = new System.Windows.Forms.Button();
 			this.rButtonPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.buttonOk = new System.Windows.Forms.Button();
+			this.buttonModsFolder = new System.Windows.Forms.Button();
 			this.modTabControl.SuspendLayout();
 			this.tabPageJar.SuspendLayout();
 			this.jarModButtonPanel.SuspendLayout();
@@ -331,33 +332,33 @@
 			this.resourceView.HotTracking = true;
 			this.resourceView.Location = new System.Drawing.Point(3, 3);
 			this.resourceView.Name = "resourceView";
-			treeNode11.Name = "TNode1";
-			treeNode11.Text = "Test Node 1";
-			treeNode11.ToolTipText = "Test";
-			treeNode12.Name = "TN2Child1";
-			treeNode12.Text = "Child Node 1";
-			treeNode13.Name = "TN2Child2";
-			treeNode13.Text = "Child Node 2";
-			treeNode14.Name = "TNode2";
-			treeNode14.Text = "Test Node 2";
-			treeNode15.Name = "TestNode";
-			treeNode15.Text = "Root";
-			treeNode15.ToolTipText = "Test";
-			treeNode16.Name = "TNode1";
-			treeNode16.Text = "Test Node 1";
-			treeNode16.ToolTipText = "Test";
-			treeNode17.Name = "TN2Child1";
-			treeNode17.Text = "Child Node 1";
-			treeNode18.Name = "TN2Child2";
-			treeNode18.Text = "Child Node 2";
-			treeNode19.Name = "TNode2";
-			treeNode19.Text = "Test Node 2";
-			treeNode20.Name = "TestNode";
-			treeNode20.Text = "Root";
-			treeNode20.ToolTipText = "Test";
+			treeNode21.Name = "TNode1";
+			treeNode21.Text = "Test Node 1";
+			treeNode21.ToolTipText = "Test";
+			treeNode22.Name = "TN2Child1";
+			treeNode22.Text = "Child Node 1";
+			treeNode23.Name = "TN2Child2";
+			treeNode23.Text = "Child Node 2";
+			treeNode24.Name = "TNode2";
+			treeNode24.Text = "Test Node 2";
+			treeNode25.Name = "TestNode";
+			treeNode25.Text = "Root";
+			treeNode25.ToolTipText = "Test";
+			treeNode26.Name = "TNode1";
+			treeNode26.Text = "Test Node 1";
+			treeNode26.ToolTipText = "Test";
+			treeNode27.Name = "TN2Child1";
+			treeNode27.Text = "Child Node 1";
+			treeNode28.Name = "TN2Child2";
+			treeNode28.Text = "Child Node 2";
+			treeNode29.Name = "TNode2";
+			treeNode29.Text = "Test Node 2";
+			treeNode30.Name = "TestNode";
+			treeNode30.Text = "Root";
+			treeNode30.ToolTipText = "Test";
 			this.resourceView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode15,
-            treeNode20});
+            treeNode25,
+            treeNode30});
 			this.resourceView.PathSeparator = "/";
 			this.resourceView.ShowLines = false;
 			this.resourceView.ShowNodeToolTips = true;
@@ -389,6 +390,7 @@
 			this.flowLayoutPanel1.AutoSize = true;
 			this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.flowLayoutPanel1.Controls.Add(this.buttonExport);
+			this.flowLayoutPanel1.Controls.Add(this.buttonModsFolder);
 			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
 			this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
@@ -434,6 +436,17 @@
 			this.buttonOk.UseVisualStyleBackColor = true;
 			this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
 			// 
+			// buttonModsFolder
+			// 
+			this.buttonModsFolder.AutoSize = true;
+			this.buttonModsFolder.Location = new System.Drawing.Point(86, 5);
+			this.buttonModsFolder.Name = "buttonModsFolder";
+			this.buttonModsFolder.Size = new System.Drawing.Size(111, 23);
+			this.buttonModsFolder.TabIndex = 2;
+			this.buttonModsFolder.Text = "Central &Mods Folder";
+			this.buttonModsFolder.UseVisualStyleBackColor = true;
+			this.buttonModsFolder.Click += new System.EventHandler(this.buttonModsFolder_Click);
+			// 
 			// EditModsForm
 			// 
 			this.AcceptButton = this.buttonOk;
@@ -460,6 +473,7 @@
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.flowLayoutPanel1.ResumeLayout(false);
+			this.flowLayoutPanel1.PerformLayout();
 			this.rButtonPanel.ResumeLayout(false);
 			this.ResumeLayout(false);
 
@@ -491,5 +505,6 @@
 		private System.Windows.Forms.Button buttonRemoveMLMod;
 		private System.Windows.Forms.ListView mlModView;
 		private System.Windows.Forms.ColumnHeader modColumn;
+		private System.Windows.Forms.Button buttonModsFolder;
 	}
 }

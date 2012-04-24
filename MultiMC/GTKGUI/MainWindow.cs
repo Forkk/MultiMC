@@ -535,5 +535,8 @@ namespace MultiMC.GTKGUI
 				mainStatusBar.Push(0,value);
 			}
 		}
+
+
+		public event EventHandler CentralModsFolderClicked;
 	}
 }

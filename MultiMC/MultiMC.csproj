@@ -440,6 +440,7 @@
     <EmbeddedResource Include="Lib\Tamir.SharpSSH.dll" />
     <EmbeddedResource Include="Lib\Winterdom.IO.FileMap.dll" />
     <Content Include="Resources\enderman.png" />
+    <Content Include="WinGUI\ToolbarIcons\CentralModsFolder.png" />
     <Content Include="WinGUI\ToolbarIcons\AboutIcon.png" />
     <Content Include="WinGUI\ToolbarIcons\CheckUpdateIcon.png" />
     <Content Include="WinGUI\ToolbarIcons\HelpIcon.png" />

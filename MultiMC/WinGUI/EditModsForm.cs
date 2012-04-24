@@ -22,6 +22,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 using MultiMC.GUI;
 using MultiMC.Mods;
@@ -732,5 +733,14 @@ namespace MultiMC.WinGUI
 			return fileDlg.FileNames;
 		}
 		#endregion
+
+		private void buttonModsFolder_Click(object sender, EventArgs e)
+		{
+			string modFolder = Path.GetFullPath(AppSettings.Main.CentralModsDir);
+
+			if (!Directory.Exists(modFolder))
+				Directory.CreateDirectory(modFolder);
+			Process.Start(modFolder);
+		}
 	}
 }

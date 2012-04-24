@@ -63,6 +63,7 @@ namespace MultiMC
 			MainWindow.AddInstClicked += AddInstClicked;
 			MainWindow.RefreshClicked += (o, args) => MainWindow.LoadInstances();
 			MainWindow.ViewFolderClicked += ViewFolderClicked;
+			MainWindow.CentralModsFolderClicked += CentralModsClicked;
 
 			MainWindow.SettingsClicked += SettingsClicked;
 			MainWindow.CheckUpdatesClicked += UpdateClicked;
@@ -353,6 +354,15 @@ namespace MultiMC
 			Process.Start(instDir);
 		}
 
+		void CentralModsClicked(object sender, EventArgs e)
+		{
+			string modFolder = Path.GetFullPath(AppSettings.Main.CentralModsDir);
+
+			if (!Directory.Exists(modFolder))
+				Directory.CreateDirectory(modFolder);
+			Process.Start(modFolder);
+		}
+
 		void CheckUpdatesClicked(object sender, EventArgs e)
 		{
 			DoUpdateCheck();
@@ -360,6 +370,12 @@ namespace MultiMC
 
 		void SettingsClicked(object sender, EventArgs e)
 		{
+			foreach (Instance inst in MainWindow.InstanceList)
+			{
+				inst.Dispose();
+			}
+			MainWindow.InstanceList.Clear();
+
 			ISettingsDialog settingsWindow = GUIManager.Main.SettingsWindow();
 			settingsWindow.Parent = MainWindow;
 			settingsWindow.DefaultPosition = DefWindowPosition.CenterParent;
@@ -378,6 +394,8 @@ namespace MultiMC
 			{
 				DownloadNewVersion();
 			}
+
+			MainWindow.LoadInstances();
 		}
 		#endregion
 

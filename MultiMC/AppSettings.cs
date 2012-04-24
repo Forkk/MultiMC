@@ -144,8 +144,24 @@ namespace MultiMC
 
 		public string InstanceDir
 		{
+			get
+			{
+				return Environment.ExpandEnvironmentVariables(
+					this["InstDir", "instances"]);
+			}
+			set { this["InstDir"] = value; }
+		}
+
+		public string RawInstanceDir
+		{
 			get { return this["InstDir", "instances"]; }
 			set { this["InstDir"] = value; }
+		}
+
+		public string CentralModsDir
+		{
+			get { return this["ModsDir", "mods"]; }
+			set { this["ModsDir"] = value; }
 		}
 
 		public bool ShowConsole

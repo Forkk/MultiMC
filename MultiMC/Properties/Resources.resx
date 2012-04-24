@@ -262,4 +262,7 @@
   <data name="enderman" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\enderman.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="CentralModsFolder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\wingui\toolbaricons\centralmodsfolder.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

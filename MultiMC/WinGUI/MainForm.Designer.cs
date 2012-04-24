@@ -60,6 +60,7 @@
 			this.toolStripContainer = new System.Windows.Forms.ToolStripContainer();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.DragDropHintLabel = new System.Windows.Forms.ToolStripStatusLabel();
+			this.centralModsFolderButton = new System.Windows.Forms.ToolStripButton();
 			this.instanceContextMenu.SuspendLayout();
 			this.menuToolBar.SuspendLayout();
 			this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
@@ -176,6 +177,7 @@
             this.addInstButton,
             this.importButton,
             this.viewInstanceFolder,
+            this.centralModsFolderButton,
             this.refreshButton,
             this.toolStripSeparator1,
             this.settingsButton,
@@ -355,6 +357,15 @@
 			this.DragDropHintLabel.Text = "Drag Drop Hint";
 			this.DragDropHintLabel.Visible = false;
 			// 
+			// centralModsFolderButton
+			// 
+			this.centralModsFolderButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.centralModsFolderButton.Image = global::MultiMC.Properties.Resources.CentralModsFolder;
+			this.centralModsFolderButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.centralModsFolderButton.Name = "centralModsFolderButton";
+			this.centralModsFolderButton.Size = new System.Drawing.Size(23, 22);
+			this.centralModsFolderButton.Text = "Open central mods folder.";
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -412,6 +423,7 @@
 		private System.Windows.Forms.ToolStripMenuItem addNewToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem copyExistingToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
+		private System.Windows.Forms.ToolStripButton centralModsFolderButton;
 	}
 }
 
