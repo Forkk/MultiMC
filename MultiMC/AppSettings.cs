@@ -84,12 +84,39 @@ namespace MultiMC
 			if (OSUtils.OS == OSEnum.Windows)
 			{
 				Console.WriteLine("Finding Java on Windows...");
+
+				RegistryKey x64LocalMachineKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+				RegistryKey javaKey = null;
+				if (x64LocalMachineKey != null)//On x64 first try x64-Java else x86-java
+				{
+					javaKey = x64LocalMachineKey.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment") ?? x64LocalMachineKey.OpenSubKey("SOFTWARE\\Wow6432Node\\Javasoft\\Java Runtime Environment");
+				}
+				else
+				{
+					javaKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment");
+				}
+
+				if (javaKey != null)
+				{
+					string javaVersion = javaKey.GetValue("CurrentVersion").ToString();
+					try
+					{
+						JavaPath = javaKey.OpenSubKey(javaVersion).GetValue("JavaHome").ToString() + @"\bin\java.exe";
+						return true;
+					}
+					catch (NullReferenceException)
+					{
+						//Key not found or JavaHome not found ... in both cases: use failsafe
+					}
+				}
+
+				//Old version as failsave ...
 				string[] possiblePaths = new string[]
 				{
-					@"C:\Program Files\Java\jre6\bin\java.exe",
 					@"C:\Program Files\Java\jre7\bin\java.exe",
-					@"C:\Program Files (x86)\Java\jre6\bin\java.exe",
+					@"C:\Program Files\Java\jre6\bin\java.exe",
 					@"C:\Program Files (x86)\Java\jre7\bin\java.exe",
+					@"C:\Program Files (x86)\Java\jre6\bin\java.exe",
 				};
 
 				foreach (string path in possiblePaths)

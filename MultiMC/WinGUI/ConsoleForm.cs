@@ -53,7 +53,7 @@ namespace MultiMC.WinGUI
 			Invoke((o, args) =>
 				{
 					if (!instConsole.IsDisposed && IsHandleCreated)
-						instConsole.AppendText(text + "\n");
+						instConsole.AppendText(text + System.Environment.NewLine);
 				});
 		}
 
