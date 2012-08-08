@@ -998,8 +998,8 @@ namespace MultiMC
 						{
 							string[] responseValues = reply.Split(':');
 
-							// The response must have 4 values or it's invalid
-							if (responseValues.Length != 4)
+							// The response must have at least 4 values or it's invalid
+							if (responseValues.Length < 4)
 							{
 								// Error
 								MainWindow.Invoke((sender, e) =>
