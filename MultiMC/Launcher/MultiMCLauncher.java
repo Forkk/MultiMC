@@ -91,27 +91,27 @@ public class MultiMCLauncher
 			mc.getMethod("main", String[].class).invoke(null, (Object) mcArgs);
 		} catch (ClassNotFoundException e)
 		{
-			System.err.println("ClassNotFoundException, " + e.toString());
+			e.printStackTrace();
 			System.exit(1);
 		} catch (IllegalArgumentException e)
 		{
-			System.err.println("IllegalArgumentException, " + e.toString());
+			e.printStackTrace();
 			System.exit(2);
 		} catch (IllegalAccessException e)
 		{
-			System.err.println("IllegalAccessException, " + e.toString());
+			e.printStackTrace();
 			System.exit(2);
 		} catch (InvocationTargetException e)
 		{
-			System.err.println("InvocationTargetException, " + e.toString());
+			e.printStackTrace();
 			System.exit(3);
 		} catch (NoSuchMethodException e)
 		{
-			System.err.println("NoSuchMethodException, " + e.toString());
+			e.printStackTrace();
 			System.exit(3);
 		} catch (SecurityException e)
 		{
-			System.err.println("SecurityException, " + e.toString());
+			e.printStackTrace();
 			System.exit(4);
 		}
 	}
